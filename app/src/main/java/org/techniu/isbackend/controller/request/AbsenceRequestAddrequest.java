@@ -14,17 +14,17 @@ import static org.techniu.isbackend.exception.ValidationConstants.ABSENCETYPE_NA
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class AbsenceTypeUpdaterequest {
+public class AbsenceRequestAddrequest {
 
+    private String startDate;
+    private String endDate;
+    private String absenceDays;
+    private String startHour;
+    private String endHour;
+    private String absenceHours;
+    private String staffId;
     private String absenceTypeId;
-    @NotBlank(message = ABSENCETYPE_CODE_NOT_BLANK)
-    private String code;
-    @NotBlank(message = ABSENCETYPE_NAME_NOT_BLANK)
-    private String name;
-    private String description;
-    private String durationType;
-    private String documentsMandatory;
-    private String absenceResponsibleId;
-    private String inCopyResponsibleId;
-    private String docExtension;
+    private String sendToName;
+    private String fromName;
+    private String sendToEmail;
 }

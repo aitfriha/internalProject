@@ -18,6 +18,7 @@ public enum EntityType {
     Currency,
     CommercialOperation,
     AbsenceType,
+    AbsenceRequest,
     ContractType,
     LegalCategoryType,
     Contact,
