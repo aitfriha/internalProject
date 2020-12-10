@@ -11,6 +11,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.techniu.isbackend.entity.Address;
 import org.techniu.isbackend.entity.Staff;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,4 +46,9 @@ public class ClientDto {
     private String sector2;
     private String sector3;
     private String sectorLeader;
+    //
+    private Date startDateResponsibleCommercial;
+    private Date endDateResponsibleCommercial;
+    private Date startDateAssistantCommercial;
+    private Date endDateAssistantCommercial;
 }

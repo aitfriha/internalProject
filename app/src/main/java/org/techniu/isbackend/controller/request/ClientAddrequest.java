@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +25,7 @@ public class ClientAddrequest {
     private String email;
     private String webSite;
     private String cityId;
+    private String city;
     private String addressName;
     private String postCode;
 
@@ -30,4 +33,10 @@ public class ClientAddrequest {
     private String sector2;
     private String sector3;
     private String sectorLeader;
+
+    //
+    private Date startDateResponsibleCommercial;
+    private Date endDateResponsibleCommercial;
+    private Date startDateAssistantCommercial;
+    private Date endDateAssistantCommercial;
 }

@@ -15,6 +15,7 @@ public class FinancialCompanyUpdaterequest {
     // @NotBlank(message = IVA_NAME_NOT_BLANK)
     private String financialCompanyId;
     private String name;
+    private String code;
     private String email;
     private String phone1;
     private String phone2;

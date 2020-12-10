@@ -10,6 +10,7 @@ import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.repository.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,13 +19,14 @@ import java.util.stream.Collectors;
 public class ClientServiceImpl implements ClientService{
     private ClientRepository clientRepository;
     private AddressRepository addressRepository;
+    private AssignmentService assignmentService;
     private CityRepository cityRepository;
     private AddressService addressService;
     private StaffService  staffService;
     private StaffRepository staffRepository;
     private AssignmentRepository assignmentRepository;
     private CountryConfigRepository countryConfigRepository;
-    private AssignmentService assignmentService;
+
     private CountryRepository countryRepository;
     private final ClientMapper clientMapper = Mappers.getMapper(ClientMapper.class);
     ClientServiceImpl(ClientRepository clientRepository, AddressRepository addressRepository, AddressService addressService, StaffService staffService,
@@ -71,6 +73,50 @@ public class ClientServiceImpl implements ClientService{
        ///client.setResponsibleCommercial(responsibleCommercial);
 
         clientRepository.save(client);
+    }
+
+    @Override
+    public void saveClientAssignement(Client client, Address address, String cityName,
+                                      Date startDateResponsibleCommercial, Date endDateResponsibleCommercial,
+                                      Date startDateAssistantCommercial, Date endDateAssistantCommercial,
+                                      String AssistantCommercialFullName, String responsibleCommercialFullName
+    ) {
+        int len = this.getAllClient().size();
+        String code;
+        City city=cityRepository.findCityByCityName(cityName);
+        String country = city.getStateCountry().getCountry().getCountryName().length() > 3 ? city.getStateCountry().getCountry().getCountryName().substring(0,3).toUpperCase() : city.getStateCountry().getCountry().getCountryName().toUpperCase();
+        if (len < 9) {
+            len+=1;
+            code = country + "-00" + len;
+            client.setCode(code);
+        }
+        if (len < 99) {
+            len+=1;
+            code = country + "-0" + len;
+            client.setCode(code);
+        } else {
+            len+=1;
+            code = country + "-" + len;
+            client.setCode(code);
+        }
+        String[] splitAssistantCommercial = AssistantCommercialFullName.split("\\s+");
+        Staff staff=staffRepository.findByAndFirstNameAndFatherFamilyName(splitAssistantCommercial[0],splitAssistantCommercial[1]);
+        client.setAddress(addressService.saveAddress(address.setCity(city)));
+        Client client1 = clientRepository.save(client);
+        Assignment assignment1=new Assignment();
+        assignment1.setTypeStaff("Assistant Commercial");
+        assignment1.setClient(client1);
+        assignment1.setStaff(staff);
+        assignmentService.saveAssignment(assignment1);
+
+        String[] splitresponsibleCommercial = responsibleCommercialFullName.split("\\s+");
+        Staff staff1=staffRepository.findByAndFirstNameAndFatherFamilyName(splitresponsibleCommercial[0],splitresponsibleCommercial[1]);
+        client.setAddress(addressService.saveAddress(address.setCity(city)));
+        Assignment assignment2=new Assignment();
+        assignment2.setTypeStaff("Responsible Commercial");
+        assignment2.setClient(client1);
+        assignment2.setStaff(staff1);
+        assignmentService.saveAssignment(assignment2);
     }
 
     @Override
@@ -145,7 +191,6 @@ public class ClientServiceImpl implements ClientService{
                 clientDto.setResponsibleCommercial(assignmentResponsible.getStaff().getFirstName()+" "+assignmentResponsible.getStaff().getFatherFamilyName());
             }
             Assignment assignmentAssistant = assignmentRepository.findByClientAndTypeStaff(client,"Assistant Commercial");
-            System.out.println("assignmentAssistant  ** " +assignmentAssistant);
             if(assignmentAssistant !=null) {
                 clientDto.setAssistantCommercial(assignmentAssistant.getStaff().getFirstName()+" "+assignmentAssistant.getStaff().getFatherFamilyName());
             }

@@ -17,4 +17,5 @@ public class CivilityTitleDto {
     private String civilityTitleId;
     private String name;
     private String code;
+    private boolean isRelated;
 }

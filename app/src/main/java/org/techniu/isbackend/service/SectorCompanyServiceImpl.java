@@ -273,7 +273,7 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
         ArrayList<SectorCompanyDto> sectorCompanyDtos = new ArrayList<>();
         List<SectorCompany> SectorCompanys = sectorCompanyRepository.findByParent(sectorCompanyRepository.findByName(sectorName));
         SectorCompany sectorCompanyParent = sectorCompanyRepository.findByName(sectorName);
-        System.out.println(SectorCompanys);
+       // System.out.println(SectorCompanys);
         for (SectorCompany sectorCompany : SectorCompanys) {
             SectorCompanyDto sectorCompanyDto = new SectorCompanyDto();
             sectorCompanyDto.setFirstSectorId(sectorCompanyParent.get_id());
@@ -283,15 +283,28 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
             sectorCompanyDto.setSecondSectorName(sectorCompany.getName());
             sectorCompanyDto.setSecondSectorDescription(sectorCompany.getDescription());
             List<SectorCompany> thirdSectors = sectorCompanyRepository.findByParent(sectorCompany);
+         //   System.out.println(thirdSectors);
             if (thirdSectors != null) {
                 for (SectorCompany thirdsectorCompany : thirdSectors) {
-                    sectorCompanyDto.setThirdSectorId(thirdsectorCompany.get_id());
-                    sectorCompanyDto.setThirdSectorName(thirdsectorCompany.getName());
-                    sectorCompanyDto.setThirdSectorDescription(thirdsectorCompany.getDescription());
+                    SectorCompanyDto sectorCompanyDtoCopy = new SectorCompanyDto(
+                            sectorCompanyParent.get_id(),
+                            sectorCompanyParent.getName(),
+                            sectorCompanyParent.getDescription(),
+                            sectorCompany.get_id(),
+                            sectorCompany.getName(),
+                           sectorCompany.getDescription()
+                    );
+                    sectorCompanyDtoCopy.setThirdSectorId(thirdsectorCompany.get_id());
+                    sectorCompanyDtoCopy.setThirdSectorName(thirdsectorCompany.getName());
+                    sectorCompanyDtoCopy.setThirdSectorDescription(thirdsectorCompany.getDescription());
+                    sectorCompanyDtos.add(sectorCompanyDtoCopy);
                 }
             }
-            sectorCompanyDtos.add(sectorCompanyDto);
+            else {
+                sectorCompanyDtos.add(sectorCompanyDto);
+            }
         }
+        System.out.println(sectorCompanyDtos);
         return sectorCompanyDtos;
     }
 

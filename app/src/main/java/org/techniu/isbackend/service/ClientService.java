@@ -6,10 +6,17 @@ import org.techniu.isbackend.entity.Address;
 import org.techniu.isbackend.entity.Client;
 import org.techniu.isbackend.entity.SectorCompany;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ClientService {
     void saveClient(Client client, Address address,String cityId,String AssistantCommercialId,String responsibleCommercialId);
+
+    void saveClientAssignement(Client client, Address address, String cityId,
+                               Date startDateResponsibleCommercial, Date endDateResponsibleCommercial,
+                               Date startDateAssistantCommercial, Date endDateAssistantCommercial,
+                               String AssistantCommercialId, String responsibleCommercialId
+    );
 
     void updateClient(Client client, Address address, String cityId, String AssistantCommercialId, String responsibleCommercialId);
 

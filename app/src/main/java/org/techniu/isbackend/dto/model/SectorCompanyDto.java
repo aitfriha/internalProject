@@ -26,4 +26,14 @@ public class SectorCompanyDto {
     private String thirdSectorId;
     private String thirdSectorName;
     private String thirdSectorDescription;
+
+    public SectorCompanyDto(String firstSectorId, String firstSectorName, String firstSectorDescription,
+                            String secondSectorId, String secondSectorName, String secondSectorDescription) {
+        this.firstSectorId=firstSectorId;
+                this.firstSectorName=firstSectorName;
+                this.firstSectorDescription=firstSectorDescription;
+                this.secondSectorId=secondSectorId;
+                this.secondSectorName=secondSectorName;
+                this.secondSectorDescription=secondSectorDescription;
+    }
 }

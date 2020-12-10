@@ -59,8 +59,6 @@ public class FinancialCompanyServiceImpl implements FinancialCompanyService {
 
     @Override
     public FinancialCompany getById(String id) {
-        // System.out.println(id);
-        // System.out.println(financialCompanyRepository.findAllBy_id(id));
         return financialCompanyRepository.findAllBy_id(id);
     }
 
@@ -85,6 +83,7 @@ public class FinancialCompanyServiceImpl implements FinancialCompanyService {
 
         financialCompany.setAddress(address);
         financialCompany.setName(financialCompanyDto.getName());
+        financialCompany.setCode(financialCompanyDto.getCode());
         financialCompany.setPhone2(financialCompanyDto.getPhone2());
         financialCompany.setPhone1(financialCompanyDto.getPhone1());
         financialCompany.setEmail(financialCompanyDto.getEmail());

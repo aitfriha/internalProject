@@ -5,10 +5,13 @@ import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.CivilityTitleMapper;
 import org.techniu.isbackend.dto.model.CivilityTitleDto;
 import org.techniu.isbackend.entity.CivilityTitle;
+import org.techniu.isbackend.entity.Contact;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.CivilityTitleRepository;
+import org.techniu.isbackend.repository.ContactRepository;
+
 import static org.springframework.util.StringUtils.capitalize;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +22,11 @@ import static org.techniu.isbackend.exception.ExceptionType.*;
 @Service
 public class CivilityTitleServiceImpl implements CivilityTitleService{
     private CivilityTitleRepository civilityTitleRepository;
+    private ContactRepository contactRepository;
     private final CivilityTitleMapper civilityTitleMapper = Mappers.getMapper(CivilityTitleMapper.class);
-    CivilityTitleServiceImpl(CivilityTitleRepository civilityTitleRepository) {
+    CivilityTitleServiceImpl(CivilityTitleRepository civilityTitleRepository, ContactRepository contactRepository) {
         this.civilityTitleRepository = civilityTitleRepository;
+        this.contactRepository = contactRepository;
     }
     @Override
     public void save(CivilityTitleDto civilityTitleDto) {
@@ -72,7 +77,15 @@ public class CivilityTitleServiceImpl implements CivilityTitleService{
         ArrayList<CivilityTitleDto> civilityTitleDtos = new ArrayList<>();
 
         for (CivilityTitle civilityTitle : civilityTitles) {
+            List<Contact> contactList=contactRepository.findByCivilityTitle(civilityTitle);
+
             CivilityTitleDto civilityTitleDto = civilityTitleMapper.modelToDto(civilityTitle);
+            if(contactList.size()>0){
+                civilityTitleDto.setRelated(true);
+            }
+            else {
+                civilityTitleDto.setRelated(false);
+            }
             civilityTitleDtos.add(civilityTitleDto);
         }
         return civilityTitleDtos;

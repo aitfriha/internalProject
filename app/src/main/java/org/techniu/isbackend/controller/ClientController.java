@@ -47,6 +47,24 @@ public class ClientController {
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Client, ADDED)), HttpStatus.OK);
     }
 
+    @PostMapping("/import")
+    public ResponseEntity importe(@RequestBody @Valid List<ClientAddrequest> clientAddRequests, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
+        // Save client
+        for(ClientAddrequest clientAddRequest : clientAddRequests) {
+            Address address = new Address();
+            address.setFullAddress(clientAddRequest.getAddressName());
+            address.setPostCode(clientAddRequest.getPostCode());
+            clientService.saveClientAssignement(clientMapper.dtoToModel(clientMapper.addRequestToDto(clientAddRequest)), address, clientAddRequest.getCity(),
+                    clientAddRequest.getStartDateResponsibleCommercial(), clientAddRequest.getEndDateResponsibleCommercial(),
+                    clientAddRequest.getStartDateAssistantCommercial(), clientAddRequest.getEndDateAssistantCommercial(),
+                    clientAddRequest.getAssistantCommercial(), clientAddRequest.getResponsibleCommercial()
+            );
+        }
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Client, ADDED)), HttpStatus.OK);
+    }
+
+
     @PostMapping("/update")
     public ResponseEntity update(@RequestBody @Valid ClientUpdaterequest clientUpdaterequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
