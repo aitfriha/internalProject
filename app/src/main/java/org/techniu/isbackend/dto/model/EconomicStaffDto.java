@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.techniu.isbackend.entity.Currency;
 import org.techniu.isbackend.entity.FinancialCompany;
 import org.techniu.isbackend.entity.Staff;
 
@@ -42,4 +43,7 @@ public class EconomicStaffDto {
 
     @DBRef
     private FinancialCompany financialCompany;
+
+    @DBRef
+    private Currency currency;
 }

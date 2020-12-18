@@ -10,13 +10,14 @@ import org.techniu.isbackend.controller.request.EconomicStaffAddrequest;
 import org.techniu.isbackend.controller.request.EconomicStaffUpdaterequest;
 import org.techniu.isbackend.dto.mapper.EconomicStaffMapper;
 import org.techniu.isbackend.dto.model.EconomicStaffDto;
+import org.techniu.isbackend.entity.Currency;
 import org.techniu.isbackend.entity.EconomicStaff;
 import org.techniu.isbackend.entity.FinancialCompany;
 import org.techniu.isbackend.entity.Staff;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
+import org.techniu.isbackend.repository.CurrencyRepository;
 import org.techniu.isbackend.repository.FinancialCompanyRepository;
 import org.techniu.isbackend.repository.StaffRepository;
-import org.techniu.isbackend.repository.StateCountryRepository;
 import org.techniu.isbackend.service.EconomicStaffService;
 
 import javax.validation.Valid;
@@ -36,16 +37,17 @@ public class EconomicStaffController {
     private final EconomicStaffMapper economicStaffMapper = Mappers.getMapper(EconomicStaffMapper.class);
     private StaffRepository staffRepository;
     private FinancialCompanyRepository financialCompanyRepository;
+    private CurrencyRepository currencyRepository;
 
 
     public EconomicStaffController(EconomicStaffService economicStaffService, FinancialCompanyRepository financialCompanyRepository,
-        MapValidationErrorService mapValidationErrorService, StaffRepository staffRepository) {
+        MapValidationErrorService mapValidationErrorService, StaffRepository staffRepository, CurrencyRepository currencyRepository) {
         this.economicStaffService = economicStaffService;
         this.mapValidationErrorService = mapValidationErrorService;
         this.staffRepository = staffRepository;
         this.financialCompanyRepository = financialCompanyRepository;
+        this.currencyRepository = currencyRepository;
     }
-
 
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody @Valid EconomicStaffAddrequest economicStaffAddrequest, BindingResult bindingResult) {
@@ -55,9 +57,11 @@ public class EconomicStaffController {
 
         Staff staff = staffRepository.findAllByStaffId(economicStaffAddrequest.getStaff().getStaffId());
         FinancialCompany financialCompany = financialCompanyRepository.findAllBy_id(economicStaffAddrequest.getFinancialCompany().get_id());
+        Currency currency = currencyRepository.findAllBy_id(economicStaffAddrequest.getCurrency().get_id());
 
         economicStaffAddrequest.setStaff(staff);
         economicStaffAddrequest.setFinancialCompany(financialCompany);
+        economicStaffAddrequest.setCurrency(currency);
 
         System.out.println(economicStaffAddrequest);
 

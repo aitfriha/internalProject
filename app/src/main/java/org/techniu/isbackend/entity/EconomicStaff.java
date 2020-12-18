@@ -39,4 +39,7 @@ public class EconomicStaff {
 
     @DBRef
     private FinancialCompany financialCompany;
+
+    @DBRef
+    private Currency currency;
 }

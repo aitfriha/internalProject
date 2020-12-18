@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.techniu.isbackend.entity.Currency;
 import org.techniu.isbackend.entity.FinancialCompany;
 import org.techniu.isbackend.entity.Staff;
 
@@ -33,4 +34,5 @@ public class EconomicStaffUpdaterequest {
 
     private Staff staff;
     private FinancialCompany financialCompany;
+    private Currency currency;
 }
