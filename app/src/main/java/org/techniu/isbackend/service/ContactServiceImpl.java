@@ -45,6 +45,7 @@ public class ContactServiceImpl implements ContactService{
             throw exception(DUPLICATE_ENTITY);
         }
         Contact contact1=contactMapper.dtoToModel(contactDto);
+        System.out.println(contact1);
         contact1.setClient(client);
         contact1.setCivilityTitle(civilityTitle);
         contact1.setAddress(addressRepository.save(address.setCity(city)));

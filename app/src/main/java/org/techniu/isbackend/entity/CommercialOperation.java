@@ -42,23 +42,8 @@ public class CommercialOperation{
    // private int progress;
 
     @DBRef
-    private ClientContact decisionMakerContact;
-    @DBRef
-    private ClientContact personCloseOfDecisionMakerContact;
-    @DBRef
-    private ClientContact technicalLeaderContact;
-    @DBRef
-    private ClientContact qualificationProcessContact;
-    @DBRef
-    private ClientContact ProcurementDepartmentContact;
-    @DBRef
-    private ClientContact legalAreaContact;
-    @DBRef
-    private ClientContact otherContact1;
-    @DBRef
-    private ClientContact otherContact2;
-    @DBRef
-    private ClientContact otherContact;
+    private List<Contact> Contacts;
+
 
 
 }

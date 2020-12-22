@@ -34,8 +34,6 @@ public class CommercialOperationController {
     public ResponseEntity add(@RequestBody @Valid CommercialOperationAddrequest commercialOperationAddrequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         // Save CommercialOperation
-        System.out.println(commercialOperationAddrequest);
-        System.out.println(commercialOperationMapper.addRequestToDto(commercialOperationAddrequest));
         commercialOperationService.save(commercialOperationMapper.addRequestToDto(commercialOperationAddrequest));
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(CommercialOperation, ADDED)), HttpStatus.OK);
     }

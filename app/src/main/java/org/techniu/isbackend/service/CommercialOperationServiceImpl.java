@@ -3,16 +3,14 @@ package org.techniu.isbackend.service;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.CommercialOperationMapper;
+import org.techniu.isbackend.dto.mapper.ContactMapper;
 import org.techniu.isbackend.dto.model.CommercialOperationDto;
-import org.techniu.isbackend.dto.model.IvaDto;
+import org.techniu.isbackend.dto.model.ContactDto;
 import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
-import org.techniu.isbackend.repository.ClientRepository;
-import org.techniu.isbackend.repository.CommercialOperationRepository;
-import org.techniu.isbackend.repository.CommercialOperationStatusRepository;
-import org.techniu.isbackend.repository.ServiceTypeRepository;
+import org.techniu.isbackend.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,16 +22,19 @@ import static org.techniu.isbackend.exception.ExceptionType.*;
 public class CommercialOperationServiceImpl implements CommercialOperationService{
     private CommercialOperationRepository commercialOperationRepository;
     private ClientRepository clientRepository;
+    private ContactRepository contactRepository;
     private ServiceTypeService serviceTypeService;
     private ServiceTypeRepository serviceTypeRepository;
     private CommercialOperationStatusRepository commercialOperationStatusRepository;
+    private final ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
     private final CommercialOperationMapper commercialOperationMapper = Mappers.getMapper(CommercialOperationMapper.class);
     CommercialOperationServiceImpl(CommercialOperationRepository commercialOperationRepository,
                                    CommercialOperationStatusRepository commercialOperationStatusRepository,
-                                   ClientRepository clientRepository, ServiceTypeService serviceTypeService, ServiceTypeRepository serviceTypeRepository) {
+                                   ClientRepository clientRepository, ContactRepository contactRepository, ServiceTypeService serviceTypeService, ServiceTypeRepository serviceTypeRepository) {
         this.commercialOperationRepository = commercialOperationRepository;
         this.clientRepository = clientRepository;
         this.commercialOperationStatusRepository = commercialOperationStatusRepository;
+        this.contactRepository = contactRepository;
         this.serviceTypeService = serviceTypeService;
         this.serviceTypeRepository = serviceTypeRepository;
     }
@@ -43,6 +44,7 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
         commercialOperationDto.setName(commercialOperationDto.getName().toLowerCase());
        Client client = clientRepository.getBy_id(commercialOperationDto.getClientId());
         CommercialOperationStatus commercialOperationStatus = commercialOperationStatusRepository.findBy_id(commercialOperationDto.getStateId());
+        System.out.println(commercialOperationDto.getStateId());
         int len = this.getAll().size();
         String code;
         //City city=cityRepository.findCityBy_id(cityId);
@@ -82,6 +84,11 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
         commercialOperation3.setClient(client);
         commercialOperation3.setState(commercialOperationStatus);
         commercialOperation3.setServiceType(serviceTypes);
+        ArrayList<Contact> contacts = new ArrayList<>();
+        for (String id : commercialOperationDto.getContactsIds()){
+            contacts.add(contactRepository.findBy_id(id));
+        }
+        commercialOperation3.setContacts(contacts);
         commercialOperationRepository.save(commercialOperation3);
     }
 
@@ -137,6 +144,13 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
             commercialOperationDto.setServiceTypeName(serviceTypes);
                 commercialOperationDto.setStateName(commercialOperation.getState().getName());
         }
+            ArrayList<ContactDto> contactDtos = new ArrayList<>();
+            if (commercialOperation.getContacts() != null){
+                for (Contact contact : commercialOperation.getContacts()) {
+                    contactDtos.add(contactMapper.modelToDto(contact));
+                }
+                commercialOperationDto.setContactDtos(contactDtos);
+            }
             commercialOperationDtos.add(commercialOperationDto);
         }
         return commercialOperationDtos;

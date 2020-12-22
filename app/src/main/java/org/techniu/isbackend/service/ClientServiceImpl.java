@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class ClientServiceImpl implements ClientService{
     private ClientRepository clientRepository;
+
     private AddressRepository addressRepository;
     private AssignmentService assignmentService;
     private CityRepository cityRepository;
@@ -81,50 +82,72 @@ public class ClientServiceImpl implements ClientService{
                                       Date startDateAssistantCommercial, Date endDateAssistantCommercial,
                                       String AssistantCommercialFullName, String responsibleCommercialFullName
     ) {
-        int len = this.getAllClient().size();
+
+        int len = clientRepository.findAll().size();
         String code;
         City city=cityRepository.findCityByCityName(cityName);
         String country = city.getStateCountry().getCountry().getCountryName().length() > 3 ? city.getStateCountry().getCountry().getCountryName().substring(0,3).toUpperCase() : city.getStateCountry().getCountry().getCountryName().toUpperCase();
-        if (len < 9) {
-            len+=1;
-            code = country + "-00" + len;
-            client.setCode(code);
+        Client client2 =clientRepository.findByName(client.getName());
+        if(client2 != null){
+            client.set_id(client2.get_id());
+            client.setAddress(addressService.saveAddress(address.setCity(city)));
+            String[] splitAssistantCommercial = AssistantCommercialFullName.split("\\s+");
+            Staff staff = staffRepository.findByAndFirstNameAndFatherFamilyNameAndMotherFamilyName(splitAssistantCommercial[0], splitAssistantCommercial[1], splitAssistantCommercial[2]);
+            String[] splitresponsibleCommercial = responsibleCommercialFullName.split("\\s+");
+            Staff staff1 = staffRepository.findByAndFirstNameAndFatherFamilyNameAndMotherFamilyName(splitresponsibleCommercial[0], splitresponsibleCommercial[1], splitAssistantCommercial[2]);
+            //this.updateClient( client,  address,  city.get_id(),  staff.getStaffId(),  staff1.getStaffId());
+            Assignment assignment1 = new Assignment();
+            assignment1.setClient(client2);
+            assignment1.setStaff(staff);
+            assignment1.setTypeStaff("Assistant Commercial");
+            assignmentService.saveAssignment(assignment1);
+            Assignment assignment2 = new Assignment();
+            assignment2.setTypeStaff("Responsible Commercial");
+            assignment2.setClient(client2);
+            assignment2.setStaff(staff1);
+            assignmentService.saveAssignment(assignment2);
         }
-        if (len < 99) {
-            len+=1;
-            code = country + "-0" + len;
-            client.setCode(code);
-        } else {
-            len+=1;
-            code = country + "-" + len;
-            client.setCode(code);
+        else {
+            if (len < 9) {
+                len += 1;
+                code = country + "-00" + len;
+                client.setCode(code);
+            }
+            if (len < 99) {
+                len += 1;
+                code = country + "-0" + len;
+                client.setCode(code);
+            } else {
+                len += 1;
+                code = country + "-" + len;
+                client.setCode(code);
+            }
+            String[] splitAssistantCommercial = AssistantCommercialFullName.split("\\s+");
+            Staff staff = staffRepository.findByAndFirstNameAndFatherFamilyName(splitAssistantCommercial[0], splitAssistantCommercial[1]);
+            client.setAddress(addressService.saveAddress(address.setCity(city)));
+            Client client1 = clientRepository.save(client);
+            Assignment assignment1 = new Assignment();
+            assignment1.setTypeStaff("Assistant Commercial");
+            assignment1.setClient(client1);
+            assignment1.setStaff(staff);
+            assignmentService.saveAssignment(assignment1);
+            String[] splitresponsibleCommercial = responsibleCommercialFullName.split("\\s+");
+            Staff staff1 = staffRepository.findByAndFirstNameAndFatherFamilyName(splitresponsibleCommercial[0], splitresponsibleCommercial[1]);
+            client.setAddress(addressService.saveAddress(address.setCity(city)));
+            Assignment assignment2 = new Assignment();
+            assignment2.setTypeStaff("Responsible Commercial");
+            assignment2.setClient(client1);
+            assignment2.setStaff(staff1);
+            assignmentService.saveAssignment(assignment2);
         }
-        String[] splitAssistantCommercial = AssistantCommercialFullName.split("\\s+");
-        Staff staff=staffRepository.findByAndFirstNameAndFatherFamilyName(splitAssistantCommercial[0],splitAssistantCommercial[1]);
-        client.setAddress(addressService.saveAddress(address.setCity(city)));
-        Client client1 = clientRepository.save(client);
-        Assignment assignment1=new Assignment();
-        assignment1.setTypeStaff("Assistant Commercial");
-        assignment1.setClient(client1);
-        assignment1.setStaff(staff);
-        assignmentService.saveAssignment(assignment1);
-
-        String[] splitresponsibleCommercial = responsibleCommercialFullName.split("\\s+");
-        Staff staff1=staffRepository.findByAndFirstNameAndFatherFamilyName(splitresponsibleCommercial[0],splitresponsibleCommercial[1]);
-        client.setAddress(addressService.saveAddress(address.setCity(city)));
-        Assignment assignment2=new Assignment();
-        assignment2.setTypeStaff("Responsible Commercial");
-        assignment2.setClient(client1);
-        assignment2.setStaff(staff1);
-        assignmentService.saveAssignment(assignment2);
     }
 
     @Override
     public void updateClient(Client client, Address address, String cityId, String AssistantCommercialId, String responsibleCommercialId) {
+        System.out.println("UPDATE : "+client.get_id());
         Client clientOld=clientRepository.getBy_id(client.get_id());
         City city=cityRepository.findCityBy_id(cityId);
         Address address1=clientOld.getAddress();
-        System.out.println(address);
         client.setCode(clientOld.getCode());
         client.setResponsibleCommercial(clientOld.getResponsibleCommercial());
         client.setAssistantCommercial(clientOld.getAssistantCommercial());
@@ -137,7 +160,6 @@ public class ClientServiceImpl implements ClientService{
         client.setSector3(clientOld.getSector3());
         client.setSectorLeader(clientOld.getSectorLeader());
         client.setAddress(addressService.saveAddress(addressService.saveAddress(address1)));
-
         clientRepository.save(client);
     }
 
@@ -250,9 +272,9 @@ public class ClientServiceImpl implements ClientService{
     @Override
     public void deleteSectorFromclient(SectorCompany sectorCompany1,SectorCompany sectorCompany2,SectorCompany sectorCompany3) {
         //get all client that have this sector
-        System.out.println(sectorCompany1);
+       /* System.out.println(sectorCompany1);
         System.out.println(sectorCompany2);
-        System.out.println(sectorCompany3);
+        System.out.println(sectorCompany3);*/
         if(sectorCompany1 != null && sectorCompany2 != null && sectorCompany3 !=null) {
             List<Client> client = clientRepository.findBySector1OrSector2OrSector3(sectorCompany1.getName(), sectorCompany2.getName(), sectorCompany3.getName());
             for (Client c:client) {
