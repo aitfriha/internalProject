@@ -16,7 +16,6 @@ import org.techniu.isbackend.entity.FinancialCompany;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.repository.CityRepository;
 import org.techniu.isbackend.service.AddressService;
-import org.techniu.isbackend.service.CityService;
 import org.techniu.isbackend.service.FinancialCompanyService;
 
 import javax.validation.Valid;

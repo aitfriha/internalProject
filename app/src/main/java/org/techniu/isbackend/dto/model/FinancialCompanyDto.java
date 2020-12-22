@@ -6,12 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.techniu.isbackend.entity.Address;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -25,6 +23,7 @@ public class FinancialCompanyDto {
     private String financialCompanyId;
     @NotNull
     private String name;
+    private String code;
     private String email;
     @NotNull
     private String phone1;

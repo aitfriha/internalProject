@@ -1,6 +1,8 @@
 package org.techniu.isbackend.exception;
 
 public enum EntityType {
+    EconomicStaffYear,
+    EconomicStaffMonth,
     Staff,
     StaffContract,
     StaffContractHistory,
@@ -29,5 +31,6 @@ public enum EntityType {
     FinancialContract,
     Bill,
     ContactByOperation,
-    CivilityTitle
+    CivilityTitle,
+    EconomicStaff
 }
