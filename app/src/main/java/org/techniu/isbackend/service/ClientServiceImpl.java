@@ -93,8 +93,18 @@ public class ClientServiceImpl implements ClientService{
             client.setAddress(addressService.saveAddress(address.setCity(city)));
             String[] splitAssistantCommercial = AssistantCommercialFullName.split("\\s+");
             Staff staff = staffRepository.findByAndFirstNameAndFatherFamilyNameAndMotherFamilyName(splitAssistantCommercial[0], splitAssistantCommercial[1], splitAssistantCommercial[2]);
+            //test if staff existe
+            if(staff==null)
+            {
+
+            }
             String[] splitresponsibleCommercial = responsibleCommercialFullName.split("\\s+");
             Staff staff1 = staffRepository.findByAndFirstNameAndFatherFamilyNameAndMotherFamilyName(splitresponsibleCommercial[0], splitresponsibleCommercial[1], splitAssistantCommercial[2]);
+            //test if staff1 existe
+            if(staff1==null)
+            {
+
+            }
             //this.updateClient( client,  address,  city.get_id(),  staff.getStaffId(),  staff1.getStaffId());
             Assignment assignment1 = new Assignment();
             assignment1.setClient(client2);
