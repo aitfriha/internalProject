@@ -43,4 +43,7 @@ public class ContactDto {
     private String stateName;
     private String countryName;
     private String postCode;
+    private String suppliersArea;
+    private String supplierType;
+
 }

@@ -31,4 +31,6 @@ public interface ContactByOperationService {
      * @param contactTypeName - contactTypeName
      */
     void remove(String statusId, String contactTypeName);
+
+    List<ContactByOperationDto> getContactByOperationById(String id);
 }

@@ -73,6 +73,7 @@ public class EconomicStaffServiceImpl implements EconomicStaffService {
         
         economicStaff.setFinancialCompany(economicStaffDto.getFinancialCompany());
         economicStaff.setStaff(economicStaffDto.getStaff());
+        economicStaff.setCurrency(economicStaffDto.getCurrency());
         
         economicStaff.setChangeFactor(economicStaffDto.getChangeFactor());
         economicStaff.setEmployeeNumber(economicStaffDto.getEmployeeNumber());

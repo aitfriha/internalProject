@@ -23,4 +23,10 @@ public interface AssignmentService {
      * @param clients - clients
      */
     void save(AssignmentDto assignmentDto, String staffId, List<String> clients);
+    /**
+     * delete Assignment
+     *
+     * @param id - id
+     */
+    void remove(String id);
 }

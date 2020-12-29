@@ -12,6 +12,7 @@ public interface AssignmentRepository extends MongoRepository<Assignment, String
     List<Assignment> findByClient(Client client);
     List<Assignment> findByStaff(Staff staff);
     Assignment findByClientAndTypeStaff(Client client,String typeStaff);
+   List<Assignment> findByClientAndStaffAndTypeStaff(Client client,Staff staff,String typeStaff);
     List<Assignment> findAll();
     Assignment findBy_id(String id);
 }
