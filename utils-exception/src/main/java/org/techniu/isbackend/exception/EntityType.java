@@ -32,5 +32,6 @@ public enum EntityType {
     Bill,
     ContactByOperation,
     CivilityTitle,
-    EconomicStaff
+    EconomicStaff,
+    Assignment
 }

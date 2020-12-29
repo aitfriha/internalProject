@@ -7,12 +7,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.ClientMapper;
 import org.techniu.isbackend.dto.model.ClientDto;
 import org.techniu.isbackend.entity.*;
+import org.techniu.isbackend.exception.EntityType;
+import org.techniu.isbackend.exception.ExceptionType;
+import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.techniu.isbackend.exception.ExceptionType.IMPORTATION_STAFF_NOTE_EXIST;
+import static org.techniu.isbackend.exception.ExceptionType.STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL;
 
 @Service
 @Transactional
@@ -96,14 +102,41 @@ public class ClientServiceImpl implements ClientService{
             //test if staff existe
             if(staff==null)
             {
-
+                throw exception(IMPORTATION_STAFF_NOTE_EXIST);
             }
+            List<FunctionalStructureLevel> listFunctionalStructureLevels= staff.getFunctionalStructureLevels();
+            int compteur=0;
+            for(FunctionalStructureLevel  functionalStructureLevel : listFunctionalStructureLevels){
+                System.out.println(functionalStructureLevel.getIsCommercialLevel());
+                if(functionalStructureLevel.getIsCommercialLevel().equals("yes")){
+                    compteur=compteur+1;
+                }
+            }
+            if(compteur==0)
+            {
+                throw exception(STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL);
+            }
+            /*if(staff.getFunctionalStructureLevels()==null)
+            {
+                throw exception(IMPORTATION_STAFF_NOTE_EXIST);
+            }*/
             String[] splitresponsibleCommercial = responsibleCommercialFullName.split("\\s+");
             Staff staff1 = staffRepository.findByAndFirstNameAndFatherFamilyNameAndMotherFamilyName(splitresponsibleCommercial[0], splitresponsibleCommercial[1], splitAssistantCommercial[2]);
             //test if staff1 existe
+            List<FunctionalStructureLevel> listFunctionalStructureLevels1= staff1.getFunctionalStructureLevels();
             if(staff1==null)
             {
-
+                throw exception(IMPORTATION_STAFF_NOTE_EXIST);
+            }
+            int compteur2=0;
+            for(FunctionalStructureLevel  functionalStructureLevel : listFunctionalStructureLevels1){
+                if(functionalStructureLevel.getIsCommercialLevel().equals("yes")){
+                    compteur2=compteur2+1;
+                }
+            }
+            if(compteur2==0)
+            {
+                throw exception(STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL);
             }
             //this.updateClient( client,  address,  city.get_id(),  staff.getStaffId(),  staff1.getStaffId());
             Assignment assignment1 = new Assignment();
@@ -316,6 +349,16 @@ public class ClientServiceImpl implements ClientService{
                 clientRepository.save(c);
             }
         }
+    }
+    /**
+     * Returns a new RuntimeException
+     *
+     * @param exceptionType exceptionType
+     * @param args          args
+     * @return RuntimeException
+     */
+    private RuntimeException exception(ExceptionType exceptionType, String... args) {
+        return MainException.throwException(EntityType.SectorCompany, exceptionType, args);
     }
 
 }

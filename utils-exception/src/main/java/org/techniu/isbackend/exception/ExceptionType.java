@@ -27,8 +27,9 @@ public enum ExceptionType {
     STAFF_DOCUMENT_DATE_EQUAL("Expedition date is the same as expiration date"),
     DELETED("deleted"),
     ASSIGNED_LEVEL_STAFF("staff.assigned.to.level"),
-    SECTOR_RELATED_TO_CLIENT("this sector its already related to a client !");
-
+    SECTOR_RELATED_TO_CLIENT("this sector its already related to a client !"),
+    IMPORTATION_STAFF_NOTE_EXIST("Staff not exist in our data base !"),
+    STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL("Staff is not assigned to a commercial level !");
     // public static final ExceptionType SECTOR_RELATED_TO_CLIENT = null;
     String value;
 
