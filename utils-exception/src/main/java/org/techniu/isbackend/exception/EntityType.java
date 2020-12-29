@@ -3,6 +3,7 @@ package org.techniu.isbackend.exception;
 public enum EntityType {
     EconomicStaffYear,
     EconomicStaffMonth,
+    EconomicStaffExtra,
     Staff,
     StaffContract,
     StaffContractHistory,
