@@ -29,6 +29,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
     @Override
     public Assignment saveAssignment(Assignment assignment) {
+        System.out.println(assignment.getTypeStaff());
         if (staffRepository.existsById(assignment.getStaff().getStaffId())
             && clientRepository.existsById(assignment.getClient().get_id())) {
             if (assignment.getTypeStaff().equals("Responsible Commercial")) {
@@ -36,8 +37,17 @@ public class AssignmentServiceImpl implements AssignmentService {
             } else {
                 assignment.getClient().setAssistantCommercial(assignment.getStaff());
             }
+            System.out.println(assignment.getClient().getIsActive());
+            System.out.println(assignment.getClient().getMultinational());
+            System.out.println(assignment.getClient().getType());
             clientRepository.save(assignment.getClient());
-            return assignmentRepository.save(assignment);
+            List<Assignment> assignments=assignmentRepository.findByClientAndStaffAndTypeStaff(assignment.getClient(),assignment.getStaff(),assignment.getTypeStaff());
+            if(assignments.size()==0) {
+                return assignmentRepository.save(assignment);
+            }
+            else {
+                return assignment;
+            }
         } else {
             throw new ExceptionMessage("Cannot save assignment");
         }

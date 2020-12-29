@@ -39,4 +39,6 @@ public class ContactAddRequest {
     private String cityId;
     private String fullAddress;
     private String postCode;
+    private String suppliersArea;
+    private String supplierType;
 }

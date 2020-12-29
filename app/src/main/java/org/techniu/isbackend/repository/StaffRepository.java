@@ -41,4 +41,5 @@ public interface StaffRepository extends MongoRepository<Staff, String> {
     Staff findByStaffDocumentsContaining(StaffDocument staffDocument);
 
     Staff findByAndFirstNameAndFatherFamilyName(String firstName,String fatherFamilyName);
+    Staff findByAndFirstNameAndFatherFamilyNameAndMotherFamilyName(String firstName,String fatherFamilyName,String motherFamilyName);
 }

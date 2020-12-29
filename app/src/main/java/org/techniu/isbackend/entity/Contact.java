@@ -36,4 +36,6 @@ public class Contact {
     private Client client;
     @DBRef
     private CivilityTitle civilityTitle;
+    private String suppliersArea;
+    private String supplierType;
 }

@@ -4,6 +4,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.ContactByOperationMapper;
 import org.techniu.isbackend.dto.model.ContactByOperationDto;
+import org.techniu.isbackend.entity.CommercialOperation;
 import org.techniu.isbackend.entity.CommercialOperationStatus;
 import org.techniu.isbackend.entity.ContactByOperation;
 import org.techniu.isbackend.exception.EntityType;
@@ -88,6 +89,19 @@ public class ContactByOperationServiceImpl implements ContactByOperationService{
         contactByOperationRepository.delete(contactByOperation.get());
     }
 
+    @Override
+    public List<ContactByOperationDto> getContactByOperationById(String id) {
+        // Get all action
+        CommercialOperationStatus commercialOperationStatus= commercialOperationStatusRepository.findBy_id(id);
+        List<ContactByOperation> contactByOperations = contactByOperationRepository.findByStatus(commercialOperationStatus);
+        ArrayList<ContactByOperationDto> contactByOperationDtos = new ArrayList<>();
+        ContactByOperationDto contactByOperationDto;
+        for (ContactByOperation contactByOperation : contactByOperations) {
+             contactByOperationDto=contactByOperationMapper.modelToDto(contactByOperation).setStatusName(contactByOperation.getStatus().getName());
+            contactByOperationDtos.add(contactByOperationDto);
+        }
+        return contactByOperationDtos;
+    }
 
     /**
      * Returns a new RuntimeException

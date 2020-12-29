@@ -61,7 +61,7 @@ public class ClientController {
                     clientAddRequest.getAssistantCommercial(), clientAddRequest.getResponsibleCommercial()
             );
         }
-        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Client, ADDED)), HttpStatus.OK);
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Client, IMPORTED)), HttpStatus.OK);
     }
 
 
@@ -69,7 +69,7 @@ public class ClientController {
     public ResponseEntity update(@RequestBody @Valid ClientUpdaterequest clientUpdaterequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         // Save client
-        System.out.println("clientUpdaterequest.getAddressName() "+clientUpdaterequest.getAddressName());
+      //  System.out.println("clientUpdaterequest.getAddressName() "+clientUpdaterequest.getAddressName());
         Address address = new Address();
         address.setFullAddress(clientUpdaterequest.getAddressName());
         address.setPostCode(clientUpdaterequest.getPostCode());

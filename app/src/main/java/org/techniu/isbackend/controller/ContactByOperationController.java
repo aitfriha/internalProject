@@ -76,4 +76,13 @@ public class ContactByOperationController {
     public ResponseEntity allContactByOperation() {
         return new ResponseEntity<Response>(Response.ok().setPayload(contactByOperationService.getAll()), HttpStatus.OK);
     }
+
+    /**
+     * display all contactByOperation GET API "/api/contactByOperation/id"
+     * @param id action delete request
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ResponseEntity contactByOperationById(@PathVariable String id) {
+        return new ResponseEntity<Response>(Response.ok().setPayload(contactByOperationService.getContactByOperationById(id)), HttpStatus.OK);
+    }
 }

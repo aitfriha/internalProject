@@ -5,6 +5,7 @@ public enum ExceptionType {
     ENTITY_NOT_FOUND("not.found"),
     DUPLICATE_ENTITY("duplicate"),
     ADDED("added"),
+    IMPORTED("imported"),
     UPDATED("updated"),
     APPLICATION_ALREADY_HAS_A_CONTRACT("application.already.has.a.contract"),
     PUBLIC_PROPERTY_ALREADY_HAS_A_METER("public.property.already.has.meter"),

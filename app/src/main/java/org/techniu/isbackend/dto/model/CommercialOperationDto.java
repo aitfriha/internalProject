@@ -48,4 +48,6 @@ public class CommercialOperationDto {
     private String sector1;
     private String sector2;
     private String sector3;
+    private List<String> contactsIds;
+    private List<ContactDto> contactDtos;
 }
