@@ -17,12 +17,5 @@ import static org.techniu.isbackend.exception.ValidationConstants.ABSENCETYPE_NA
 public class AbsenceRequestUpdaterequest {
 
     private String absenceRequestId;
-    private String startDate;
-    private String endDate;
-    private String absenceDays;
-    private String startHour;
-    private String endHour;
-    private String absenceHours;
-    private String staffId;
-    private String absenceTypeId;
+    private String state;
 }

@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Document(value = "AbsenceRequest")
 @Data
@@ -20,10 +21,10 @@ public class AbsenceRequest implements Serializable {
     private String startDate;
     private String endDate;
     private String absenceDays;
-    private String startHour;
-    private String endHour;
-    private String absenceHours;
-    private  byte[] document;
+    private String hourRate;
+    private String state;
+    private List<String> docExtensionList;
+    private  List<byte[]> documentList;
 
     @DBRef
     private Staff staff;

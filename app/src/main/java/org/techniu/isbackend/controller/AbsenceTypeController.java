@@ -48,7 +48,10 @@ public class AbsenceTypeController {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         // Save AbsenceType
         AbsenceTypeDto absenceTypeDto = absenceTypeMapper.addRequestToDto(absenceTypeAddrequest);
-        absenceTypeDto.setDocument(doc.getBytes());
+        if(!doc.getContentType().equals("application/json")) {
+            absenceTypeDto.setDocument(doc.getBytes());
+            System.out.println("set contract doc");
+        };
         absenceTypeService.save(absenceTypeDto);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceType, ADDED)), HttpStatus.OK);
     }

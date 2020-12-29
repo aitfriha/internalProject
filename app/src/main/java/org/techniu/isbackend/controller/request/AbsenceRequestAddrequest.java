@@ -19,12 +19,9 @@ public class AbsenceRequestAddrequest {
     private String startDate;
     private String endDate;
     private String absenceDays;
-    private String startHour;
-    private String endHour;
-    private String absenceHours;
+    private String hourRate;
     private String staffId;
     private String absenceTypeId;
-    private String sendToName;
     private String fromName;
-    private String sendToEmail;
+
 }

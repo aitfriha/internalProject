@@ -11,6 +11,7 @@ import org.techniu.isbackend.entity.AbsenceType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
+import org.techniu.isbackend.repository.AbsenceRequestRepository;
 import org.techniu.isbackend.repository.AbsenceTypeRepository;
 import org.techniu.isbackend.repository.StaffRepository;
 import org.techniu.isbackend.repository.StateCountryRepository;
@@ -29,14 +30,17 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
     private AbsenceTypeRepository absenceTypeRepository;
     private StateCountryRepository stateCountryRepository;
     private StaffRepository staffRepository;
+    private AbsenceRequestRepository absenceRequestRepository;
     private final AbsenceTypeMapper absenceTypeMapper = Mappers.getMapper(AbsenceTypeMapper.class);
 
     AbsenceTypeServiceImpl(AbsenceTypeRepository absenceTypeRepository,
                            StateCountryRepository stateCountryRepository,
-                           StaffRepository staffRepository) {
+                           StaffRepository staffRepository,
+                           AbsenceRequestRepository absenceRequestRepository) {
         this.absenceTypeRepository = absenceTypeRepository;
         this.stateCountryRepository = stateCountryRepository;
         this.staffRepository = staffRepository;
+        this.absenceRequestRepository = absenceRequestRepository;
     }
 
     @Override
@@ -55,6 +59,11 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         Optional<AbsenceType> absenceType2 = Optional.ofNullable(absenceTypeRepository.findByCodeAndState(absenceTypeDto.getCode(), stateCountry));
         if (absenceType2.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
+        }
+
+        if (absenceTypeDto.getDocument() != null) {
+            absenceType.setDocument(absenceTypeDto.getDocument());
+            absenceType.setDocExtension(absenceTypeDto.getDocExtension());
         }
 
         absenceType.setState(stateCountry);
@@ -100,7 +109,6 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         absenceType.setAbsenceResponsible(absenceResponsible);
         Staff inCopyResponsible = staffRepository.findById(absenceTypeDto.getInCopyResponsibleId()).get();
         absenceType.setInCopyResponsible(inCopyResponsible);
-        absenceType.setDocument(absenceTypeDto.getDocument());
         absenceTypeRepository.save(absenceType);
     }
 
@@ -111,7 +119,10 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         if (!action.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
-        absenceTypeRepository.deleteById(id);
+        AbsenceType absenceType = absenceTypeRepository.findById(id).get();
+        List<AbsenceRequest> list = absenceRequestRepository.findAllByAbsenceType(absenceType);
+        absenceRequestRepository.deleteAll(list);
+        absenceTypeRepository.delete(absenceType);
     }
 
     @Override

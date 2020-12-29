@@ -12,8 +12,13 @@ import org.techniu.isbackend.controller.request.AbsenceRequestAddrequest;
 import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.*;
+import org.techniu.isbackend.controller.request.AbsenceRequestAddrequest;
+import org.techniu.isbackend.controller.request.AbsenceRequestUpdaterequest;
+import org.techniu.isbackend.controller.request.AbsenceTypeUpdaterequest;
 import org.techniu.isbackend.dto.mapper.AbsenceRequestMapper;
 import org.techniu.isbackend.dto.model.AbsenceRequestDto;
+import org.techniu.isbackend.dto.model.AbsenceRequestDto;
+import org.techniu.isbackend.dto.model.AbsenceTypeDto;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.AbsenceRequestService;
 import org.techniu.isbackend.service.utilities.MailMail;
@@ -22,8 +27,10 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.techniu.isbackend.exception.EntityType.AbsenceRequest;
+import static org.techniu.isbackend.exception.EntityType.*;
 import static org.techniu.isbackend.exception.ExceptionType.*;
 import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
 
@@ -42,29 +49,28 @@ public class AbsenceRequestController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity add(@RequestBody @Valid AbsenceRequestAddrequest absenceRequestAddrequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
-        // Save AbsenceRequest
-        System.out.println(absenceRequestMapper.addRequestToDto(absenceRequestAddrequest));
-        absenceRequestService.save(absenceRequestMapper.addRequestToDto(absenceRequestAddrequest),
-                absenceRequestAddrequest.getSendToName(),
-                absenceRequestAddrequest.getFromName(),
-                absenceRequestAddrequest.getSendToEmail());
-
-        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceRequest, ADDED)), HttpStatus.OK);
-    }
-
     public ResponseEntity add(@ModelAttribute("absenceRequest") AbsenceRequestAddrequest absenceRequestAddrequest,
-                              @RequestParam("doc") MultipartFile doc,
+                              @RequestParam("docExtensionList") List<String> docExtensionList,
+                              @RequestParam("docList") List<MultipartFile> docList,
                               BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
+        // Save AbsenceRequest
+        List<byte[]> documentList = new ArrayList<>();
         AbsenceRequestDto absenceRequestDto = absenceRequestMapper.addRequestToDto(absenceRequestAddrequest);
-        absenceRequestDto.setDocument(doc.getBytes());
+
+        docList.forEach(doc-> {
+            try {
+                documentList.add(doc.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+        absenceRequestDto.setDocumentList(documentList);
+        absenceRequestDto.setDocExtensionList(docExtensionList);
         System.out.println(absenceRequestAddrequest);
         absenceRequestService.save(absenceRequestDto,
-                absenceRequestAddrequest.getSendToName(),
-                absenceRequestAddrequest.getFromName(),
-                absenceRequestAddrequest.getSendToEmail());
+                absenceRequestAddrequest.getFromName());
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceRequest, ADDED)), HttpStatus.OK);
     }
 
@@ -72,6 +78,23 @@ public class AbsenceRequestController {
     @GetMapping("/all")
     public ResponseEntity getAllAbsenceRequests(){
         return new ResponseEntity<Response>(Response.ok().setPayload(absenceRequestService.getAll()), HttpStatus.OK);
+    }
+
+    @GetMapping("/all-by-absenceType/{absenceTypeId}")
+    public ResponseEntity getAllByAbsenceType(@PathVariable("absenceTypeId") String absenceTypeId) {
+        return new ResponseEntity<Response>(Response.ok().setPayload(absenceRequestService.getAllByAbsenceType(absenceTypeId)), HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity update(@RequestBody @Valid AbsenceRequestUpdaterequest absenceRequestUpdaterequest,
+                                 BindingResult bindingResult) throws IOException {
+        if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
+        System.out.println("is update");
+        AbsenceRequestDto absenceRequestDto = absenceRequestMapper.updateRequestToDto(absenceRequestUpdaterequest);
+        System.out.println(absenceRequestDto);
+        absenceRequestService.update(absenceRequestDto);
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceRequest, UPDATED)), HttpStatus.OK);
+
     }
 
     @DeleteMapping("/delete/{id}")
