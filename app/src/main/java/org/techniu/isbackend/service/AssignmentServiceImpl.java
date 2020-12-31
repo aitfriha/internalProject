@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.AssignmentMapper;
 import org.techniu.isbackend.dto.model.AssignmentDto;
 import org.techniu.isbackend.entity.Assignment;
-import org.techniu.isbackend.entity.CivilityTitle;
 import org.techniu.isbackend.entity.Client;
 import org.techniu.isbackend.entity.Staff;
 import org.techniu.isbackend.exception.EntityType;
@@ -123,12 +122,13 @@ public class AssignmentServiceImpl implements AssignmentService {
      */
     @Override
     public void remove(String id) {
-        Optional<Assignment> action = Optional.ofNullable(assignmentRepository.findBy_id(id));
+        Client client=clientRepository.findById(id).get();
+        List<Assignment> assignments = assignmentRepository.findByClient(client);
         // If Assignment doesn't exists
-        if (!action.isPresent()) {
+        if (assignments.get(0)==null) {
             throw exception(ENTITY_NOT_FOUND);
         }
-        assignmentRepository.deleteById(id);
+        assignmentRepository.deleteAll(assignments);
     }
     /**
      * Returns a new RuntimeException

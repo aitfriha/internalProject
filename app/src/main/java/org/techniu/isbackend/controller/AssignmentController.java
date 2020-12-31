@@ -50,11 +50,11 @@ public class AssignmentController {
     /**
      * Handles the incoming DELETE API "/contact/delete"
      *
-     * @param id contact delete request
+     * @param clientId delete request
      */
     @RequestMapping(value = "delete/{clientId}", method = RequestMethod.DELETE)
-    public ResponseEntity delete(@PathVariable String id) {
-        assignmentService.remove(id);
+    public ResponseEntity delete(@PathVariable String clientId) {
+        assignmentService.remove(clientId);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Assignment, DELETED)), HttpStatus.OK);
     }
 
