@@ -24,6 +24,7 @@ public enum EntityType {
     AbsenceRequest,
     ContractType,
     LegalCategoryType,
+    LocalBankHoliday,
     Contact,
     FunctionalStructureLevel,
     FunctionalStructureAssignationHistory,

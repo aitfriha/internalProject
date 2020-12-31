@@ -133,6 +133,10 @@ public class ValidationConstants {
     public final static String LEGALCATEGORYTYPE_NAME_NOT_BLANK = "legal category type name can not be blank";
     public final static String LEGALCATEGORYTYPE_FUNCTIONS_NOT_BLANK = "legal category code can not be blank";
 
+    //LocalBankHoliday
+    public final static String LOCALBANKHOLIDAY_NAME_NOT_BLANK = "local bank holiday name can not be blank";
+    public final static String LOCALBANKHOLIDAY_CODE_NOT_BLANK = "local bank holiday code can not be blank";
+
     //FunctionalStructureLevel
     public final static String FUNCTIONALSTRUCTURELEVEL_NAME_NOT_BLANK = "level name can not be blank";
     public final static String FUNCTIONALSTRUCTURELEVEL_TYPE_NOT_BLANK = "level type can not be blank";
@@ -384,7 +388,11 @@ public class ValidationConstants {
 
         //LEGALCATEGORYTYPE
         backendTranslation.put(LEGALCATEGORYTYPE_NAME_NOT_BLANK, getNotBlankValue(LEGALCATEGORYTYPE_NAME_NOT_BLANK));
-        backendTranslation.put(LEGALCATEGORYTYPE_FUNCTIONS_NOT_BLANK, getNotBlankValue(LEGALCATEGORYTYPE_NAME_NOT_BLANK));
+        backendTranslation.put(LEGALCATEGORYTYPE_FUNCTIONS_NOT_BLANK, getNotBlankValue(LEGALCATEGORYTYPE_FUNCTIONS_NOT_BLANK));
+
+        //LOCALBANKHOLIDAY
+        backendTranslation.put(LOCALBANKHOLIDAY_NAME_NOT_BLANK, getNotBlankValue(LOCALBANKHOLIDAY_NAME_NOT_BLANK));
+        backendTranslation.put(LOCALBANKHOLIDAY_CODE_NOT_BLANK, getNotBlankValue(LOCALBANKHOLIDAY_CODE_NOT_BLANK));
 
         //FUNCTIONALSTRUCTURELEVEL
         backendTranslation.put(FUNCTIONALSTRUCTURELEVEL_NAME_NOT_BLANK, getNotBlankValue(FUNCTIONALSTRUCTURELEVEL_NAME_NOT_BLANK));
