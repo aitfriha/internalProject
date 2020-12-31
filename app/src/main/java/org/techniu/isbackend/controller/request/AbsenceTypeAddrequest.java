@@ -20,6 +20,11 @@ public class AbsenceTypeAddrequest {
     @NotBlank(message = ABSENCETYPE_NAME_NOT_BLANK)
     private String name;
     private String description;
+    private String durationType;
+    private String documentsMandatory;
     private String stateId;
+    private String absenceResponsibleId;
+    private String inCopyResponsibleId;
+    private String docExtension;
 
 }

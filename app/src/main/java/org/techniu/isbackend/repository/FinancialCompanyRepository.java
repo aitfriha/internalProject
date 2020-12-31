@@ -7,4 +7,6 @@ public interface FinancialCompanyRepository extends MongoRepository<FinancialCom
 
     FinancialCompany findAllBy_id(String id);
 
+    FinancialCompany findByCode(String code);
+
 }
