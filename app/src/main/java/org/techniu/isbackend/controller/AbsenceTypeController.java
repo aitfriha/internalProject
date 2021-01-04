@@ -6,18 +6,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.techniu.isbackend.Response;
 import org.techniu.isbackend.controller.request.AbsenceTypeAddrequest;
 import org.techniu.isbackend.controller.request.AbsenceTypeAddrequest;
 import org.techniu.isbackend.controller.request.AbsenceTypeUpdaterequest;
+import org.techniu.isbackend.controller.request.StaffDocumentAddrequest;
 import org.techniu.isbackend.dto.mapper.AbsenceTypeMapper;
 import org.techniu.isbackend.dto.mapper.AbsenceTypeMapper;
 import org.techniu.isbackend.dto.model.AbsenceTypeDto;
+import org.techniu.isbackend.dto.model.StaffDocumentDto;
 import org.techniu.isbackend.entity.AbsenceType;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.AbsenceTypeService;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 import static org.techniu.isbackend.exception.EntityType.*;
@@ -38,11 +42,17 @@ public class AbsenceTypeController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity add(@RequestBody @Valid AbsenceTypeAddrequest absenceTypeAddrequest, BindingResult bindingResult) {
+    public ResponseEntity add(
+        @ModelAttribute("absenceType") @Valid AbsenceTypeAddrequest absenceTypeAddrequest, @RequestParam("doc") MultipartFile doc,
+        BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         // Save AbsenceType
-        System.out.println(absenceTypeMapper.addRequestToDto(absenceTypeAddrequest));
-        absenceTypeService.save(absenceTypeMapper.addRequestToDto(absenceTypeAddrequest));
+        AbsenceTypeDto absenceTypeDto = absenceTypeMapper.addRequestToDto(absenceTypeAddrequest);
+        if(!doc.getContentType().equals("application/json")) {
+            absenceTypeDto.setDocument(doc.getBytes());
+            System.out.println("set contract doc");
+        };
+        absenceTypeService.save(absenceTypeDto);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceType, ADDED)), HttpStatus.OK);
     }
 
@@ -59,9 +69,15 @@ public class AbsenceTypeController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity update(@RequestBody @Valid AbsenceTypeUpdaterequest absenceTypeUpdaterequest, BindingResult bindingResult){
+    public ResponseEntity update( @ModelAttribute("absenceType") @Valid AbsenceTypeUpdaterequest absenceTypeUpdaterequest, @RequestParam("doc") MultipartFile doc,
+                                  BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
-        absenceTypeService.update(absenceTypeMapper.updateRequestToDto(absenceTypeUpdaterequest));
+        AbsenceTypeDto absenceTypeDto = absenceTypeMapper.updateRequestToDto(absenceTypeUpdaterequest);
+        if(!doc.getContentType().equals("application/json")) {
+            absenceTypeDto.setDocument(doc.getBytes());
+            System.out.println("set contract doc");
+        };
+        absenceTypeService.update(absenceTypeDto);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceType, UPDATED)), HttpStatus.OK);
 
     }

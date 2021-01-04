@@ -18,10 +18,8 @@ import org.techniu.isbackend.service.AssignmentService;
 import javax.validation.Valid;
 import java.util.List;
 
-import static org.techniu.isbackend.exception.EntityType.CommercialOperation;
-import static org.techniu.isbackend.exception.EntityType.CommercialOperationStatus;
-import static org.techniu.isbackend.exception.ExceptionType.ADDED;
-import static org.techniu.isbackend.exception.ExceptionType.UPDATED;
+import static org.techniu.isbackend.exception.EntityType.*;
+import static org.techniu.isbackend.exception.ExceptionType.*;
 import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
 
 @RestController
@@ -47,6 +45,17 @@ public class AssignmentController {
         // Save Assignment
         assignmentService.save(assignmentMapper.addRequestToDto(assignmentAddrequest),assignmentAddrequest.getStaffId(),assignmentAddrequest.getClientIds());
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(CommercialOperationStatus, ADDED)), HttpStatus.OK);
+    }
+
+    /**
+     * Handles the incoming DELETE API "/contact/delete"
+     *
+     * @param clientId delete request
+     */
+    @RequestMapping(value = "delete/{clientId}", method = RequestMethod.DELETE)
+    public ResponseEntity delete(@PathVariable String clientId) {
+        assignmentService.remove(clientId);
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Assignment, DELETED)), HttpStatus.OK);
     }
 
 

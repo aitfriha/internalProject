@@ -8,12 +8,17 @@ import org.techniu.isbackend.dto.model.AssignmentDto;
 import org.techniu.isbackend.entity.Assignment;
 import org.techniu.isbackend.entity.Client;
 import org.techniu.isbackend.entity.Staff;
+import org.techniu.isbackend.exception.EntityType;
+import org.techniu.isbackend.exception.ExceptionType;
+import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.AssignmentRepository;
 import org.techniu.isbackend.repository.ClientRepository;
 import org.techniu.isbackend.repository.StaffRepository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -108,5 +113,31 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public List<Assignment> getAssignmentByPeople(String staffId) {
         return staffRepository.findById(staffId).map(staff -> assignmentRepository.findByStaff(staff)).orElseThrow(() -> new ExceptionMessage("Cannot get assignment by Commercial"));
+    }
+
+    /**
+     * delete Assignment
+     *
+     * @param id - id
+     */
+    @Override
+    public void remove(String id) {
+        Client client=clientRepository.findById(id).get();
+        List<Assignment> assignments = assignmentRepository.findByClient(client);
+        // If Assignment doesn't exists
+        if (assignments.get(0)==null) {
+            throw exception(ENTITY_NOT_FOUND);
+        }
+        assignmentRepository.deleteAll(assignments);
+    }
+    /**
+     * Returns a new RuntimeException
+     *
+     * @param exceptionType exceptionType
+     * @param args  args
+     * @return RuntimeException
+     */
+    private RuntimeException exception(ExceptionType exceptionType, String... args) {
+        return MainException.throwException(EntityType.CommercialOperationStatus, exceptionType, args);
     }
 }

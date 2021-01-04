@@ -319,6 +319,14 @@ public class StaffServiceImpl implements StaffService {
             List<Staff> staffs1 = staffRepository.findAllByAdministrativeStructureLevelsEqualsAndStaffContract(new ArrayList<>(), staffContract);
             staffs.addAll(staffs1);
         });
+        FinancialCompany company1 = financialCompanyRepository.findByCode("100");
+        if(company1 != null) {
+            List<StaffContract> staffContracts1 = staffContractRepository.findAllByCompany(company1);
+            staffContracts1.forEach(staffContract -> {
+                List<Staff> staffs1 = staffRepository.findAllByAdministrativeStructureLevelsEqualsAndStaffContract(new ArrayList<>(), staffContract);
+                staffs.addAll(staffs1);
+            });
+        }
         // Create a list of all staff dto
         ArrayList<StaffDto> staffDtos = new ArrayList<>();
         for (Staff staff : staffs) {
@@ -459,7 +467,9 @@ public class StaffServiceImpl implements StaffService {
         staffDto.setCityId(staff.getAddress().getCity().get_id());
         staffDto.setFullAddress(staff.getAddress().getFullAddress());
         staffDto.setCityName(staff.getAddress().getCity().getCityName());
+        staffDto.setStateId(staff.getAddress().getCity().getStateCountry().get_id());
         staffDto.setStateName(staff.getAddress().getCity().getStateCountry().getStateName());
+        staffDto.setCountryId(staff.getAddress().getCity().getStateCountry().getCountry().getCountryId());
         staffDto.setCountryName(staff.getAddress().getCity().getStateCountry().getCountry().getCountryName());
         staffDto.setPostCode(staff.getAddress().getPostCode());
         // Documentation

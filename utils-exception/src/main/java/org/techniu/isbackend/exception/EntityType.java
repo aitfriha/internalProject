@@ -22,8 +22,10 @@ public enum EntityType {
     Currency,
     CommercialOperation,
     AbsenceType,
+    AbsenceRequest,
     ContractType,
     LegalCategoryType,
+    LocalBankHoliday,
     Contact,
     FunctionalStructureLevel,
     FunctionalStructureAssignationHistory,
@@ -34,5 +36,6 @@ public enum EntityType {
     Bill,
     ContactByOperation,
     CivilityTitle,
-    EconomicStaff
+    EconomicStaff,
+    Assignment
 }

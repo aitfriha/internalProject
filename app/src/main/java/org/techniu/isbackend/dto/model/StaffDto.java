@@ -43,7 +43,9 @@ public class StaffDto{
     private String cityId;
     private String fullAddress;
     private String cityName;
+    private String stateId;
     private String stateName;
+    private String countryId;
     private String countryName;
     private String postCode;
     // documentation

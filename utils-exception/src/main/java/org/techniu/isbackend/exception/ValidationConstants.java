@@ -133,6 +133,10 @@ public class ValidationConstants {
     public final static String LEGALCATEGORYTYPE_NAME_NOT_BLANK = "legal category type name can not be blank";
     public final static String LEGALCATEGORYTYPE_FUNCTIONS_NOT_BLANK = "legal category code can not be blank";
 
+    //LocalBankHoliday
+    public final static String LOCALBANKHOLIDAY_NAME_NOT_BLANK = "local bank holiday name can not be blank";
+    public final static String LOCALBANKHOLIDAY_CODE_NOT_BLANK = "local bank holiday code can not be blank";
+
     //FunctionalStructureLevel
     public final static String FUNCTIONALSTRUCTURELEVEL_NAME_NOT_BLANK = "level name can not be blank";
     public final static String FUNCTIONALSTRUCTURELEVEL_TYPE_NOT_BLANK = "level type can not be blank";
@@ -161,6 +165,8 @@ public class ValidationConstants {
     private final static String PUBLIC_PROPERTY_ALREADY_HAS_A_METER_SENTENCE = "public property has already meter";
     private final static String DOMESTIC_PROPERTY_ALREADY_HAS_A_METER_SENTENCE = "domestic property has already meter";
     private final static String SECTOR_RELATED_TO_CLIENT_SENTENCE = "you can't delete this sector because its related to client";
+    private final static String IMPORTATION_STAFF_NOTE_EXIST_SENTENCE = "Staff not exist in our data base";
+    private final static String STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL_SENTENCE = "Staff is not assigned to a commercial level !";
     private final static String INDCOM_PROPERTY_ALREADY_HAS_A_METER_SENTENCE = "industrial commercial property has already meter";
     private final static String METER_DIAMETER_NOT_NULL_SENTENCE = "meter diameter can't be null";
     private final static String CONFIGURATION_DATABASE_TABLE_NAME_NOT_BLANK_SENTENCE = "data base table name can't be blank";
@@ -182,6 +188,10 @@ public class ValidationConstants {
         hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.DUPLICATE_ENTITY), entityName + DUPLICATE_ENTITY_SENTENCE);
         if(entityType == SectorCompany) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.SECTOR_RELATED_TO_CLIENT),""+ SECTOR_RELATED_TO_CLIENT_SENTENCE + "");
+        }
+        if(entityType == Staff) {
+            hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.IMPORTATION_STAFF_NOTE_EXIST),""+ IMPORTATION_STAFF_NOTE_EXIST_SENTENCE + "");
+            hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL),""+ STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL_SENTENCE + "");
         }
         /*if(entityType == Contract) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.APPLICATION_ALREADY_HAS_A_CONTRACT), APPLICATION_ALREADY_HAS_A_SENTENCE + entityName);
@@ -378,7 +388,11 @@ public class ValidationConstants {
 
         //LEGALCATEGORYTYPE
         backendTranslation.put(LEGALCATEGORYTYPE_NAME_NOT_BLANK, getNotBlankValue(LEGALCATEGORYTYPE_NAME_NOT_BLANK));
-        backendTranslation.put(LEGALCATEGORYTYPE_FUNCTIONS_NOT_BLANK, getNotBlankValue(LEGALCATEGORYTYPE_NAME_NOT_BLANK));
+        backendTranslation.put(LEGALCATEGORYTYPE_FUNCTIONS_NOT_BLANK, getNotBlankValue(LEGALCATEGORYTYPE_FUNCTIONS_NOT_BLANK));
+
+        //LOCALBANKHOLIDAY
+        backendTranslation.put(LOCALBANKHOLIDAY_NAME_NOT_BLANK, getNotBlankValue(LOCALBANKHOLIDAY_NAME_NOT_BLANK));
+        backendTranslation.put(LOCALBANKHOLIDAY_CODE_NOT_BLANK, getNotBlankValue(LOCALBANKHOLIDAY_CODE_NOT_BLANK));
 
         //FUNCTIONALSTRUCTURELEVEL
         backendTranslation.put(FUNCTIONALSTRUCTURELEVEL_NAME_NOT_BLANK, getNotBlankValue(FUNCTIONALSTRUCTURELEVEL_NAME_NOT_BLANK));

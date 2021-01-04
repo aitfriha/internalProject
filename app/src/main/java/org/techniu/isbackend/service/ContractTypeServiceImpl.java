@@ -54,6 +54,7 @@ public class ContractTypeServiceImpl implements ContractTypeService {
         if (contractTypeDto.getCode().contains(" ")) {
             throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
+
         Optional<ContractType>  contractType1= Optional.ofNullable(contractTypeRepository.findByNameAndState(contractTypeDto.getName(), stateCountry));
         if (contractType1.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
@@ -76,11 +77,7 @@ public class ContractTypeServiceImpl implements ContractTypeService {
         }
 
         Optional<ContractType>  contractType1= Optional.ofNullable(contractTypeRepository.findByNameAndState(contractTypeDto.getName(), contractType.getState()));
-        System.out.println(contractType1.get());
-        System.out.println(contractTypeDto);
-        System.out.println(contractType1.get().get_id());
-        System.out.println(contractTypeDto.getContractTypeId());
-        System.out.println(!contractType1.get().get_id().equals(contractTypeDto.getContractTypeId()));
+
         if (contractType1.isPresent()) {
             if(!contractType1.get().get_id().equals(contractTypeDto.getContractTypeId())) {
                 throw exception(DUPLICATE_ENTITY);

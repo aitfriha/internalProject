@@ -92,7 +92,7 @@ public class CivilityTitleServiceImpl implements CivilityTitleService{
     }
 
     /**
-     * delete Action
+     * delete CivilityTitle
      *
      * @param id - id
      */

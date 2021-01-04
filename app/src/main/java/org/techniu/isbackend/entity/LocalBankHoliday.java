@@ -9,30 +9,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
-@Document(value = "AbsenceType")
+@Document(value = "LocalBankHoliday")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AbsenceType implements Serializable {
+public class LocalBankHoliday implements Serializable {
 
     @Id
     private String _id;
-    private String code;
     private String name;
-    private String description;
-    private String durationType;
-    private String documentsMandatory;
-    private String docExtension;
-    private byte[] document;
+    private String code;
+    private String startDate;
+    private String endDate;
+    private String totalDays;
 
     @DBRef
-    private StateCountry state;
-
-    @DBRef
-    private Staff absenceResponsible;
-
-    @DBRef
-    private Staff inCopyResponsible;
-
+    private FinancialCompany company;
 
 }

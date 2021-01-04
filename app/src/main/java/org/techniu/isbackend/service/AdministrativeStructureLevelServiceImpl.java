@@ -10,17 +10,14 @@ import org.techniu.isbackend.controller.request.AdministrativeStructureLevelAddr
 import org.techniu.isbackend.dto.mapper.AdministrativeStructureLevelMapper;
 import org.techniu.isbackend.dto.model.AdministrativeStructureLevelDto;
 import org.techniu.isbackend.dto.model.StaffDto;
-import org.techniu.isbackend.entity.AdministrativeStructureLevel;
-import org.techniu.isbackend.entity.FinancialCompany;
-import org.techniu.isbackend.entity.Staff;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
-import org.techniu.isbackend.repository.AdministrativeStructureLevelRepository;
-import org.techniu.isbackend.repository.FinancialCompanyRepository;
-import org.techniu.isbackend.repository.StaffRepository;
+import org.techniu.isbackend.repository.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,19 +25,26 @@ import java.util.Optional;
 @Transactional
 public class AdministrativeStructureLevelServiceImpl implements AdministrativeStructureLevelService {
     private AdministrativeStructureLevelRepository administrativeStructureLevelRepository;
+    private AdministrativeStructureAssignationHistoryRepository administrativeStructureAssignationHistoryRepository;
     private StaffRepository staffRepository;
+    private StaffContractRepository staffContractRepository;
     private FinancialCompanyRepository financialCompanyRepository;
     private final AdministrativeStructureLevelMapper administrativeStructureLevelMapper = Mappers.getMapper(AdministrativeStructureLevelMapper.class);
     AdministrativeStructureLevelServiceImpl(
             AdministrativeStructureLevelRepository administrativeStructureLevelRepository,
+            AdministrativeStructureAssignationHistoryRepository administrativeStructureAssignationHistoryRepository,
             StaffRepository staffRepository,
+            StaffContractRepository staffContractRepository,
             FinancialCompanyRepository financialCompanyRepository) {
         this.administrativeStructureLevelRepository = administrativeStructureLevelRepository;
         this.staffRepository = staffRepository;
+        this.staffContractRepository = staffContractRepository;
         this.financialCompanyRepository = financialCompanyRepository;
+        this.administrativeStructureAssignationHistoryRepository = administrativeStructureAssignationHistoryRepository;
     }
     @Override
     public Boolean save(List<Object> objects) {
+
         ObjectMapper mapper = new ObjectMapper();
         List<AdministrativeStructureLevel> list = new ArrayList<>();
         List<StaffDto> leaders  = mapper.convertValue(objects.get(0), new TypeReference<List<StaffDto>>() { });
@@ -61,6 +65,29 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                 staff1.setAdministrativeStructureLevels(levels);
                 System.out.println(staff1);
                 staffRepository.save(staff1);
+            }
+            if(lvl.getType().equals("Level 1")) {
+                List<StaffContract> staffContracts = staffContractRepository.findAllByCompany(company);
+                List<Staff> assignedStaffs = new ArrayList<>();
+                staffContracts.forEach(staffContract -> {
+                    List<Staff> staffs1 = staffRepository.findAllByAdministrativeStructureLevelsEqualsAndStaffContract(new ArrayList<>(), staffContract);
+                    assignedStaffs.addAll(staffs1);
+                });
+                AdministrativeStructureLevel finalLvl = lvl;
+                assignedStaffs.forEach(staffDto -> {
+                    List<AdministrativeStructureLevel> levels = new ArrayList<>();
+                    levels.add(finalLvl);
+                    Staff staff = staffRepository.findById(staffDto.getStaffId()).get();
+                    staff.setAdministrativeStructureLevels(levels);
+                    AdministrativeStructureAssignationHistory administrativeStructureAssignationHistory = new AdministrativeStructureAssignationHistory();
+                    administrativeStructureAssignationHistory.setStartDate(new Date().toInstant().toString().substring(0,10));
+                    administrativeStructureAssignationHistory.setEndDate("none");
+                    administrativeStructureAssignationHistory.setLevel(finalLvl);
+                    administrativeStructureAssignationHistory.setStaff(staffRepository.save(staff));
+                    administrativeStructureAssignationHistoryRepository.save(administrativeStructureAssignationHistory);
+                    System.out.println("staffDto related");
+                    System.out.println(staffDto.getFirstName());
+                });
             }
             list.add(lvl);
         }
@@ -85,7 +112,8 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                 }
             }
             level.setChilds(childs);
-            list.set(i-1,administrativeStructureLevelRepository.save(level));
+            AdministrativeStructureLevel administrativeStructureLevel = administrativeStructureLevelRepository.save(level);
+            list.set(i-1, administrativeStructureLevel);
         }
         return true;
     }
