@@ -9,6 +9,7 @@ import org.techniu.isbackend.Response;
 import org.techniu.isbackend.controller.request.TypeOfCurrencyAddrequest;
 import org.techniu.isbackend.controller.request.TypeOfCurrencyUpdaterequest;
 import org.techniu.isbackend.dto.mapper.TypeOfCurrencyMapper;
+import org.techniu.isbackend.dto.model.CurrencyDto;
 import org.techniu.isbackend.dto.model.TypeOfCurrencyDto;
 import org.techniu.isbackend.entity.TypeOfCurrency;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
@@ -42,6 +43,14 @@ public class TypeOfCurrencyController {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         // Save Type Of Currency
         System.out.println(typeOfCurrencyAddrequest);
+
+        List <TypeOfCurrencyDto> currencyList = typeOfCurrencyService.getAllTypeOfCurrency();
+        for (TypeOfCurrencyDto currencyDto : currencyList) {
+            if (currencyDto.getCurrencyCode().equals(typeOfCurrencyAddrequest.getCurrencyCode())
+                    || currencyDto.getCurrencyName().equals(typeOfCurrencyAddrequest.getCurrencyName())) return null;
+        }
+
+
         typeOfCurrencyService.saveTypeOfCurrency(typeOfCurrencyMapper.addRequestToDto(typeOfCurrencyAddrequest));
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(TypeOfCurrency, ADDED)), HttpStatus.OK);
     }
