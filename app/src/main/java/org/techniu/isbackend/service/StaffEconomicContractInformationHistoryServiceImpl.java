@@ -86,8 +86,8 @@ public class StaffEconomicContractInformationHistoryServiceImpl implements Staff
         staffEconomicContractInformationHistoryDto.setTotalCompanyCostDateGoing(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getTotalCompanyCostDateGoing());
         staffEconomicContractInformationHistoryDto.setTotalCompanyCostDateOut(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getTotalCompanyCostDateOut());
         staffEconomicContractInformationHistoryDto.setCurrencyId(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getCurrency().get_id());
-        staffEconomicContractInformationHistoryDto.setCurrencyCode(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getCurrency().getCurrencyCode());
-        staffEconomicContractInformationHistoryDto.setCurrencyName(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getCurrency().getCurrencyName());
+        staffEconomicContractInformationHistoryDto.setCurrencyCode(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getCurrency().getTypeOfCurrency().getCurrencyCode());
+        staffEconomicContractInformationHistoryDto.setCurrencyName(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getCurrency().getTypeOfCurrency().getCurrencyName());
         staffEconomicContractInformationHistoryDto.setCurrencyMonth(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getCurrency().getMonth());
         staffEconomicContractInformationHistoryDto.setCurrencyYear(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getCurrency().getYear());
         staffEconomicContractInformationHistoryDto.setChangeFactor(staffEconomicContractInformationHistory.getStaffEconomicContractInformationHistory().getCurrency().getChangeFactor());

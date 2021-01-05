@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.techniu.isbackend.entity.TypeOfCurrency;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,9 +20,11 @@ import javax.validation.constraints.NotNull;
 public class CurrencyDto {
     @NotNull
     private String currencyId;
-    private String currencyCode;
-    private String currencyName;
     private int year;
     private int month;
     private String changeFactor;
+
+    @DBRef
+    private TypeOfCurrency typeOfCurrency;
+
 }

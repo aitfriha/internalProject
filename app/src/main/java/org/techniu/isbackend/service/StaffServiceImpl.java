@@ -523,8 +523,8 @@ public class StaffServiceImpl implements StaffService {
         staffDto.setTotalCompanyCostDateGoing(staff.getStaffEconomicContractInformation().getTotalCompanyCostDateGoing());
         staffDto.setTotalCompanyCostDateOut(staff.getStaffEconomicContractInformation().getTotalCompanyCostDateOut());
         staffDto.setCurrencyId(staff.getStaffEconomicContractInformation().getCurrency().get_id());
-        staffDto.setCurrencyCode(staff.getStaffEconomicContractInformation().getCurrency().getCurrencyCode());
-        staffDto.setCurrencyName(staff.getStaffEconomicContractInformation().getCurrency().getCurrencyName());
+        staffDto.setCurrencyCode(staff.getStaffEconomicContractInformation().getCurrency().getTypeOfCurrency().getCurrencyCode());
+        staffDto.setCurrencyName(staff.getStaffEconomicContractInformation().getCurrency().getTypeOfCurrency().getCurrencyName());
         staffDto.setCurrencyMonth(staff.getStaffEconomicContractInformation().getCurrency().getMonth());
         staffDto.setCurrencyYear(staff.getStaffEconomicContractInformation().getCurrency().getYear());
         staffDto.setChangeFactor(staff.getStaffEconomicContractInformation().getCurrency().getChangeFactor());

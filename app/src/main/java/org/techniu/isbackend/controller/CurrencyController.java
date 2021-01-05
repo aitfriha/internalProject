@@ -45,7 +45,7 @@ public class CurrencyController {
 
        List<CurrencyDto> currencyList = currencyService.getAllCurrency();
         for (CurrencyDto currencyDto : currencyList) {
-            if (currencyDto.getCurrencyCode().equals(currencyAddrequest.getCurrencyCode())
+            if (currencyDto.getTypeOfCurrency().get_id().equals(currencyAddrequest.getTypeOfCurrency().get_id())
                     && currencyDto.getYear() == currencyAddrequest.getYear()
                     && currencyDto.getMonth() == currencyAddrequest.getMonth()) return null;
         }
