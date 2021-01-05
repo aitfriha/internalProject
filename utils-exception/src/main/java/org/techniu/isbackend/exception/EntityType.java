@@ -1,6 +1,7 @@
 package org.techniu.isbackend.exception;
 
 public enum EntityType {
+    TypeOfCurrency,
     EconomicStaffYear,
     EconomicStaffMonth,
     EconomicStaffExtra,
@@ -24,6 +25,7 @@ public enum EntityType {
     AbsenceRequest,
     ContractType,
     LegalCategoryType,
+    LocalBankHoliday,
     Contact,
     FunctionalStructureLevel,
     FunctionalStructureAssignationHistory,
