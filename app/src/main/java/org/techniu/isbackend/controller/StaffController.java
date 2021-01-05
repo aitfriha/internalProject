@@ -20,6 +20,8 @@ import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
 import static org.techniu.isbackend.exception.EntityType.Staff;
 
 import org.springframework.http.HttpStatus;
+
+import javax.el.ArrayELResolver;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -217,5 +219,29 @@ public class StaffController {
     @GetMapping("get-staff-by-isAdministrativeLeader/isAdministrativeLeader={isAdministrativeLeader}")
     public List<StaffDto> getStaffsByIsAdministrativeLeader(@PathVariable("isAdministrativeLeader") String isAdministrativeLeader){
         return staffService.getStaffsByIsAdministrativeLeader(isAdministrativeLeader);
+    }
+
+    /**
+     * display all staff GET API "/api/staff/allStaffAssignedToFunctionalLevel"
+     * @return
+     */
+    @GetMapping("/allStaffAssignedToFunctionalLevel")
+    public ResponseEntity allStaffAssignedToFunctionalLevel() {
+        List<FunctionalStructureLevel> listFunctionalStructureLevels;
+        List<StaffDto> staffLists=staffService.getAll();
+        List<StaffDto> staffListsNew=new ArrayList<>();
+        for(StaffDto  staffdto : staffLists){
+            listFunctionalStructureLevels= staffdto.getFunctionalStructureLevels();
+            for(FunctionalStructureLevel  functionalStructureLevel : listFunctionalStructureLevels){
+                if(functionalStructureLevel.getIsCommercialLevel().equals("yes")){
+                    staffListsNew.add(staffdto);
+                }
+                else
+                {
+                    staffLists.remove(staffdto);
+                }
+            }
+        }
+        return new ResponseEntity<Response>(Response.ok().setPayload(staffListsNew), HttpStatus.OK);
     }
 }
