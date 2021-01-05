@@ -236,10 +236,6 @@ public class StaffController {
                 if(functionalStructureLevel.getIsCommercialLevel().equals("yes")){
                     staffListsNew.add(staffdto);
                 }
-                else
-                {
-                    staffLists.remove(staffdto);
-                }
             }
         }
         return new ResponseEntity<Response>(Response.ok().setPayload(staffListsNew), HttpStatus.OK);
