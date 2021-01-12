@@ -14,6 +14,8 @@ public interface AssignmentService {
     List<Assignment> getAllAssignment();
     List<Assignment> getAssignmentByClient(String clientId);
     List<Assignment> getAssignmentByPeople(String staffId);
+    List<Assignment> getAllAssignmentByStaff(String staffId);
+
 
     /**
      * save
