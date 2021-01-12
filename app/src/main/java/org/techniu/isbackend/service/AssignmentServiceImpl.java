@@ -115,6 +115,11 @@ public class AssignmentServiceImpl implements AssignmentService {
         return staffRepository.findById(staffId).map(staff -> assignmentRepository.findByStaff(staff)).orElseThrow(() -> new ExceptionMessage("Cannot get assignment by Commercial"));
     }
 
+    @Override
+    public List<Assignment> getAllAssignmentByStaff(String staffId) {
+        return staffRepository.findById(staffId).map(staff -> assignmentRepository.findByStaff(staff)).orElseThrow(() -> new ExceptionMessage("Cannot get assignment by Commercial"));
+    }
+
     /**
      * delete Assignment
      *
