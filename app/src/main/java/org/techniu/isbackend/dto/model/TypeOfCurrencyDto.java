@@ -7,9 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.techniu.isbackend.entity.TypeOfCurrency;
+import org.techniu.isbackend.entity.StateCountry;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -17,14 +18,13 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CurrencyDto {
-    @NotNull
-    private String currencyId;
-    private int year;
-    private int month;
-    private String changeFactor;
+public class TypeOfCurrencyDto {
 
-    @DBRef
-    private TypeOfCurrency typeOfCurrency;
+    @NotNull
+    private String typeOfCurrencyId;
+    @NotNull
+    private String currencyName;
+    @NotNull
+    private String currencyCode;
 
 }

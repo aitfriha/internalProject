@@ -6,10 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.CurrencyMapper;
 import org.techniu.isbackend.dto.model.CurrencyDto;
 import org.techniu.isbackend.entity.Currency;
+import org.techniu.isbackend.entity.TypeOfCurrency;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.CurrencyRepository;
+import org.techniu.isbackend.repository.StateCountryRepository;
+import org.techniu.isbackend.repository.TypeOfCurrencyRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +25,12 @@ import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 public class CurrencyServiceImpl implements CurrencyService {
     private CurrencyRepository contractStatusRepository;
     private final CurrencyMapper currencyMapper = Mappers.getMapper(CurrencyMapper.class);
+    private TypeOfCurrencyRepository typeOfCurrencyRepository;
 
 
-    public CurrencyServiceImpl(CurrencyRepository contractStatusRepository) {
+    public CurrencyServiceImpl(CurrencyRepository contractStatusRepository, TypeOfCurrencyRepository typeOfCurrencyRepository) {
         this.contractStatusRepository = contractStatusRepository;
+        this.typeOfCurrencyRepository = typeOfCurrencyRepository;
     }
 
     @Override
@@ -62,8 +67,9 @@ public class CurrencyServiceImpl implements CurrencyService {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
 
-        currency.setCurrencyName(currencyDto.getCurrencyName());
-        currency.setCurrencyCode(currencyDto.getCurrencyCode());
+        TypeOfCurrency typeOfCurrency = typeOfCurrencyRepository.findAllBy_id(currencyDto.getTypeOfCurrency().get_id());
+
+        currency.setTypeOfCurrency(typeOfCurrency);
         currency.setChangeFactor(currencyDto.getChangeFactor());
         currency.setYear(currencyDto.getYear());
         currency.setMonth(currencyDto.getMonth());
