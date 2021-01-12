@@ -93,8 +93,8 @@ public class SelectionProcessInformationServiceImpl implements SelectionProcessI
         SelectionProcessInformationDto selectionProcessInformationDto = selectionProcessInformationMapper.modelToDto(selectionProcessInformation);
         selectionProcessInformationDto.setKnowledge(selectionProcessInformation.getKnowledge());
         selectionProcessInformationDto.setCurrencyId(selectionProcessInformation.getCurrency().get_id());
-        selectionProcessInformationDto.setCurrencyCode(selectionProcessInformation.getCurrency().getCurrencyCode());
-        selectionProcessInformationDto.setCurrencyName(selectionProcessInformation.getCurrency().getCurrencyName());
+        selectionProcessInformationDto.setCurrencyCode(selectionProcessInformation.getCurrency().getTypeOfCurrency().getCurrencyCode());
+        selectionProcessInformationDto.setCurrencyName(selectionProcessInformation.getCurrency().getTypeOfCurrency().getCurrencyName());
         selectionProcessInformationDto.setCurrencyMonth(selectionProcessInformation.getCurrency().getMonth());
         selectionProcessInformationDto.setCurrencyYear(selectionProcessInformation.getCurrency().getYear());
         selectionProcessInformationDto.setChangeFactor(selectionProcessInformation.getCurrency().getChangeFactor());
