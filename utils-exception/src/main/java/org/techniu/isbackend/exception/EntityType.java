@@ -39,5 +39,6 @@ public enum EntityType {
     EconomicStaff,
     Assignment,
     SelectionTypeEvaluation,
-    SelectionProcessInformation
+    SelectionProcessInformation,
+    Ability,Action,Department,Machine,Role,Subject,USER
 }

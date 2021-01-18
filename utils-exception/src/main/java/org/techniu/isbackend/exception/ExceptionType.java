@@ -14,7 +14,7 @@ public enum ExceptionType {
     APPLICATION_Type_AND_WATER_CONTRACT_CATEGORY_ARE_DIFFERENT("application.type.and.water.contract.category.are.different"),
     CONFIGURATION_DATABASE_TABLE_NAME_NOT_BLANK("configuration.table.name.can't.be.blank"),
     METER_DIAMETER_CAN_T_BE_NULL("meter.diameter.can't.be.null"),
-    CODE_SHOULD_NOT_CONTAIN_SPACES("Code should not contain spaces"),
+    CODE_SHOULD_NOT_CONTAIN_SPACES("code.should.not.contain.spaces"),
     FILL_ALL_NECESSARY_FIELDS("Please fill all necessary fields"),
     STAFF_NAME_EXIST("Staff full name already exist"),
     STAFF_EMAIL_EXIST("Personal email already exist"),
@@ -29,6 +29,7 @@ public enum ExceptionType {
     ASSIGNED_LEVEL_STAFF("staff.assigned.to.level"),
     SECTOR_RELATED_TO_CLIENT("this sector its already related to a client !"),
     IMPORTATION_STAFF_NOTE_EXIST("Staff not exist in our data base !"),
+    Name_SHOULD_NOT_CONTAIN_SPACES("name.should.not.contain.spaces"),
     STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL("Staff is not assigned to a commercial level !");
     // public static final ExceptionType SECTOR_RELATED_TO_CLIENT = null;
     String value;
