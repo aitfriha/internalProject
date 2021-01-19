@@ -9,8 +9,45 @@ public class ValidationConstants {
     // put the validators constants here
 
     // Auth
-    public final static String AUTH_WRONG_CREDENTIALS = "auth.wrong.credentials";
+    public final static String AUTH_WRONG_CREDENTIALS = "User or Password Is Incorrect";
+    //Action
+    public final static String ACTION_CODE_NOT_BLANK = "action.code.not.blank";
 
+    //Department
+    public final static String DEPARTMENT_CODE_NOT_BLANK = "department.code.not.blank";
+    public final static String DEPARTMENT_UPDATED_AT_NOT_BLANK = "department.updated.at.not.blank";
+    public final static String DEPARTMENT_CREATED_AT_NOT_BLANK = "department.created.at.not.blank";
+
+    //Subject
+    public final static String SUBJECT_CODE_NOT_BLANK = "subject.code.not.blank";
+    public final static String SUBJECT_UPDATED_AT_NOT_BLANK = "subject.updated.at.not.blank";
+    public final static String SUBJECT_CREATED_AT_NOT_BLANK = "subject.created.at.not.blank";
+
+    //SubjectField
+    public final static String FIELD_CODE_NOT_BLANK = "subjectfield.code.not.blank";
+
+    // Role
+    public final static String ROLE_NAME_NOT_BLANK = "role.name.not.blank";
+
+    // Ability
+    public final static String ACTION_ID_NOT_BLANK = "action.id.not.blank";
+    public final static String SUBJECT_ID_NOT_BLANK = "subject.id.not.blank";
+
+    // Machine
+    public final static String MACHINE_TYPE_NOT_BLANK = "machine.type.not.blank";
+    public final static String MACHINE_MAC_ADDRESS_NOT_BLANK = "machine.mac.address.not.blank";
+    public final static String MACHINE_SERIAL_NUMBER_NOT_BLANK = "machine.serial.number.not.blank";
+
+    // Users
+    public final static String USER_EMAIL_NOT_BLANK = "user.email.not.blank";
+    public final static String USER_FULL_NAME_NOT_BLANK = "user.full.name.not.blank";
+    public final static String USER_PASSWORD_NOT_BLANK = "user.password.not.blank";
+    public final static String USER_MOBILE_NUMBER_NOT_BLANK = "user.mobile.number.not.blank";
+    public final static String USER_STATUS_NOT_BLANK = "user.status.not.blank";
+    public final static String USER_ACTIVE_NOT_NULL = "user.active.not.null";
+    public final static String USER_ROLES_NOT_EMPTY = "user.roles.not.empty";
+    public final static String USER_DEPARTMENT_NOT_BLANK = "user.department.not.blank";
+    public final static String USER_COUNTRY_LANGUAGE_NOT_BLANK = "user.country.language.not.blank";
     // Default Sentence
     public final static String DEFAULTSENTENCE_CODE_NOT_BLANK = "defaultsentence.code.not.blank";
     public final static String DEFAULTSENTENCE_VALUE_NOT_BLANK = "defaultsentence.value.not.blank";
@@ -105,12 +142,12 @@ public class ValidationConstants {
     public final static String CONFIGURATION_FOR_NOT_BLANK = "configuration.for.not.blank";
 
     //Action
-    public final static String ACTION_CODE_NOT_BLANK = "action.code.not.blank";
+    //public final static String ACTION_CODE_NOT_BLANK = "action.code.not.blank";
     public final static String ACTION_UPDATE_date_NOT_BLANK = "action.updateDate.not.blank";
     public final static String ACTION_CREATION_date_NOT_BLANK = "action.creationDate.not.blank";
 
     //Department
-    public final static String DEPARTMENT_CODE_NOT_BLANK = "department.code.not.blank";
+    //public final static String DEPARTMENT_CODE_NOT_BLANK = "department.code.not.blank";
     public final static String DEPARTMENT_UPDATE_date_NOT_BLANK = "department.updateDate.not.blank";
     public final static String DEPARTMENT_CREATION_date_NOT_BLANK = "department.creationDate.not.blank";
     //Internal Project
@@ -171,7 +208,7 @@ public class ValidationConstants {
     private final static String METER_DIAMETER_NOT_NULL_SENTENCE = "meter diameter can't be null";
     private final static String CONFIGURATION_DATABASE_TABLE_NAME_NOT_BLANK_SENTENCE = "data base table name can't be blank";
     private final static String CODE_SHOULD_NOT_CONTAIN_SPACES_SENTENCE = "code shouldn't contain spaces";
-
+    private final static String NAME_SHOULD_NOT_CONTAIN_SPACES_SENTENCE = "name shouldn't contain spaces";
     /**
      *  get key & value for translation for the standard error messages
      * @param entityType entityType
@@ -192,6 +229,12 @@ public class ValidationConstants {
         if(entityType == Staff) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.IMPORTATION_STAFF_NOTE_EXIST),""+ IMPORTATION_STAFF_NOTE_EXIST_SENTENCE + "");
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL),""+ STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL_SENTENCE + "");
+        }
+        if(entityType == Department || entityType == Action) {
+            hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.CODE_SHOULD_NOT_CONTAIN_SPACES), CODE_SHOULD_NOT_CONTAIN_SPACES_SENTENCE + "");
+        }
+        if(entityType == Role ) {
+            hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.Name_SHOULD_NOT_CONTAIN_SPACES), NAME_SHOULD_NOT_CONTAIN_SPACES_SENTENCE + "");
         }
         /*if(entityType == Contract) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.APPLICATION_ALREADY_HAS_A_CONTRACT), APPLICATION_ALREADY_HAS_A_SENTENCE + entityName);
@@ -214,9 +257,18 @@ public class ValidationConstants {
         if(entityType == Department) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.CODE_SHOULD_NOT_CONTAIN_SPACES), CODE_SHOULD_NOT_CONTAIN_SPACES_SENTENCE + "");
         }*/
+
         return hashMap;
     }
-
+    /**
+     * Concat one word of the model attribute and "cannot be blank"
+     *
+     * @param attribute attribute of a model
+     * @return String
+     */
+    private static String getSentence1NotBlankValue(String attribute) {
+        return attribute.split("\\.")[1] + " cannot be blank";
+    }
     /**
      * Concat the model attribute and "cannot be blank"
      *
@@ -332,7 +384,9 @@ public class ValidationConstants {
         backendTranslation.put(DOMESTIC_PROPERTY_TOTAL_NUMBER_OF_ROOMS_NOT_NULL, getNotBlankValue(DOMESTIC_PROPERTY_TOTAL_NUMBER_OF_ROOMS_NOT_NULL));
         backendTranslation.put(DOMESTIC_PROPERTY_TOTAL_NUMBER_OF_FLAT_NOT_NULL, getNotBlankValue(DOMESTIC_PROPERTY_TOTAL_NUMBER_OF_FLAT_NOT_NULL));
         backendTranslation.put(DOMESTIC_PROPERTY_AREA_OF_FLAT_NOT_NULL, getNotBlankValue(DOMESTIC_PROPERTY_AREA_OF_FLAT_NOT_NULL));
-
+        // Role
+        getKeyValueTranslation(Role, "role").forEach(backendTranslation::putIfAbsent);
+        backendTranslation.put(ROLE_NAME_NOT_BLANK, getSentence1NotBlankValue(ROLE_NAME_NOT_BLANK));
         // Application
         //getKeyValueTranslation(Application, "application").forEach(backendTranslation::putIfAbsent);
         backendTranslation.put(APPLICATION_CLIENT_ID_CARD_NOT_BLANK, getNotBlankValue(APPLICATION_CLIENT_ID_CARD_NOT_BLANK));

@@ -64,6 +64,12 @@ public class AssignmentController {
         return assignmentService.getAssignmentByClient(clientId);
     }
 
+    @RequestMapping(path = "assignmentByStaff/{staffId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getAllAssignmentByStaff(@PathVariable(value = "staffId") String staffId){
+        //return assignmentService.getAllAssignmentByStaff(staffId);
+        return new ResponseEntity<Response>(Response.ok().setPayload(assignmentService.getAllAssignmentByStaff(staffId)), HttpStatus.OK);
+    }
+
     @RequestMapping(path = "client/assignment/people/{peopleId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Assignment> getAssignmentByPeople(@PathVariable(value = "peopleId") String peopleId){
         return assignmentService.getAssignmentByPeople(peopleId);

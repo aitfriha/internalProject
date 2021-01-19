@@ -37,5 +37,8 @@ public enum EntityType {
     ContactByOperation,
     CivilityTitle,
     EconomicStaff,
-    Assignment
+    Assignment,
+    SelectionTypeEvaluation,
+    SelectionProcessInformation,
+    Ability,Action,Department,Machine,Role,Subject,USER
 }
