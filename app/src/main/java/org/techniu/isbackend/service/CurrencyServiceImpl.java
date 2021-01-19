@@ -17,6 +17,8 @@ import org.techniu.isbackend.repository.TypeOfCurrencyRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 
@@ -41,15 +43,44 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public List<CurrencyDto> getAllCurrency() {
         // Get all actions
-        List<Currency> contractStatus = contractStatusRepository.findAll();
+        List<Currency> currencies = contractStatusRepository.findAll();
         // Create a list of all actions dto
         ArrayList<CurrencyDto> currencyDtos = new ArrayList<>();
 
-        for (Currency contractStatus1 : contractStatus) {
-            CurrencyDto currencyDto = currencyMapper.modelToDto(contractStatus1);
+        for (Currency currency1 : currencies) {
+            CurrencyDto currencyDto = currencyMapper.modelToDto(currency1);
             currencyDtos.add(currencyDto);
         }
         return currencyDtos;
+    }
+
+    @Override
+    public List<CurrencyDto> getFilteredCurrency() {
+        // Get all actions
+        List<Currency> currencies = contractStatusRepository.findAll();
+        // Create a list of all actions dto
+        ArrayList<CurrencyDto> currencyDtos = new ArrayList<>();
+
+        for (Currency currency1 : currencies) {
+            CurrencyDto currencyDto = currencyMapper.modelToDto(currency1);
+            currencyDtos.add(currencyDto);
+        }
+        ArrayList<CurrencyDto> NewT = new ArrayList<>();
+        for (CurrencyDto currency : currencyDtos) {
+            String id = currency.getTypeOfCurrency().get_id();
+            CurrencyDto newCurrency = new CurrencyDto();
+            for (CurrencyDto currency2 : currencyDtos) {
+                if (currency2.getTypeOfCurrency().get_id().equals(id)) {
+                    if ((currency.getYear() < currency2.getYear())
+                            || (currency.getYear() == currency2.getYear() && currency.getMonth() < currency2.getMonth())) {
+                        newCurrency = currency2;
+                    }
+                }
+            }
+            if (newCurrency.getCurrencyId() != null && !NewT.contains(newCurrency)) NewT.add(newCurrency);
+        }
+        System.out.println(NewT);
+        return NewT;
     }
 
     @Override
