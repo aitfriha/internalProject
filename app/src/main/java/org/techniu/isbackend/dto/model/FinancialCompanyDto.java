@@ -24,6 +24,7 @@ public class FinancialCompanyDto {
     @NotNull
     private String name;
     private String code;
+    private String taxNumber;
     private String email;
     @NotNull
     private String phone1;

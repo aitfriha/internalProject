@@ -84,6 +84,7 @@ public class FinancialCompanyServiceImpl implements FinancialCompanyService {
         financialCompany.setAddress(address);
         financialCompany.setName(financialCompanyDto.getName());
         financialCompany.setCode(financialCompanyDto.getCode());
+        financialCompany.setTaxNumber(financialCompanyDto.getTaxNumber());
         financialCompany.setPhone2(financialCompanyDto.getPhone2());
         financialCompany.setPhone1(financialCompanyDto.getPhone1());
         financialCompany.setEmail(financialCompanyDto.getEmail());

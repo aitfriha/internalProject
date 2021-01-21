@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.repository.*;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.wproducts.*","org.techniu"})
+@EnableMongoRepositories(basePackages = {"com.wproducts.*","org.techniu"})
 public class IsBackendApplication implements CommandLineRunner {
     @Autowired
     private ClientRepository clientRepository;
