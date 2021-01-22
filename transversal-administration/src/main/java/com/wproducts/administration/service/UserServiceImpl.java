@@ -19,7 +19,11 @@ import org.mapstruct.factory.Mappers;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.techniu.isbackend.service.utilities.MailMail;
+import org.springframework.core.io.Resource;
 import java.time.Instant;
 import java.util.*;
 
@@ -74,6 +78,18 @@ public class UserServiceImpl implements UserService {
                 .setUserCreatedAt(Instant.now());
 
         userRepository.save(user1);
+        Resource resource=new ClassPathResource("applicationContext.xml");
+        BeanFactory b=new XmlBeanFactory(resource);
+        MailMail m=(MailMail)b.getBean("mailMail");
+        String sender="internal.system.project@gmail.com";//write here sender gmail id
+        String[] receivers = {user1.getUserEmail()};
+        //m.sendMail(sender,"Internal System", receivers,"New Absence Request","Hello " + sendToName +",\nYou got a new absence request from " + fromName + ".\n Regards,\n Internal System.");
+        String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello,</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">You got a " + user1.getUserFullName() + " request from <strong>" + "fromName" + "</strong>.</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Regards,</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
+                "<p>&nbsp;</p>";
+        m.sendMail(sender,"Internal System", receivers,"New Absence Request",message);
     }
 
     @Override
