@@ -282,7 +282,7 @@ public class StaffServiceImpl implements StaffService {
             }
         return staffDtos;
     }
-
+    
     @Override
     public List<StaffDto> getAllFunctionalNotAssignedStaffs() {
         // Get all actions
@@ -327,6 +327,25 @@ public class StaffServiceImpl implements StaffService {
                 staffs.addAll(staffs1);
             });
         }
+        // Create a list of all staff dto
+        ArrayList<StaffDto> staffDtos = new ArrayList<>();
+        for (Staff staff : staffs) {
+
+            staffDtos.add(staffToStaffDto(staff));
+        }
+        return staffDtos;
+    }
+
+    @Override
+    public List<StaffDto> getAllStaffsByCompany(String companyId) {
+        // Get all company
+        FinancialCompany company = financialCompanyRepository.findById(companyId).get();
+        List<StaffContract> staffContracts = staffContractRepository.findAllByCompany(company);
+        List<Staff> staffs = new ArrayList<>();
+        staffContracts.forEach(staffContract -> {
+            List<Staff> staffs1 = staffRepository.findAllByStaffContract(staffContract);
+            staffs.addAll(staffs1);
+        });
         // Create a list of all staff dto
         ArrayList<StaffDto> staffDtos = new ArrayList<>();
         for (Staff staff : staffs) {

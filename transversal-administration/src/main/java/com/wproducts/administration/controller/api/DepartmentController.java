@@ -21,7 +21,7 @@ import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
 
 @RestController
 @RequestMapping("/api/department")
-@CrossOrigin(origins = { "http://localhost:3001" })
+@CrossOrigin(origins = { "*" })
 public class DepartmentController {
 
     private final DepartmentService departmentService;

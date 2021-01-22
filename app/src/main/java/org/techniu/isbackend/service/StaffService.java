@@ -12,6 +12,7 @@ public interface StaffService {
     List<StaffDto> getAllFunctionalNotAssignedStaffs();
     List<StaffDto> getAllAdministrativeNotAssignedStaffs();
     List<StaffDto> getAllAdministrativeNotAssignedStaffsByCompany(String companyId);
+    List<StaffDto> getAllStaffsByCompany(String companyId);
     void assignFunctionalLevelToStaff(List<Object> objects);
     void assignAdministrativeLevelToStaff(List<Object> objects);
     List<StaffDto> getStaffsByFunctionalLevel(String levelId, String isFunctionalLeader);
