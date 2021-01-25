@@ -21,6 +21,8 @@ public class LocalBankHolidayUpdaterequest {
     private String name;
     @NotBlank(message = LOCALBANKHOLIDAY_CODE_NOT_BLANK)
     private String code;
+    private String type;
+    private String description;
     private String startDate;
     private String endDate;
     private String totalDays;

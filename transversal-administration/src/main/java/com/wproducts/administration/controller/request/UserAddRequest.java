@@ -39,8 +39,8 @@ public class UserAddRequest {
     private String userStatus;
     @NotNull(message = USER_ACTIVE_NOT_NULL)
     private boolean userIsActive;
-    @NotBlank(message = USER_COUNTRY_LANGUAGE_NOT_BLANK)
-    private String userCountryLanguage;
+   // @NotBlank(message = USER_COUNTRY_LANGUAGE_NOT_BLANK)
+   // private String userCountryLanguage;
      @NotEmpty(message = USER_ROLES_NOT_EMPTY)
      private Set<String> userRolesIds;
     //private Set<String> userRoles;

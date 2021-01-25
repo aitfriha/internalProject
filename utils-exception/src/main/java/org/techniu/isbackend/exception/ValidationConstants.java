@@ -8,7 +8,7 @@ public class ValidationConstants {
 
     // put the validators constants here
     // Auth
-    public final static String AUTH_WRONG_CREDENTIALS = "auth.wrong.credentials";
+    public final static String AUTH_WRONG_CREDENTIALS = "User or Password Is Incorrect";
     //Action
     public final static String ACTION_CODE_NOT_BLANK = "action.code.not.blank";
 

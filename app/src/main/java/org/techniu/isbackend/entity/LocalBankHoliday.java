@@ -19,6 +19,8 @@ public class LocalBankHoliday implements Serializable {
     private String _id;
     private String name;
     private String code;
+    private String type;
+    private String description;
     private String startDate;
     private String endDate;
     private String totalDays;

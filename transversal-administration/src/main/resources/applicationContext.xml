@@ -20,24 +20,7 @@ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
             </props>
         </property>
     </bean>
-    <bean id="mailSenderTwo" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="smtp.gmail.com" />
-        <property name="port" value="25"/>
-        <property name="username" value="internal.system.project@gmail.com" />
-        <property name="password" value="isystem2020" />
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.smtp.auth">true</prop>
-                <prop key="mail.transport.protocol">smtp</prop>
-                <prop key="mail.smtp.starttls.enable">true</prop>
-                <prop key="mail.debug">true</prop>
-            </props>
-        </property>
-    </bean>
-    <bean id="mailMail" class="org.techniu.isbackend.service.utilities.MailMail">
-        <property name="mailSender" ref="mailSender" />
-    </bean>
     <bean id="mailMailTwo" class="com.wproducts.administration.service.utilities.MailMail">
-        <property name="mailSender" ref="mailSenderTwo" />
+        <property name="mailSender" ref="mailSender" />
     </bean>
 </beans>

@@ -190,6 +190,10 @@ public class StaffController {
     public List<StaffDto> getAdministrativeNotAssignedStaffByCompany(@PathVariable("companyId") String companyId){
         return staffService.getAllAdministrativeNotAssignedStaffsByCompany(companyId);
     }
+    @RequestMapping(path = "by-company/{companyId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<StaffDto> getAllStaffsByCompany(@PathVariable("companyId") String companyId){
+        return staffService.getAllStaffsByCompany(companyId);
+    }
 
     @RequestMapping(path = "assign-functional-level-staff",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public void assignFunctionalLevelToStaff(@RequestBody List<Object> objects){
@@ -240,4 +244,5 @@ public class StaffController {
         }
         return new ResponseEntity<Response>(Response.ok().setPayload(staffListsNew), HttpStatus.OK);
     }
+
 }

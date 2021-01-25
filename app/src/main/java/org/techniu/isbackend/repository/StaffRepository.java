@@ -26,6 +26,8 @@ public interface StaffRepository extends MongoRepository<Staff, String> {
 
     List<Staff> findAllByAdministrativeStructureLevelsEqualsAndStaffContract(List<AdministrativeStructureLevel> list, StaffContract staffContract);
 
+    List<Staff> findAllByStaffContract(StaffContract staffContract);
+
     Staff findByStaffEconomicContractInformation(StaffEconomicContractInformation staffEconomicContractInformation);
 
     Staff findByFirstNameAndFatherFamilyNameAndMotherFamilyName(String firstName, String fatherFamilyName, String motherFamilyName);

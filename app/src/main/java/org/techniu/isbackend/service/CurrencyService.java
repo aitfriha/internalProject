@@ -10,6 +10,8 @@ public interface CurrencyService {
 
     List<CurrencyDto> getAllCurrency();
 
+    List<CurrencyDto> getFilteredCurrency();
+
     Currency getById(String id);
 
     List<CurrencyDto> updateCurrency(CurrencyDto currencyDto, String id);

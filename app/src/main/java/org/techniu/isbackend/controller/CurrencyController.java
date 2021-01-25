@@ -61,6 +61,12 @@ public class CurrencyController {
 
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/Filtered")
+    public List<CurrencyDto> getFilteredCurrency() {
+        return currencyService.getFilteredCurrency();
+
+    }
+
     @PostMapping("/row/{Id}")
     public Currency getCurrencyById(@PathVariable String Id) {
         return currencyService.getById(Id);

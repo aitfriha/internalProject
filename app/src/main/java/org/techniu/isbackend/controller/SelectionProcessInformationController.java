@@ -59,8 +59,8 @@ public class SelectionProcessInformationController {
         if(!attitudeTestDoc.getContentType().equals("application/json")) {
             selectionProcessInformationDto.setAttitudeTestDoc(attitudeTestDoc.getBytes());
         };
-        System.out.println(selectionProcessInformationAddrequest.getCurrencyId());
-        System.out.println(selectionProcessInformationDto.getCurrencyId());
+        System.out.println(selectionProcessInformationAddrequest);
+        System.out.println(selectionProcessInformationDto);
         selectionProcessInformationService.save(selectionProcessInformationDto, selectionProcessInformationAddrequest.getKnowledgeIdList());
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(SelectionProcessInformation, ADDED)), HttpStatus.OK);
     }

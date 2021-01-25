@@ -10,6 +10,7 @@ import com.wproducts.administration.dto.model.SubjectFieldDto;
 import com.wproducts.administration.dto.model.UserDto;
 import com.wproducts.administration.model.*;
 import com.wproducts.administration.repository.DepartmentRepository;
+import com.wproducts.administration.service.utilities.MailMail;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -19,7 +20,10 @@ import org.mapstruct.factory.Mappers;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.Resource;
 import java.time.Instant;
 import java.util.*;
 
@@ -74,6 +78,21 @@ public class UserServiceImpl implements UserService {
                 .setUserCreatedAt(Instant.now());
 
         userRepository.save(user1);
+        Resource resource=new ClassPathResource("applicationContext.xml");
+        BeanFactory b=new XmlBeanFactory(resource);
+        MailMail m= (MailMail) b.getBean("mailMailTwo");
+        String sender="internal.system.project@gmail.com";//write here sender gmail id
+        String[] receivers = {user1.getUserEmail()};
+        //m.sendMail(sender,"Internal System", receivers,"New Absence Request","Hello " + sendToName +",\nYou got a new absence request from " + fromName + ".\n Regards,\n Internal System.");
+        String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello" + user1.getUserFullName() +",</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Welcome to internal project. " + "</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Your account registered Please use this login to connect to your page" + "</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>login:"+user1.getUserEmail()+"</span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password:"+user1.getUserPassword()+"</span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Regards,</strong></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
+                "<p>&nbsp;</p>";
+        m.sendMail(sender,"Internal System", receivers,"Compte sur Internal System\n",message);
     }
 
     @Override

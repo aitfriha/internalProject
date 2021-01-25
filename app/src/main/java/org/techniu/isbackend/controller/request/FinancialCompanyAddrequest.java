@@ -20,6 +20,7 @@ public class FinancialCompanyAddrequest {
     private String financialCompanyId;
     private String name;
     private String code;
+    private String taxNumber;
     private String email;
     private String phone1;
     private String phone2;
