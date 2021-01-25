@@ -8,6 +8,10 @@ import java.util.List;
 @Repository
 public interface StaffRepository extends MongoRepository<Staff, String> {
 
+    //List<Staff> findAllByFunctionalStructureLevel(FunctionalStructureLevel functionalStructureLevel);
+
+    List<Staff> findAllByFunctionalStructureLevelsContaining(FunctionalStructureLevel functionalStructureLevel);
+
     List<Staff> findAllByFunctionalStructureLevelsEquals(List<FunctionalStructureLevel> list);
 
     List<Staff> findAllByFunctionalStructureLevelsContainingAndIsFunctionalLeader(FunctionalStructureLevel level, String isFunctionalLeader);

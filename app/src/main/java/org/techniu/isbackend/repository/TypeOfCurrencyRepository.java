@@ -6,4 +6,5 @@ import org.techniu.isbackend.entity.TypeOfCurrency;
 public interface TypeOfCurrencyRepository extends MongoRepository<TypeOfCurrency, String> {
 
     TypeOfCurrency findAllBy_id(String id);
+    TypeOfCurrency findByCurrencyCode(String currencyCode);
 }

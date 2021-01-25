@@ -10,6 +10,7 @@ import org.techniu.isbackend.entity.AdministrativeStructureLevel;
 import org.techniu.isbackend.entity.FunctionalStructureLevel;
 import org.techniu.isbackend.entity.StaffDocument;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data

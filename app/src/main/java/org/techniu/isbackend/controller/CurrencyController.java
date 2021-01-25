@@ -15,6 +15,7 @@ import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.CurrencyService;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.techniu.isbackend.exception.EntityType.Currency;
@@ -43,7 +44,7 @@ public class CurrencyController {
         // Save Contract Status
         System.out.println(currencyAddrequest);
 
-       List<CurrencyDto> currencyList = currencyService.getAllCurrency();
+        List<CurrencyDto> currencyList = currencyService.getAllCurrency();
         for (CurrencyDto currencyDto : currencyList) {
             if (currencyDto.getTypeOfCurrency().get_id().equals(currencyAddrequest.getTypeOfCurrency().get_id())
                     && currencyDto.getYear() == currencyAddrequest.getYear()
@@ -68,7 +69,7 @@ public class CurrencyController {
 
     @PostMapping("/delete/{Id}")
     public List<CurrencyDto> deleteCurrencyById(@PathVariable String Id) {
-        System.out.println("test delete :" +Id);
+        System.out.println("test delete :" + Id);
         return currencyService.remove(Id);
 
     }
@@ -80,6 +81,18 @@ public class CurrencyController {
         System.out.println(currencyUpdaterequest + "" + Id);
         currencyService.updateCurrency(currencyMapper.updateRequestToDto(currencyUpdaterequest), Id);
         return currencyService.getAllCurrency();
+    }
+
+    @PostMapping("/lastDataByCurrencyType/{currencyTypeId}")
+    public CurrencyDto getLastDataByCurrencyType(@PathVariable String currencyTypeId) {
+        return currencyService.getLastDataByCurrencyType(currencyTypeId);
+
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/lastDataAssociatedWithCurrencyTypes")
+    public List<CurrencyDto> getLastDataByCurrencyType() {
+        return currencyService.getLastDataAssociatedWithCurrencyTypes();
+
     }
 
 }

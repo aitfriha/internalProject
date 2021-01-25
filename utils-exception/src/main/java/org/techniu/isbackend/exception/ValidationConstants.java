@@ -7,7 +7,6 @@ import static org.techniu.isbackend.exception.EntityType.*;
 public class ValidationConstants {
 
     // put the validators constants here
-
     // Auth
     public final static String AUTH_WRONG_CREDENTIALS = "auth.wrong.credentials";
     //Action
@@ -48,6 +47,7 @@ public class ValidationConstants {
     public final static String USER_ROLES_NOT_EMPTY = "user.roles.not.empty";
     public final static String USER_DEPARTMENT_NOT_BLANK = "user.department.not.blank";
     public final static String USER_COUNTRY_LANGUAGE_NOT_BLANK = "user.country.language.not.blank";
+
     // Default Sentence
     public final static String DEFAULTSENTENCE_CODE_NOT_BLANK = "defaultsentence.code.not.blank";
     public final static String DEFAULTSENTENCE_VALUE_NOT_BLANK = "defaultsentence.value.not.blank";
@@ -189,6 +189,45 @@ public class ValidationConstants {
     public final static String CONTACT_PERSONALEMAIL_NOT_BLANK = "Contact personal email can not be blank";
     public final static String CONTACT_COMPANY_NOT_BLANK = "Contact company  can not be blank";
     public final static String CONTACT_CITY_NOT_BLANK = "Contact city  can not be blank";
+
+    //Assignment Type
+    public final static String ASSIGNMENT_TYPE_CODE_NOT_BLANK = "assignment.type.code.not.blank";
+    public final static String ASSIGNMENT_TYPE_NAME_NOT_BLANK = "assignment.type.name.not.blank";
+
+    //Staff Expenses Type
+    public final static String STAFF_EXPENSE_TYPE_CODE_NOT_BLANK = "staffexpensetype.code.not.blank";
+    public final static String STAFF_EXPENSE_TYPE_NAME_NOT_BLANK = "staffexpensetype.name.not.blank";
+
+    //Staff Expenses Subtype
+    public final static String STAFF_EXPENSE_SUBTYPE_CODE_NOT_BLANK = "staffexpensesubtype.code.not.blank";
+    public final static String STAFF_EXPENSE_SUBTYPE_NAME_NOT_BLANK = "staffexpensesubtype.name.not.blank";
+
+    //Person Type
+    public final static String PERSON_TYPE_CODE_NOT_BLANK = "persontype.code.not.blank";
+    public final static String PERSON_TYPE_NAME_NOT_BLANK = "persontype.name.not.blank";
+
+    //Voucher Type
+    public final static String VOUCHER_TYPE_CODE_NOT_BLANK = "vouchertype.code.not.blank";
+    public final static String VOUCHER_TYPE_NAME_NOT_BLANK = "vouchertype.name.not.blank";
+
+    //Business Expenses Type
+    public final static String BUSINESS_EXPENSE_TYPE_CODE_NOT_BLANK = "businessexpensetype.code.not.blank";
+    public final static String BUSINESS_EXPENSE_TYPE_NAME_NOT_BLANK = "businessexpensetype.name.not.blank";
+
+    //Business Expenses Subtype
+    public final static String BUSINESS_EXPENSE_SUBTYPE_CODE_NOT_BLANK = "businessexpensesubtype.code.not.blank";
+    public final static String BUSINESS_EXPENSE_SUBTYPE_NAME_NOT_BLANK = "businessexpensesubtype.name.not.blank";
+
+    //Request Status
+    public final static String REQUEST_STATUS_CODE_NOT_BLANK = "requeststatus.code.not.blank";
+    public final static String REQUEST_STATUS_NAME_NOT_BLANK = "requeststatus.name.not.blank";
+
+    //Expense Status
+    public final static String EXPENSE_STATUS_CODE_NOT_BLANK = "expensestatus.code.not.blank";
+    public final static String EXPENSE_STATUS_NAME_NOT_BLANK = "expensestatus.name.not.blank";
+
+    //Email Address
+    public final static String EMAIL_ADDRESS_NOT_BLANK = "emailaddress.not.blank";
 
     // Static messages, do not modify them
     private static HashMap<String, String> backendTranslation = new HashMap<>();

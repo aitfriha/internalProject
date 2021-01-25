@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.techniu.isbackend.entity.Currency;
 import org.techniu.isbackend.entity.SelectionTypeEvaluation;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
