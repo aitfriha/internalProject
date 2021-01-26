@@ -5,11 +5,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.repository.*;
 
-@SpringBootApplication(scanBasePackages = {"com.wproducts.*","org.techniu"})
-@EnableMongoRepositories(basePackages = {"com.wproducts.*","org.techniu"})
+
+
+import java.io.File;
+
+@SpringBootApplication(scanBasePackages = {"com.wproducts.*","org.techniu", "com.internal.*"})
+@EnableMongoRepositories(basePackages = {"com.wproducts.*","org.techniu", "com.internal.*"})
 public class IsBackendApplication implements CommandLineRunner {
     @Autowired
     private ClientRepository clientRepository;
@@ -22,7 +25,12 @@ public class IsBackendApplication implements CommandLineRunner {
 
 
     public static void main(String[] args) {
+
         SpringApplication.run(IsBackendApplication.class, args);
+        File documentsDirectory = new File("TEMPORAL DOCUMENTS");
+        if(!documentsDirectory.exists()){
+            documentsDirectory.mkdirs();
+        }
     }
 
     @Override
@@ -115,4 +123,5 @@ public class IsBackendApplication implements CommandLineRunner {
          */
 
     }
+
 }

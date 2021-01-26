@@ -54,4 +54,8 @@ public class Staff {
 
     @DBRef
     private List<StaffDocument> staffDocuments;
+
+    public String getFullName() {
+        return firstName + " " + fatherFamilyName + " " + motherFamilyName;
+    }
 }

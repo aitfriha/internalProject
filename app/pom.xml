@@ -94,6 +94,11 @@
         </dependency>
         <dependency>
             <groupId>com.implimental</groupId>
+            <artifactId>transversal-translation</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.implimental</groupId>
             <artifactId>utils-exception</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>

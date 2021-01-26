@@ -40,5 +40,25 @@ public enum EntityType {
     Assignment,
     SelectionTypeEvaluation,
     SelectionProcessInformation,
-    Ability,Action,Department,Machine,Role,Subject,USER
+    Ability,Action,Department,Machine,Role,Subject,USER,
+
+    DefaultSentence,
+    TranslateSentence,
+
+    TravelRequest,
+    EmailAddress,
+    File,
+    BusinessExpenseType,
+    BusinessExpenseSubtype,
+    PersonType,
+    Expense,
+    VoucherType,
+    StaffExpenseType,
+    StaffExpenseSubtype,
+    ExpenseStatus,
+    AssignmentType,
+    StaffAssignment,
+    RequestStatus,
+    WeeklyReport,
+    WeeklyReportConfig
 }

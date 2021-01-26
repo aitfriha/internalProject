@@ -71,22 +71,49 @@ public class FinancialContractDto {
     @DBRef
     private FinancialCompany financialCompany;
 
+    //Company data
+    private String companyId;
+    private String companyCode;
+    private String companyName;
+
     @DBRef
     private Client client;
+
+    //Client data
+    private String clientId;
+    private String clientCode;
+    private String clientName;
 
     @DBRef
     private CommercialOperation commercialOperation;
 
+    //Commercial Operation data
+    private String operationId;
+    private String operationCode;
+    private String operationName;
+
     @DBRef
     private ContractStatus contractStatus;
 
+    //Status data
+    private String statusId;
+    private int statusCode;
+    private String statusName;
+
     @DBRef
     private FunctionalStructureLevel functionalStructureLevel;
+
+    //Functional Structure data
+    private String functionalStructureId;
+    private String functionalStructureName;
 
     @DBRef
     private Address address;
 
     @DBRef
     private Currency currency;
+
+
+
 
 }

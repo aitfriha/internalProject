@@ -56,7 +56,7 @@ public class TypeOfCurrencyController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/all")
-    public List<TypeOfCurrencyDto> getAllContractSt() {
+    public List<TypeOfCurrencyDto> getAllTypeOfCurrencies() {
         return typeOfCurrencyService.getAllTypeOfCurrency();
 
     }

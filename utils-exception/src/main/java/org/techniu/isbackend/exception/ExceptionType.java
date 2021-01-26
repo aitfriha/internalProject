@@ -7,6 +7,7 @@ public enum ExceptionType {
     ADDED("added"),
     IMPORTED("imported"),
     UPDATED("updated"),
+    APPROVED("approved"),
     APPLICATION_ALREADY_HAS_A_CONTRACT("application.already.has.a.contract"),
     PUBLIC_PROPERTY_ALREADY_HAS_A_METER("public.property.already.has.meter"),
     DOMESTIC_PROPERTY_ALREADY_HAS_A_METER("domestic.property.already.has.meter"),
@@ -30,8 +31,19 @@ public enum ExceptionType {
     SECTOR_RELATED_TO_CLIENT("this sector its already related to a client !"),
     IMPORTATION_STAFF_NOTE_EXIST("Staff not exist in our data base !"),
     Name_SHOULD_NOT_CONTAIN_SPACES("name.should.not.contain.spaces"),
-    STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL("Staff is not assigned to a commercial level !");
+    STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL("Staff is not assigned to a commercial level !"),
     // public static final ExceptionType SECTOR_RELATED_TO_CLIENT = null;
+
+    ASSOCIATED_WITH_SOME_WEEKLY_WORK("associated.with.some.weekly.work"),
+    EMPTY_MANDATORY_FIELDS("empty.mandatory.fields"),
+    ERRORS_IN_JOURNAL_VALUES("errors.in.journal.values"),
+    NOT_GENERATED("not.generated"),
+    COULD_NOT_BE_UPDATED("could.not.be.updated"),
+    ASSOCIATED_WITH_SOME_TRAVEL_REQUEST("associated.with.some.travel.request"),
+    ASSOCIATED_WITH_SOME_EXPENSE("associated.with.some.expense"),
+    DUPLICATE_ACTION("duplicate.action"),
+    NOT_ASSOCIATED_DATA("not.associated.data");
+
     String value;
 
     ExceptionType(String value) {

@@ -8,6 +8,8 @@ import java.util.List;
 public interface AbsenceRequestRepository extends MongoRepository<AbsenceRequest, String> {
 
     List<AbsenceRequest> findAllByAbsenceType(AbsenceType absenceType);
+    List<AbsenceRequest> findAllByStaffAndStateEquals(Staff staff, String state); //"APPROVED"
+    List<AbsenceRequest> findAllByStaff(Staff staff);
 
 
 }
