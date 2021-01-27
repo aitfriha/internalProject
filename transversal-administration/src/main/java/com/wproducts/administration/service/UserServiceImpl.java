@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         User user1 = userMapper.dtoToModel(userMapper.addRequestToDto(userAddRequest))
-                // .setUserPassword(bCryptPasswordEncoder.encode(userAddRequest.getUserPassword()))
+                .setUserPassword(bCryptPasswordEncoder.encode(userAddRequest.getUserPassword()))
                 .setUserDepartment(department)
                 .setUserRoles(roles)
                 .setUserCreatedAt(Instant.now());
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">wellcome to the internal systems. " + "</span></span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Your account registered Please use this login to connect to your page" + "</span></span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>login:"+user1.getUserEmail()+"</span></p>\n" +
-                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password:"+user1.getUserPassword()+"</span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password:"+userAddRequest.getUserPassword()+"</span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>To reset your password please click this link: http://localhost:3001/reset-password</span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Regards,</strong></span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
@@ -230,6 +230,26 @@ public class UserServiceImpl implements UserService {
         userDto.setUserRoles(roleDtos);
         userDto.setUserDepartmentId(departmentMapper.modelToDto(user.getUserDepartment()).getDepartmentCode());
         return userDto;
+    }
+
+    @Override
+    public void sendPassword(String userEmail) {
+        User user = userRepository.findByUserEmail(userEmail);
+        user.setUserPassword(bCryptPasswordEncoder.encode("zaid"));
+        userRepository.save(user);
+        Resource resource=new ClassPathResource("applicationContext.xml");
+        BeanFactory b=new XmlBeanFactory(resource);
+        MailMail m= (MailMail) b.getBean("mailMailTwo");
+        String sender="internal.system.project@gmail.com";//write here sender gmail id
+        String[] receivers = {user.getUserEmail()};
+        String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello " + user.getUserFullName() +",</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">wellcome to the internal systems. " + "</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">your password is" + "</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password: zaid</span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Regards,</strong></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
+                "<p>&nbsp;</p>";
+        m.sendMail(sender,"Internal System", receivers,"New account on Internal System\n",message);
     }
 
     /**

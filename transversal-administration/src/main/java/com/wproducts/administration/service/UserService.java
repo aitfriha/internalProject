@@ -51,6 +51,7 @@ public interface UserService {
      */
     UserDto getOneUser(String id);
 
+    void sendPassword(String userEmail);
     /**
      * all Users
      *

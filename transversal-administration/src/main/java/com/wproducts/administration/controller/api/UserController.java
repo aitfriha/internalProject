@@ -25,7 +25,7 @@ import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = { "http://localhost:3001" })
+@CrossOrigin(origins = { "*" })
 public class UserController {
 
     private final UserService userService;
@@ -88,6 +88,17 @@ public class UserController {
         // Update user
         System.out.println(userUpdateRequest);
         userService.updateProfile(userUpdateRequest);
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(USER, UPDATED)), HttpStatus.OK);
+    }
+
+    /**
+     * Handles the incoming POST API "/user/signup"
+     *
+     * @return Response
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/forgetPassword/{userEmail}")
+    public ResponseEntity forgetPassword(@PathVariable String userEmail) {
+        userService.sendPassword(userEmail);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(USER, UPDATED)), HttpStatus.OK);
     }
 
