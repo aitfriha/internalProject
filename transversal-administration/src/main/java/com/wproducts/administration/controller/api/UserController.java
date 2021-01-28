@@ -99,7 +99,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/forgetPassword/{userEmail}")
     public ResponseEntity forgetPassword(@PathVariable String userEmail) {
         userService.sendPassword(userEmail);
-        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(USER, UPDATED)), HttpStatus.OK);
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(USER, SENT)), HttpStatus.OK);
     }
 
     /**
