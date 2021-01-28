@@ -11,8 +11,8 @@ import org.techniu.isbackend.repository.*;
 
 import java.io.File;
 
-@SpringBootApplication(scanBasePackages = {"com.wproducts.*","org.techniu", "com.internal.*"})
-@EnableMongoRepositories(basePackages = {"com.wproducts.*","org.techniu", "com.internal.*"})
+@SpringBootApplication(scanBasePackages = {"com.wproducts.*","org.techniu.*", "com.internal.*"})
+@EnableMongoRepositories(basePackages = {"com.wproducts.*","org.techniu.*", "com.internal.*"})
 public class IsBackendApplication implements CommandLineRunner {
     @Autowired
     private ClientRepository clientRepository;

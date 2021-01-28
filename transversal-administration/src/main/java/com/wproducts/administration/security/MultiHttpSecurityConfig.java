@@ -52,6 +52,7 @@ public class MultiHttpSecurityConfig {
                     .antMatcher("/api/**")
                     .authorizeRequests()
                     .antMatchers("/api/user/signup").permitAll()
+                    .antMatchers("/api/user/forgetPassword/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/translation/**").permitAll()
                     .anyRequest()
                     .authenticated()

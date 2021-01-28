@@ -24,17 +24,20 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.Resource;
+//import org.techniu.isbackend.repository.StaffRepository;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.*;
 
-import static org.techniu.isbackend.exception.ExceptionType.DUPLICATE_ENTITY;
-import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
+import static org.techniu.isbackend.exception.ExceptionType.*;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
+   // private final StaffRepository staffRepository;
     private final DepartmentMapper departmentMapper = Mappers.getMapper(DepartmentMapper.class);
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
@@ -71,8 +74,10 @@ public class UserServiceImpl implements UserService {
                 adminField.ifPresent(roles::add);
             }
         }
+        SecureRandom random = new SecureRandom();
+        String code = new BigInteger(32, random).toString(16).toUpperCase();
         User user1 = userMapper.dtoToModel(userMapper.addRequestToDto(userAddRequest))
-                // .setUserPassword(bCryptPasswordEncoder.encode(userAddRequest.getUserPassword()))
+                .setUserPassword(bCryptPasswordEncoder.encode(code))
                 .setUserDepartment(department)
                 .setUserRoles(roles)
                 .setUserCreatedAt(Instant.now());
@@ -83,16 +88,16 @@ public class UserServiceImpl implements UserService {
         MailMail m= (MailMail) b.getBean("mailMailTwo");
         String sender="internal.system.project@gmail.com";//write here sender gmail id
         String[] receivers = {user1.getUserEmail()};
-        //m.sendMail(sender,"Internal System", receivers,"New Absence Request","Hello " + sendToName +",\nYou got a new absence request from " + fromName + ".\n Regards,\n Internal System.");
-        String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello" + user1.getUserFullName() +",</span></span></p>\n" +
-                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Welcome to internal project. " + "</span></span></p>\n" +
+        String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello " + user1.getUserFullName() +",</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">wellcome to the internal systems. " + "</span></span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Your account registered Please use this login to connect to your page" + "</span></span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>login:"+user1.getUserEmail()+"</span></p>\n" +
-                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password:"+user1.getUserPassword()+"</span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password:"+code+"</span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>To reset your password please click this link: http://localhost:3001/reset-password</span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Regards,</strong></span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
                 "<p>&nbsp;</p>";
-        m.sendMail(sender,"Internal System", receivers,"Compte sur Internal System\n",message);
+        m.sendMail(sender,"Internal System", receivers,"New account on Internal System\n",message);
     }
 
     @Override
@@ -230,6 +235,35 @@ public class UserServiceImpl implements UserService {
         userDto.setUserRoles(roleDtos);
         userDto.setUserDepartmentId(departmentMapper.modelToDto(user.getUserDepartment()).getDepartmentCode());
         return userDto;
+    }
+
+    @Override
+    public void sendPassword(String userEmail) {
+        User user = userRepository.findByUserEmail(userEmail);
+       // User staff = staffRepository.findByUserEmail(userEmail);
+        if(user.isUserIsActive()) {
+            SecureRandom random = new SecureRandom();
+            String code = new BigInteger(32, random).toString(16).toUpperCase();
+            user.setUserPassword(bCryptPasswordEncoder.encode(code));
+            userRepository.save(user);
+            Resource resource = new ClassPathResource("applicationContext.xml");
+            BeanFactory b = new XmlBeanFactory(resource);
+            MailMail m = (MailMail) b.getBean("mailMailTwo");
+            String sender = "internal.system.project@gmail.com";//write here sender gmail id
+            String[] receivers = {user.getUserEmail()};
+            String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello " + user.getUserFullName() + ",</span></span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">wellcome to the internal systems. " + "</span></span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">your password is" + "</span></span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password: " + code + "</span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Regards,</strong></span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
+                    "<p>&nbsp;</p>";
+            m.sendMail(sender, "Internal System", receivers, "New account on Internal System\n", message);
+        }
+        else
+        {
+            throw exception(USER_IS_NOTE_ACTIVE);
+        }
     }
 
     /**
