@@ -18,7 +18,7 @@ public class ExternalSupplierUpdaterequest {
     private String code;
     private String taxNumber;
     private String email;
-    private String URL;
+    private String url;
     private String firstName;
     private String fatherFamilyName;
     private String motherFamilyName;

@@ -57,6 +57,7 @@ public class ExternalSupplierController {
 
         Address currentAddress = addressService.saveAddress(address);
         externalSupplierAddrequest.setAddress(currentAddress);
+        System.out.println(" test :"  + externalSupplierAddrequest);
 
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         externalSupplierService.saveExternalSupplier(externalSupplierMapper.addRequestToDto(externalSupplierAddrequest));

@@ -25,7 +25,7 @@ public class ExternalSupplier implements Serializable {
     @NotNull
     private String taxNumber;
     private String email;
-    private String URL;
+    private String url;
     @NotNull
     private String firstName;
     @NotNull

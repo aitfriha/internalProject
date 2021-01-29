@@ -89,7 +89,7 @@ public class ExternalSupplierServiceImpl implements ExternalSupplierService {
         externalSupplier.setFatherFamilyName(externalSupplierDto.getFatherFamilyName());
         externalSupplier.setMotherFamilyName(externalSupplierDto.getMotherFamilyName());
         externalSupplier.setEmail(externalSupplierDto.getEmail());
-        externalSupplier.setURL(externalSupplierDto.getURL());
+        externalSupplier.setUrl(externalSupplierDto.getUrl());
 
         externalSupplierRepository.save(externalSupplier);
         return getAllExternalSupplier();
