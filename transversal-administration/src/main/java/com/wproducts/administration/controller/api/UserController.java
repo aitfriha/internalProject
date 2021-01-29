@@ -103,12 +103,35 @@ public class UserController {
     }
 
     /**
+     * Handles the incoming POST API "/user/signup"
+     *
+     * @return Response
+     */
+    @PostMapping(value = "/reset-password/{userEmail}/{Oldpassword}/{Newpassword}")
+    public ResponseEntity resertPassword(@PathVariable String userEmail,@PathVariable String Oldpassword,@PathVariable String Newpassword) {
+        System.out.println(userEmail);
+        System.out.println(Oldpassword);
+        System.out.println(Newpassword);
+        //userService.sendPassword(userEmail);
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(USER, SENT)), HttpStatus.OK);
+    }
+
+    /**
      * display an object GET API "/user/id"
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity getOneUser(@PathVariable String id) {
         return new ResponseEntity<Response>(Response.ok().setPayload(userService.getOneUser(id)), HttpStatus.OK);
     }
+
+    /**
+     * display an object GET API "/user/email
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/byemail/{email}")
+    public ResponseEntity getOneUserByemail(@PathVariable String email) {
+        return new ResponseEntity<Response>(Response.ok().setPayload(userService.findUserByEmail(email)), HttpStatus.OK);
+    }
+
     /**
      * display all objects GET API "/user/all"
      */

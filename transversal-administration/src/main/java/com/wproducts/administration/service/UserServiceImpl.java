@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
-   // private final StaffRepository staffRepository;
+    //private final StaffRepository staffRepository;
     private final DepartmentMapper departmentMapper = Mappers.getMapper(DepartmentMapper.class);
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
@@ -219,6 +219,34 @@ public class UserServiceImpl implements UserService {
     public UserDto getOneUser(String id) {
         // Get all actions
         User user = userRepository.findBy_id(id);
+        UserDto userDto = userMapper.modelToDto(user);
+        if (user.getUserUpdatedAt() != null) {
+            userDto.setUserUpdatedAt(user.getUserUpdatedAt().toString());
+        }
+        if (user.getUserCreatedAt() != null) {
+            userDto.setUserCreatedAt(user.getUserCreatedAt().toString());
+        }
+        Set<RoleDto> roleDtos = new HashSet<>();
+        if (user.getUserRoles() != null) {
+            for (Role role : user.getUserRoles()) {
+                roleDtos.add(roleMapper.modelToDto(role));
+            }
+        }
+        userDto.setUserRoles(roleDtos);
+        userDto.setUserDepartmentId(departmentMapper.modelToDto(user.getUserDepartment()).getDepartmentCode());
+        return userDto;
+    }
+
+    /**
+     * oneUser
+     *
+     * @param email
+     * @return One UserDto
+     */
+    @Override
+    public UserDto getOneUserByEmail(String email) {
+        // Get all actions
+        User user = userRepository.findByUserEmail(email);
         UserDto userDto = userMapper.modelToDto(user);
         if (user.getUserUpdatedAt() != null) {
             userDto.setUserUpdatedAt(user.getUserUpdatedAt().toString());

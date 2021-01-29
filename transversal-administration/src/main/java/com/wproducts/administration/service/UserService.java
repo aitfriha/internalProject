@@ -50,6 +50,12 @@ public interface UserService {
      * @return One UserDto
      */
     UserDto getOneUser(String id);
+    /**
+     * oneUser
+     *
+     * @return One UserDto
+     */
+    UserDto getOneUserByEmail(String id);
 
     void sendPassword(String userEmail);
     /**
