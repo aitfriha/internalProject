@@ -1,5 +1,7 @@
 package org.techniu.isbackend.controller;
 
+import com.wproducts.administration.controller.request.UserAddRequest;
+import com.wproducts.administration.service.UserService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +17,13 @@ import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.StaffService;
 
+import static org.techniu.isbackend.exception.EntityType.USER;
 import static org.techniu.isbackend.exception.ExceptionType.*;
 import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
 import static org.techniu.isbackend.exception.EntityType.Staff;
 
 import org.springframework.http.HttpStatus;
 
-import javax.el.ArrayELResolver;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,12 +36,13 @@ public class StaffController {
 
     private StaffService staffService;
     private final MapValidationErrorService mapValidationErrorService;
-
+    private final UserService userService;
     private final StaffMapper staffMapper = Mappers.getMapper(StaffMapper.class);
 
-    StaffController(StaffService  staffService, MapValidationErrorService mapValidationErrorService){
+    StaffController(StaffService staffService, MapValidationErrorService mapValidationErrorService, UserService userService){
         this.staffService = staffService;
         this.mapValidationErrorService = mapValidationErrorService;
+        this.userService = userService;
     }
 
     /**
@@ -243,6 +246,30 @@ public class StaffController {
             }
         }
         return new ResponseEntity<Response>(Response.ok().setPayload(staffListsNew), HttpStatus.OK);
+    }
+
+    /**
+     * Handles the incoming POST API "/user/add"
+     *
+     * @param userAddRequest User Add request
+     * @return ActionDto
+     */
+    @PostMapping("/user/add")
+    public ResponseEntity signup(@RequestBody @Valid UserAddRequest userAddRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
+        System.out.print("passed .....");
+        staffService.saveUser(userAddRequest);
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(USER, ADDED)), HttpStatus.OK);
+    }
+    /**
+     * Handles the incoming POST API "/user/signup"
+     *
+     * @return Response
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/user/forgetPassword/{userEmail}")
+    public ResponseEntity forgetPassword(@PathVariable String userEmail) {
+        staffService.sendPassword(userEmail);
+        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(USER, SENT)), HttpStatus.OK);
     }
 
 }

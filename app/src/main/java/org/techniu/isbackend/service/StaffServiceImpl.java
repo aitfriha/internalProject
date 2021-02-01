@@ -2,10 +2,11 @@ package org.techniu.isbackend.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wproducts.administration.controller.request.UserAddRequest;
+import com.wproducts.administration.service.UserService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.techniu.isbackend.dto.mapper.FunctionalStructureLevelMapper;
 import org.techniu.isbackend.dto.mapper.StaffMapper;
 import org.techniu.isbackend.dto.model.AdministrativeStructureLevelDto;
 import org.techniu.isbackend.dto.model.FunctionalStructureLevelDto;
@@ -42,7 +43,7 @@ public class StaffServiceImpl implements StaffService {
     private FunctionalStructureAssignationHistoryRepository functionalStructureAssignationHistoryRepository;
     private AdministrativeStructureAssignationHistoryRepository administrativeStructureAssignationHistoryRepository;
     private CurrencyRepository currencyRepository;
-
+    private final UserService userService;
     private final StaffMapper staffMapper = Mappers.getMapper(StaffMapper.class);
 
     StaffServiceImpl(
@@ -61,7 +62,7 @@ public class StaffServiceImpl implements StaffService {
             StaffEconomicContractInformationHistoryRepository staffEconomicContractInformationHistoryRepository,
             FunctionalStructureAssignationHistoryRepository functionalStructureAssignationHistoryRepository,
             AdministrativeStructureAssignationHistoryRepository administrativeStructureAssignationHistoryRepository,
-            CurrencyRepository currencyRepository) {
+            CurrencyRepository currencyRepository, UserService userService) {
         this.staffRepository = staffRepository;
         this.functionalStructureLevelRepository = functionalStructureLevelRepository;
         this.administrativeStructureLevelRepository = administrativeStructureLevelRepository;
@@ -79,6 +80,7 @@ public class StaffServiceImpl implements StaffService {
         this.functionalStructureAssignationHistoryRepository = functionalStructureAssignationHistoryRepository;
         this.administrativeStructureAssignationHistoryRepository = administrativeStructureAssignationHistoryRepository;
         this.currencyRepository = currencyRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -252,6 +254,28 @@ public class StaffServiceImpl implements StaffService {
         staff7.setFunctionalStructureLevels(staff.getFunctionalStructureLevels());
         staff7.setAdministrativeStructureLevels(staff.getAdministrativeStructureLevels());
         return staffRepository.save(staff7);
+    }
+
+    @Override
+    public void saveUser(UserAddRequest userAddRequest) {
+        Staff staff=staffRepository.findByCompanyEmail(userAddRequest.getUserEmail());
+        if(staff.getStaffContract().getLowDate().equals("")) {
+            userService.save(userAddRequest);
+        }
+        else {
+            throw exception(ENTITY_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void sendPassword(String email) {
+        Staff staff=staffRepository.findByCompanyEmail(email);
+        if(staff.getStaffContract().getLowDate().equals("")) {
+            userService.sendPassword(email);
+        }
+        else {
+            throw exception(ENTITY_NOT_FOUND);
+        }
     }
 
     @Override

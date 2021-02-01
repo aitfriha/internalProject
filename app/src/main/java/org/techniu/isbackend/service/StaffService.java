@@ -1,5 +1,6 @@
 package org.techniu.isbackend.service;
 
+import com.wproducts.administration.controller.request.UserAddRequest;
 import org.techniu.isbackend.dto.model.StaffDto;
 import org.techniu.isbackend.entity.*;
 
@@ -21,4 +22,7 @@ public interface StaffService {
     List<StaffDto> getStaffsByIsAdministrativeLeader(String isAdministrativeLeader);
     Staff save(StaffDto staffDto, Address address, StaffEconomicContractInformation staffEconomicContractInformation, StaffContract staffContract, List<StaffDocument> staffDocumentList);
     Staff update(StaffDto staffDto, Address address);
+    void saveUser(UserAddRequest userAddRequest);
+    void sendPassword(String email);
+
 }
