@@ -242,6 +242,7 @@ public class ValidationConstants {
     private final static String DOMESTIC_PROPERTY_ALREADY_HAS_A_METER_SENTENCE = "domestic property has already meter";
     private final static String SECTOR_RELATED_TO_CLIENT_SENTENCE = "you can't delete this sector because its related to client";
     private final static String USER_IS_NOTE_ACTIVE_SENTENCE = "this user is note active";
+    private final static String STAFF_IS_NOTE_ACTIVE_SENTENCE = "this staff is note active";
     private final static String IMPORTATION_STAFF_NOTE_EXIST_SENTENCE = "Staff not exist in our data base";
     private final static String STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL_SENTENCE = "Staff is not assigned to a commercial level !";
     private final static String INDCOM_PROPERTY_ALREADY_HAS_A_METER_SENTENCE = "industrial commercial property has already meter";
@@ -269,6 +270,7 @@ public class ValidationConstants {
         if(entityType == Staff) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.IMPORTATION_STAFF_NOTE_EXIST),""+ IMPORTATION_STAFF_NOTE_EXIST_SENTENCE + "");
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL),""+ STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL_SENTENCE + "");
+            hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.STAFF_IS_NOTE_ACTIVE),""+ STAFF_IS_NOTE_ACTIVE_SENTENCE + "");
         }
         if(entityType == Department || entityType == Action) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.CODE_SHOULD_NOT_CONTAIN_SPACES), CODE_SHOULD_NOT_CONTAIN_SPACES_SENTENCE + "");

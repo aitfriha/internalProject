@@ -263,7 +263,7 @@ public class StaffServiceImpl implements StaffService {
             userService.save(userAddRequest);
         }
         else {
-            throw exception(ENTITY_NOT_FOUND);
+            throw exception(STAFF_IS_NOTE_ACTIVE);
         }
     }
 
@@ -274,7 +274,7 @@ public class StaffServiceImpl implements StaffService {
             userService.sendPassword(email);
         }
         else {
-            throw exception(ENTITY_NOT_FOUND);
+            throw exception(STAFF_IS_NOTE_ACTIVE);
         }
     }
 
