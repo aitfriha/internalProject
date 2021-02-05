@@ -17,6 +17,7 @@ public enum EntityType {
     City,
     CommercialOperationStatus,
     ServiceType,
+    SupplierContract,
     Client,
     ContractStatus,
     Iva,
