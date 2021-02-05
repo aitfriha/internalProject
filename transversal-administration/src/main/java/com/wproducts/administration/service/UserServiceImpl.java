@@ -6,10 +6,10 @@ import com.wproducts.administration.dto.mapper.DepartmentMapper;
 import com.wproducts.administration.dto.mapper.RoleMapper;
 import com.wproducts.administration.dto.mapper.UserMapper;
 import com.wproducts.administration.dto.model.RoleDto;
-import com.wproducts.administration.dto.model.SubjectFieldDto;
 import com.wproducts.administration.dto.model.UserDto;
 import com.wproducts.administration.model.*;
 import com.wproducts.administration.repository.DepartmentRepository;
+import com.wproducts.administration.repository.PasswordResetTokenRepository;
 import com.wproducts.administration.service.utilities.MailMail;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.exception.EntityType;
@@ -28,6 +28,7 @@ import org.springframework.core.io.Resource;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.techniu.isbackend.exception.ExceptionType.*;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleRepository roleRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     //private final StaffRepository staffRepository;
     private final DepartmentMapper departmentMapper = Mappers.getMapper(DepartmentMapper.class);
     private final UserRepository userRepository;
@@ -45,9 +47,10 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
     private final RoleMapper roleMapper = Mappers.getMapper(RoleMapper.class);
 
-    public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, UserRepository userRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, PasswordResetTokenRepository passwordResetTokenRepository, UserRepository userRepository, DepartmentRepository departmentRepository, ModelMapper modelMapper) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
         this.departmentRepository = departmentRepository;
         this.modelMapper = modelMapper;
@@ -83,6 +86,9 @@ public class UserServiceImpl implements UserService {
                 .setUserCreatedAt(Instant.now());
 
         userRepository.save(user1);
+        String token = UUID.randomUUID().toString();
+        this.createPasswordResetTokenForUser(user1, token);
+        String url =  "/resetPassword?token=" + token;
         Resource resource=new ClassPathResource("applicationContext.xml");
         BeanFactory b=new XmlBeanFactory(resource);
         MailMail m= (MailMail) b.getBean("mailMailTwo");
@@ -93,11 +99,18 @@ public class UserServiceImpl implements UserService {
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Your account registered Please use this login to connect to your page" + "</span></span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>login:"+user1.getUserEmail()+"</span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password:"+code+"</span></p>\n" +
-                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>To reset your password please click this link: http://localhost:3001/reset-password</span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>To reset your password please click this link: http://localhost:9000/api/user"+url+"</span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Regards,</strong></span></p>\n" +
                 "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
                 "<p>&nbsp;</p>";
         m.sendMail(sender,"Internal System", receivers,"New account on Internal System\n",message);
+    }
+    public void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        Date today  = new Date();
+        Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+        myToken.setExpiryDate(tomorrow);
+        passwordResetTokenRepository.save(myToken);
     }
 
     @Override
@@ -283,6 +296,33 @@ public class UserServiceImpl implements UserService {
                     "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">wellcome to the internal systems. " + "</span></span></p>\n" +
                     "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">your password is" + "</span></span></p>\n" +
                     "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password: " + code + "</span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Regards,</strong></span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
+                    "<p>&nbsp;</p>";
+            m.sendMail(sender, "Internal System", receivers, "New account on Internal System\n", message);
+        }
+        else
+        {
+            throw exception(USER_IS_NOTE_ACTIVE);
+        }
+    }
+
+    @Override
+    public void editPassword(String token, String newPassword) {
+        PasswordResetToken passwordResetToken=passwordResetTokenRepository.findByToken(token);
+        User user=passwordResetToken.getUser();
+        if(user.isUserIsActive()) {
+            user.setUserPassword(bCryptPasswordEncoder.encode(newPassword));
+            userRepository.save(user);
+            Resource resource = new ClassPathResource("applicationContext.xml");
+            BeanFactory b = new XmlBeanFactory(resource);
+            MailMail m = (MailMail) b.getBean("mailMailTwo");
+            String sender = "internal.system.project@gmail.com";//write here sender gmail id
+            String[] receivers = {user.getUserEmail()};
+            String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello " + user.getUserFullName() + ",</span></span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">wellcome to the internal systems. " + "</span></span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">your password is" + "</span></span></p>\n" +
+                    "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"></span>password: " + newPassword + "</span></p>\n" +
                     "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Regards,</strong></span></p>\n" +
                     "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
                     "<p>&nbsp;</p>";

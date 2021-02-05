@@ -64,5 +64,6 @@ public enum EntityType {
     StaffAssignment,
     RequestStatus,
     WeeklyReport,
-    WeeklyReportConfig
+    WeeklyReportConfig,
+    PasswordResetToken
 }
