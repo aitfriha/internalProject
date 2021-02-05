@@ -8,6 +8,8 @@ public enum ExceptionType {
     IMPORTED("imported"),
     UPDATED("updated"),
     SENT("password has been sent to you email"),
+    INVALID_TOKEN("invalid Token"),
+    EXPIRED_TOKEN("EXPIRED Token"),
     APPROVED("approved"),
     APPLICATION_ALREADY_HAS_A_CONTRACT("application.already.has.a.contract"),
     PUBLIC_PROPERTY_ALREADY_HAS_A_METER("public.property.already.has.meter"),

@@ -58,6 +58,8 @@ public interface UserService {
     UserDto getOneUserByEmail(String id);
 
     void sendPassword(String userEmail);
+
+    void editPassword(String token, String newPassword);
     /**
      * all Users
      *

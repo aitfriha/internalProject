@@ -241,6 +241,8 @@ public class ValidationConstants {
     private final static String PUBLIC_PROPERTY_ALREADY_HAS_A_METER_SENTENCE = "public property has already meter";
     private final static String DOMESTIC_PROPERTY_ALREADY_HAS_A_METER_SENTENCE = "domestic property has already meter";
     private final static String SECTOR_RELATED_TO_CLIENT_SENTENCE = "you can't delete this sector because its related to client";
+    private final static String INVALID_TOKEN_SENTENCE = "invalid Token";
+    private final static String EXPIRED_TOKEN_SENTENCE= "expired Token";
     private final static String USER_IS_NOTE_ACTIVE_SENTENCE = "this user is note active";
     private final static String STAFF_IS_NOTE_ACTIVE_SENTENCE = "this staff is note active";
     private final static String IMPORTATION_STAFF_NOTE_EXIST_SENTENCE = "Staff not exist in our data base";
@@ -280,6 +282,10 @@ public class ValidationConstants {
         }
         if(entityType == USER ) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.USER_IS_NOTE_ACTIVE), USER_IS_NOTE_ACTIVE_SENTENCE + "");
+        }
+        if(entityType == PasswordResetToken ) {
+            hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.INVALID_TOKEN), INVALID_TOKEN_SENTENCE + "");
+            hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.EXPIRED_TOKEN), EXPIRED_TOKEN_SENTENCE + "");
         }
         /*if(entityType == Contract) {
             hashMap.put(MainException.getMessageTemplate(entityType, ExceptionType.APPLICATION_ALREADY_HAS_A_CONTRACT), APPLICATION_ALREADY_HAS_A_SENTENCE + entityName);
