@@ -10,6 +10,10 @@ public interface IvaService {
 
     List<IvaDto> getAllIva();
 
+    List<String> getIvaCountries();
+
+    List<IvaDto> getIvaStates(String CountryName);
+
     Iva getById(String id);
 
     List<IvaDto> updateIva(IvaDto ivaDto, String id);

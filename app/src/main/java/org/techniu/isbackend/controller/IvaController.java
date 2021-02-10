@@ -60,13 +60,22 @@ public class IvaController {
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     public List<IvaDto> getAllContractSt() {
         return ivaService.getAllIva();
+    }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/countries")
+    public List<String> getIvaCountries() {
+        return ivaService.getIvaCountries();
+    }
+
+    @PostMapping("/states/{CountryName}")
+    public List<IvaDto> getIvaStates(@PathVariable String CountryName) {
+        System.out.println("Country : " + CountryName);
+        return ivaService.getIvaStates(CountryName);
     }
 
     @PostMapping("/row/{Id}")
     public Iva getIvaById(@PathVariable String Id) {
         return ivaService.getById(Id);
-
     }
 
     @PostMapping("/delete/{Id}")

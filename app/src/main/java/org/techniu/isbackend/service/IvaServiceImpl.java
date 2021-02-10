@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.IvaMapper;
 import org.techniu.isbackend.dto.model.ContractStatusDto;
+import org.techniu.isbackend.dto.model.CurrencyDto;
 import org.techniu.isbackend.dto.model.IvaDto;
 import org.techniu.isbackend.entity.ContractStatus;
 import org.techniu.isbackend.entity.Iva;
@@ -51,6 +52,53 @@ public class IvaServiceImpl implements IvaService {
             ivaDtos.add(ivaDto);
         }
         return ivaDtos;
+    }
+
+    @Override
+    public List<String> getIvaCountries() {
+        // Get all actions
+        List<Iva> iva = ivaRepository.findAll();
+        // Create a list of all actions dto
+        ArrayList<IvaDto> ivaDtos = new ArrayList<>();
+
+        for (Iva iva1 : iva) {
+            IvaDto ivaDto = ivaMapper.modelToDto(iva1);
+            ivaDtos.add(ivaDto);
+        }
+        ArrayList<String> NewT = new ArrayList<>();
+        for (IvaDto ivaDto : ivaDtos) {
+            if (!NewT.contains(ivaDto.getStateCountry().getCountry().getCountryName())) NewT.add(ivaDto.getStateCountry().getCountry().getCountryName());
+        }
+        return NewT;
+    }
+
+    @Override
+    public List<IvaDto> getIvaStates(String CountryName) {
+        // Get all actions
+        List<Iva> iva = ivaRepository.findAll();
+        // Create a list of all actions dto
+        ArrayList<IvaDto> ivaDtos = new ArrayList<>();
+
+        for (Iva iva1 : iva) {
+            IvaDto ivaDto = ivaMapper.modelToDto(iva1);
+            ivaDtos.add(ivaDto);
+        }
+        System.out.println("Country :: " + CountryName);
+        ArrayList<IvaDto> NewT = new ArrayList<>();
+        for (IvaDto ivaDto : ivaDtos) {
+            IvaDto newIvaDto = new IvaDto();
+            if (ivaDto.getStateCountry().getCountry().getCountryName().equals(CountryName)) {
+                for (IvaDto ivaDto1 : ivaDtos) {
+                    if (ivaDto1.getStateCountry().getStateName().equals(ivaDto.getStateCountry().getStateName())
+                        && (ivaDto1.getStartingDate().after(ivaDto.getStartingDate())))
+                        newIvaDto = ivaDto1;
+                }
+            }
+
+            if (newIvaDto.getIvaId() != null && !NewT.contains(newIvaDto)) NewT.add(newIvaDto);
+        }
+
+        return NewT;
     }
 
     @Override
