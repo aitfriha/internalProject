@@ -9,6 +9,7 @@ import java.util.List;
 public interface StaffService {
     String deleteStaff(String staffId);
     StaffDto getStaffById( String staffId);
+    StaffDto getStaffByCompanyEmail(String companyEmail);
     List<StaffDto> getAll();
     List<StaffDto> getAllFunctionalNotAssignedStaffs();
     List<StaffDto> getAllAdministrativeNotAssignedStaffs();
