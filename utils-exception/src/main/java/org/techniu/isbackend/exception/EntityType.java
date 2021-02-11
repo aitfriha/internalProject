@@ -3,6 +3,7 @@ package org.techniu.isbackend.exception;
 public enum EntityType {
     TypeOfCurrency,
     SupplierType,
+    PurchaseOrder,
     PurchaseOrderAcceptance,
     ExternalSupplier,
     EconomicStaffYear,
