@@ -74,11 +74,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         Currency currency = currencyRepository.findAllBy_id(purchaseOrderDto.getCurrency().get_id());
         Iva iva = ivaRepository.findAllBy_id(purchaseOrderDto.getIva().get_id());
         if (purchaseOrderDto.getReceptionSupplierType().equals("external")) {
-            ExternalSupplier ReceptionExternalSupplier = externalSupplierRepository.findAllBy_id(purchaseOrder.getExternalSupplierReception().get_id());
+            ExternalSupplier ReceptionExternalSupplier = externalSupplierRepository.findAllBy_id(purchaseOrderDto.getExternalSupplierReception().get_id());
             purchaseOrder.setExternalSupplierReception(ReceptionExternalSupplier);
             purchaseOrder.setSupplierResponsible(purchaseOrderDto.getSupplierResponsible());
         } else if (purchaseOrderDto.getReceptionSupplierType().equals("internal")) {
-            FinancialCompany ReceptionFinancialCompany = financialCompanyRepository.findAllBy_id(purchaseOrderDto.getCompanyEmit().get_id());
+            FinancialCompany ReceptionFinancialCompany = financialCompanyRepository.findAllBy_id(purchaseOrderDto.getInternalSupplierReception().get_id());
             purchaseOrder.setInternalSupplierReception(ReceptionFinancialCompany);
             purchaseOrder.setInternLogo(purchaseOrderDto.getInternLogo());
         }

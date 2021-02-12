@@ -63,7 +63,7 @@ public class PurchaseOrderController {
             purchaseOrderAddrequest.setSupplierResponsible(purchaseOrderAddrequest.getSupplierResponsible());
             purchaseOrderAddrequest.setInternalSupplierReception(null);
         } else if (purchaseOrderAddrequest.getReceptionSupplierType().equals("internal")) {
-            FinancialCompany ReceptionFinancialCompany = financialCompanyRepository.findAllBy_id(purchaseOrderAddrequest.getCompanyEmit().get_id());
+            FinancialCompany ReceptionFinancialCompany = financialCompanyRepository.findAllBy_id(purchaseOrderAddrequest.getInternalSupplierReception().get_id());
             purchaseOrderAddrequest.setInternalSupplierReception(ReceptionFinancialCompany);
             purchaseOrderAddrequest.setInternLogo(purchaseOrderAddrequest.getInternLogo());
             purchaseOrderAddrequest.setExternalSupplierReception(null);
