@@ -23,10 +23,17 @@ public class SupplierContract implements Serializable {
     private String document;
     private String type;
 
+    private float contractTradeVolume;
+    private float changeFactor;
+    private float contractTradeVolumeEuro;
+
     @DBRef
     private FinancialCompany financialCompany;
 
     @DBRef
     private ExternalSupplier externalSupplier;
+
+    @DBRef
+    private Currency currency;
 
 }

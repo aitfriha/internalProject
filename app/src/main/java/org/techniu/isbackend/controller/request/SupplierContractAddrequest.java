@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.techniu.isbackend.entity.Currency;
 import org.techniu.isbackend.entity.ExternalSupplier;
 import org.techniu.isbackend.entity.FinancialCompany;
 
@@ -24,7 +25,13 @@ public class SupplierContractAddrequest {
     private String codeSupplier;
     private String document;
     private String type;
+
+    private float contractTradeVolume;
+    private float changeFactor;
+    private float contractTradeVolumeEuro;
+
     private FinancialCompany financialCompany;
     private ExternalSupplier externalSupplier;
+    private Currency currency;
 
 }
