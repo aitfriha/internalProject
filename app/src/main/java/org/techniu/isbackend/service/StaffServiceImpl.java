@@ -295,6 +295,12 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public StaffDto getStaffByCompanyEmail(String companyEmail) {
+        Staff staff = staffRepository.findByCompanyEmail(companyEmail);
+        return staffToStaffDto(staff);
+    }
+
+    @Override
     public List<StaffDto> getAll() {
         // Get all actions
         List<Staff> staffs = staffRepository.findAll();

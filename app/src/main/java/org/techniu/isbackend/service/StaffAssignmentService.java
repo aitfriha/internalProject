@@ -71,6 +71,15 @@ public interface StaffAssignmentService {
     List<FinancialContractDto> getAllCustomerContractsByEmployee(String employeeId);
 
     /**
+     * Get All Customer Contracts By Company Email
+     *
+     * @param companyEmail
+     *
+     * @return List<FinancialContractDto>
+     */
+    List<FinancialContractDto> getAllCustomerContractsByCompanyEmail(String companyEmail);
+
+    /**
      * Get All Operations By Employee And Customer
      *
      * @param data

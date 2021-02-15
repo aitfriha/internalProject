@@ -189,6 +189,29 @@ public class StaffAssignmentServiceImpl implements StaffAssignmentService {
     }
 
     @Override
+    public List<FinancialContractDto> getAllCustomerContractsByCompanyEmail(String companyEmail) {
+        List<FinancialContractDto> result = new ArrayList<>();
+        List<FinancialContractDto> customerContracts = getAllCustomerContracts();
+        for (FinancialContractDto c : customerContracts) {
+            if (c.getStatusCode() != 10) { //Validate that the contract is not finished (status == 10)
+                CommercialOperation operation = commercialOperationRepository.findBy_id(c.getOperationId());
+                List<StaffAssignment> assignments = staffAssignmentRepository.findAllByOperationAndActive(operation, true);
+                AtomicBoolean add = new AtomicBoolean(false);
+                assignments.forEach(el -> {
+                    if (el.getStaff().getCompanyEmail().equalsIgnoreCase(companyEmail)) {
+                        add.set(true);
+                        return;
+                    }
+                });
+                if (add.get()) {
+                    result.add(c);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
     public List<CommercialOperationDto> getAllOperationsByEmployeeAndCustomer(HashMap data) {
         List<CommercialOperationDto> result = new ArrayList<>();
         String employeeId = (String) data.get("employeeId");

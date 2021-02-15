@@ -170,6 +170,11 @@ public class StaffController {
         return staffService.getStaffById(staffId);
     }
 
+    @RequestMapping(path = "staff-by-company-email/{companyEmail}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public StaffDto getStaffByCompanyEmail(@PathVariable("companyEmail") String companyEmail){
+        return staffService.getStaffByCompanyEmail(companyEmail);
+    }
+
     /**
      * display all staff GET API "/api/staff/all"
      * @return
