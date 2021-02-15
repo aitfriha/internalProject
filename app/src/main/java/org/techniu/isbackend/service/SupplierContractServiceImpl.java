@@ -103,7 +103,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         }
 
         Currency currency = currencyRepository.findAllBy_id(supplierContractDto.getCurrency().get_id());
-        supplierContractDto.setCurrency(currency);
+        supplierContract.setCurrency(currency);
 
         supplierContract.setName(supplierContractDto.getName());
         supplierContract.setCodeSupplier(supplierContractDto.getCodeSupplier());
