@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.SupplierContractMapper;
 import org.techniu.isbackend.dto.model.SupplierContractDto;
+import org.techniu.isbackend.entity.Currency;
 import org.techniu.isbackend.entity.ExternalSupplier;
 import org.techniu.isbackend.entity.FinancialCompany;
 import org.techniu.isbackend.entity.SupplierContract;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
+import org.techniu.isbackend.repository.CurrencyRepository;
 import org.techniu.isbackend.repository.ExternalSupplierRepository;
 import org.techniu.isbackend.repository.FinancialCompanyRepository;
 import org.techniu.isbackend.repository.SupplierContractRepository;
@@ -27,15 +29,17 @@ public class SupplierContractServiceImpl implements SupplierContractService {
     private SupplierContractRepository supplierContractRepository;
     private FinancialCompanyRepository financialCompanyRepository;
     private ExternalSupplierRepository externalSupplierRepository;
+    private CurrencyRepository currencyRepository;
     private static int code = 0;
     private final SupplierContractMapper supplierContractMapper = Mappers.getMapper(SupplierContractMapper.class);
 
-    public SupplierContractServiceImpl(SupplierContractRepository supplierContractRepository,
+    public SupplierContractServiceImpl(SupplierContractRepository supplierContractRepository, CurrencyRepository currencyRepository,
                                        FinancialCompanyRepository financialCompanyRepository,
                                        ExternalSupplierRepository externalSupplierRepository) {
         this.supplierContractRepository = supplierContractRepository;
         this.financialCompanyRepository = financialCompanyRepository;
         this.externalSupplierRepository = externalSupplierRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     @Override
@@ -54,6 +58,8 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         }
         System.out.println("CODE :" + supplierContractDto.getCodeSupplier().concat(String.valueOf(code)));
         supplierContractDto.setCodeContract(supplierContractDto.getCodeSupplier().concat(String.valueOf(code)));
+        Currency currency = currencyRepository.findAllBy_id(supplierContractDto.getCurrency().get_id());
+        supplierContractDto.setCurrency(currency);
         supplierContractRepository.save(supplierContractMapper.dtoToModel(supplierContractDto));
     }
 
@@ -91,16 +97,23 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         if (supplierContractDto.getType().equals("internal") ) {
             FinancialCompany financialCompany = financialCompanyRepository.findAllBy_id(supplierContractDto.getFinancialCompany().get_id());
             supplierContract.setFinancialCompany(financialCompany);
+            supplierContract.setExternalSupplier(null);
         } else if (supplierContractDto.getType().equals("external") ) {
             ExternalSupplier externalSupplier = externalSupplierRepository.findAllBy_id(supplierContractDto.getExternalSupplier().get_id());
             supplierContract.setExternalSupplier(externalSupplier);
+            supplierContract.setFinancialCompany(null);
         }
+
+        Currency currency = currencyRepository.findAllBy_id(supplierContractDto.getCurrency().get_id());
+        supplierContract.setCurrency(currency);
 
         supplierContract.setName(supplierContractDto.getName());
         supplierContract.setCodeSupplier(supplierContractDto.getCodeSupplier());
         supplierContract.setDocument(supplierContractDto.getDocument());
         supplierContract.setType(supplierContractDto.getType());
-        supplierContract.setCodeContract(supplierContractDto.getType());
+        supplierContract.setContractTradeVolume(supplierContractDto.getContractTradeVolume());
+        supplierContract.setChangeFactor(supplierContractDto.getChangeFactor());
+        supplierContract.setContractTradeVolumeEuro(supplierContractDto.getContractTradeVolumeEuro());
 
         System.out.println(supplierContract);
 
