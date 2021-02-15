@@ -16,7 +16,7 @@ public interface RoleMapper {
      * @return Role
      */
     @Mapping(source = "roleId", target="_id")
-    @Mapping(target = "roleAbilities", ignore=true)
+    @Mapping(target = "roleActions", ignore=true)
     Role dtoToModel(RoleDto roleDto);
     /**
      * Map model to dto
@@ -27,7 +27,7 @@ public interface RoleMapper {
     @Mapping(source = "_id", target="roleId")
     @Mapping(target = "roleCreatedAt", ignore=true)
     @Mapping(target = "roleUpdatedAt", ignore=true)
-    @Mapping(target = "roleAbilities", ignore=true)
+    @Mapping(target = "roleActions", ignore=true)
     RoleDto modelToDto(Role role);
 
     /**
@@ -37,7 +37,7 @@ public interface RoleMapper {
      * @return RoleDto
      */
     @Mapping(target = "roleUpdatedAt", ignore=true)
-    @Mapping(target = "roleAbilities", ignore=true)
+    @Mapping(target = "roleActions", ignore=true)
     RoleDto addRequestToDto(RoleAddRequest roleAddRequest);
 
     /**
@@ -48,7 +48,7 @@ public interface RoleMapper {
      */
 
     @Mapping(target = "roleCreatedAt", ignore=true)
-    @Mapping(target = "roleAbilities", ignore=true)
+    @Mapping(target = "roleActions", ignore=true)
     RoleDto updateRequestToDto(RoleUpdateRequest roleUpdateRequest);
 
 }

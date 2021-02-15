@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Set;
 
 
 @Data
@@ -23,7 +24,8 @@ public class RoleDto {
     private String roleId;
     private String roleName;
     private String roleDescription;
-    private Collection<AbilityDto> roleAbilities;
+    private Collection<ActionDto> roleActions;
     private String roleCreatedAt;
     private String roleUpdatedAt;
+    private Set<String> roleActionsIds;
 }

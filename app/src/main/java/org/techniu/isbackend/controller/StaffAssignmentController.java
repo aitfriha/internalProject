@@ -62,6 +62,12 @@ public class StaffAssignmentController {
                 staffAssignmentService.getAllCustomerContractsByEmployee(employeeId)), HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/allCustomerContractsByCompanyEmail/{companyEmail}")
+    public ResponseEntity getAllCustomerContractsByCompanyEmail(@PathVariable String companyEmail) {
+        return new ResponseEntity<Response>(Response.ok().setPayload(
+                staffAssignmentService.getAllCustomerContractsByCompanyEmail(companyEmail)), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/allOperationsByEmployeeAndCustomer")
     public ResponseEntity getAllOperationsByEmployeeAndCustomer(@RequestBody HashMap<String, Object> map) {
         return new ResponseEntity<Response>(Response.ok().setPayload(

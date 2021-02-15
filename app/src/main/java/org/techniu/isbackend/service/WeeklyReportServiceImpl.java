@@ -66,7 +66,7 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 
     @Override
     public List<SummarizedWeeklyReport> getAllSummarizedWeeklyReportByStaff(HashMap data) {
-        String employeeId = (String) data.get("employeeId");
+        String companyEmail = (String) data.get("companyEmail");
         String period = (String) data.get("period");
         Date sDate = null;
         Date eDate = null;
@@ -81,7 +81,7 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
             e.printStackTrace();
         }
         List<SummarizedWeeklyReport> result = new ArrayList<>();
-        Staff employee = staffRepository.findAllByStaffId(employeeId);
+        Staff employee = staffRepository.findByCompanyEmail(companyEmail);
         SimpleDateFormat formatDate = new SimpleDateFormat("MMMM dd", Locale.ENGLISH);
         List<String> weeks = new ArrayList<>();
         if (employee != null) {
@@ -244,12 +244,12 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     @Override
     public WeeklyReportDto getExtendedWeeklyReport(HashMap data) {
         WeeklyReportDto weeklyReportDto = new WeeklyReportDto();
-        if (data.containsKey("employeeId") && data.containsKey("year") && data.containsKey("week")) {
-            String employeeId = (String) data.get("employeeId");
+        if (data.containsKey("companyEmail") && data.containsKey("year") && data.containsKey("week")) {
+            String companyEmail = (String) data.get("companyEmail");
             int year = Integer.parseInt(String.valueOf(data.get("year")));
             int week = Integer.parseInt(String.valueOf(data.get("week")));
 
-            Staff employee = staffRepository.findAllByStaffId(employeeId);
+            Staff employee = staffRepository.findByCompanyEmail(companyEmail);
 
             HashMap dates = getStartAndEndOfWeek(year, week);
             Date startDate = (Date) dates.get("start");
@@ -263,13 +263,13 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
             //Convert Staff to StaffDto
             StaffDto staffDto = staffMapper.modelToDto(employee);
             weeklyReportDto.setEmployeeId(staffDto.getStaffId());
-            weeklyReportDto.setPersonalNumber(staffDto.getPersonalNumber());
+            weeklyReportDto.setPersonalNumber(employee.getStaffContract().getPersonalNumber());
             weeklyReportDto.setAvatar(staffDto.getPhoto());
             weeklyReportDto.setName(staffDto.getFirstName());
             weeklyReportDto.setFatherFamilyName(staffDto.getFatherFamilyName());
             weeklyReportDto.setMotherFamilyName(staffDto.getMotherFamilyName());
             weeklyReportDto.setCompanyEmail(staffDto.getCompanyEmail());
-            weeklyReportDto.setCompany(staffDto.getCompanyName());
+            weeklyReportDto.setCompany(employee.getStaffContract().getCompany().getName());
 
             //Convert each WeeklyWork to WeeklyWorkDto
             List<WeeklyWorkDto> worksDto = new ArrayList<>();
