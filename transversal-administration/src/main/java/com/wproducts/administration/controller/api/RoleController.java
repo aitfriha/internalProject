@@ -4,9 +4,12 @@ import com.wproducts.administration.controller.request.RoleAddAbilitiesRequest;
 import com.wproducts.administration.controller.request.RoleAddRequest;
 import com.wproducts.administration.controller.request.RoleUpdateRequest;
 import com.wproducts.administration.dto.mapper.AbilityMapper;
+import com.wproducts.administration.dto.mapper.ActionMapper;
 import com.wproducts.administration.dto.mapper.RoleMapper;
-import com.wproducts.administration.dto.model.AbilityDto;
+import com.wproducts.administration.dto.model.ActionDto;
+import com.wproducts.administration.model.Action;
 import com.wproducts.administration.repository.AbilityRepository;
+import com.wproducts.administration.repository.ActionRepository;
 import com.wproducts.administration.service.RoleService;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.Response;
@@ -20,6 +23,7 @@ import javax.validation.Valid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.techniu.isbackend.exception.EntityType.Ability;
 import static org.techniu.isbackend.exception.EntityType.Role;
@@ -34,14 +38,15 @@ public class RoleController {
 
     private final RoleService roleService;
     private final RoleMapper roleMapper = Mappers.getMapper(RoleMapper.class);
-    private final AbilityMapper abilityMapper = Mappers.getMapper(AbilityMapper.class);
     private final MapValidationErrorService mapValidationErrorService;
-    private final AbilityRepository abilityRepository;
+    private final ActionRepository actionRepository;
+    private final ActionMapper actionMapper = Mappers.getMapper(ActionMapper.class);
 
-    public RoleController(RoleService roleService, MapValidationErrorService mapValidationErrorService, AbilityRepository abilityRepository) {
+    public RoleController(RoleService roleService, MapValidationErrorService mapValidationErrorService, ActionRepository actionRepository) {
         this.roleService = roleService;
         this.mapValidationErrorService = mapValidationErrorService;
-        this.abilityRepository = abilityRepository;
+        this.actionRepository = actionRepository;
+
     }
 
     /**
@@ -88,14 +93,16 @@ public class RoleController {
     @PostMapping("/update")
     public ResponseEntity update(@RequestBody @Valid RoleUpdateRequest roleUpdateRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
-        List<String> roleAbilitiesIds = roleUpdateRequest.getRoleAbilities();
-        ArrayList<AbilityDto> roleAbilities = new ArrayList<>();
-        if (roleAbilitiesIds != null) {
-            for (String roleAbility : roleAbilitiesIds) {
-                roleAbilities.add(abilityMapper.modelToDto(abilityRepository.findAbilityBy_id(roleAbility)));
+        Set<String> roleActionsIds = roleUpdateRequest.getRoleActionsIds();
+        ArrayList<ActionDto> roleActions = new ArrayList<>();
+        if (roleActionsIds != null) {
+            for (String roleAction : roleActionsIds) {
+                List<Action> action= actionRepository.findByActionConcerns(roleAction);
+               // roleActions.add(action.get(0));
+                 roleActions.add(actionMapper.modelToDto(action.get(0)));
             }
         }
-        roleService.updateRole(roleMapper.updateRequestToDto(roleUpdateRequest).setRoleAbilities(roleAbilities));
+        roleService.updateRole(roleMapper.updateRequestToDto(roleUpdateRequest).setRoleActions(roleActions));
         return new ResponseEntity<Response>(Response.ok().setPayload(
                 getMessageTemplate(Role, UPDATED)), HttpStatus.OK);
     }

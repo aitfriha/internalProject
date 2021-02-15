@@ -25,7 +25,7 @@ public class Role {
 	private String roleName;
 	private String roleDescription;
 	@DBRef
-	private Collection<Ability> roleAbilities;
+	private Collection<Action> roleActions;
 	private Instant roleCreatedAt;
 	private Instant roleUpdatedAt;
 

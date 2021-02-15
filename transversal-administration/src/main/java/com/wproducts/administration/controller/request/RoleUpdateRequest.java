@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -18,5 +19,6 @@ public class RoleUpdateRequest {
     private String roleId;
     private String roleName;
     private String roleDescription;
-    private List<String> roleAbilities;
+    //private List<String> roleActions;
+    private Set<String> roleActionsIds;
 }

@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotBlank;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.techniu.isbackend.exception.ValidationConstants.ROLE_NAME_NOT_BLANK;
 
@@ -22,5 +23,5 @@ public class RoleAddRequest {
     @NotBlank(message = ROLE_NAME_NOT_BLANK)
     private String roleName;
     private String roleDescription;
-//    private List<String> roleAbilities;
+    private Set<String> roleActionsIds;
 }
