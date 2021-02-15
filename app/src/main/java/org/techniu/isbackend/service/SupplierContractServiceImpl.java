@@ -97,9 +97,11 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         if (supplierContractDto.getType().equals("internal") ) {
             FinancialCompany financialCompany = financialCompanyRepository.findAllBy_id(supplierContractDto.getFinancialCompany().get_id());
             supplierContract.setFinancialCompany(financialCompany);
+            supplierContractDto.setExternalSupplier(null);
         } else if (supplierContractDto.getType().equals("external") ) {
             ExternalSupplier externalSupplier = externalSupplierRepository.findAllBy_id(supplierContractDto.getExternalSupplier().get_id());
             supplierContract.setExternalSupplier(externalSupplier);
+            supplierContractDto.setFinancialCompany(null);
         }
 
         Currency currency = currencyRepository.findAllBy_id(supplierContractDto.getCurrency().get_id());
@@ -109,7 +111,6 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         supplierContract.setCodeSupplier(supplierContractDto.getCodeSupplier());
         supplierContract.setDocument(supplierContractDto.getDocument());
         supplierContract.setType(supplierContractDto.getType());
-        supplierContract.setCodeContract(supplierContractDto.getType());
         supplierContract.setContractTradeVolume(supplierContractDto.getContractTradeVolume());
         supplierContract.setChangeFactor(supplierContractDto.getChangeFactor());
         supplierContract.setContractTradeVolumeEuro(supplierContractDto.getContractTradeVolumeEuro());
