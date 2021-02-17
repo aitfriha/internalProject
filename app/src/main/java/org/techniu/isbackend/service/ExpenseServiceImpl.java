@@ -92,7 +92,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<ExpenseDto> getAllExpenses(HashMap data) {
         List<ExpenseDto> result = new ArrayList<>();
-        String employeeId = data.containsKey("employeeId") ? (String) data.get("employeeId") : "";
+        String companyEmail = data.containsKey("companyEmail") ? (String) data.get("companyEmail") : "";
         String period = (String) data.get("period");
         Date sDate = null;
         Date eDate = null;
@@ -106,7 +106,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Staff employee = !employeeId.isEmpty() ? staffRepository.findAllByStaffId(employeeId) : null;
+        Staff employee = !companyEmail.isEmpty() ? staffRepository.findByCompanyEmail(companyEmail) : null;
         List<Expense> expensesList = employee != null ? expenseRepository.findAllByStaff(employee) : expenseRepository.findAll();
 
         Collections.sort(expensesList, Comparator.comparing(Expense::getExpenseDate).reversed());
@@ -498,7 +498,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public File exportExpenses(HashMap data) {
 
-        String employeeId = data.containsKey("employeeId") ? (String) data.get("employeeId") : "";
+        String companyEmail = data.containsKey("companyEmail") ? (String) data.get("companyEmail") : "";
         String fileType = String.valueOf(data.get("fileType"));
 
         String period = (String) data.get("period");
@@ -515,7 +515,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             e.printStackTrace();
         }
 
-        Staff staff = !employeeId.isEmpty() ? staffRepository.findAllByStaffId(employeeId) : null;
+        Staff staff = !companyEmail.isEmpty() ? staffRepository.findByCompanyEmail(companyEmail) : null;
 
         List<Expense> initialList = staff != null ? expenseRepository.findAllByStaff(staff) : expenseRepository.findAll();
         List<Expense> expenseList = new ArrayList<>();
