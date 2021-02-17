@@ -13,11 +13,10 @@ import org.techniu.isbackend.dto.model.PurchaseOrderDto;
 import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.repository.*;
-import org.techniu.isbackend.service.AddressService;
-import org.techniu.isbackend.service.PurchaseOrderService;
 import org.techniu.isbackend.service.PurchaseOrderService;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 import static org.techniu.isbackend.exception.EntityType.PurchaseOrder;
@@ -34,7 +33,7 @@ public class PurchaseOrderController {
     private ExternalSupplierRepository externalSupplierRepository;
     private IvaRepository ivaRepository;
     private CurrencyRepository currencyRepository;
-
+    private static int code = 0;
     private final MapValidationErrorService mapValidationErrorService;
     private final PurchaseOrderMapper purchaseOrderMapper = Mappers.getMapper(PurchaseOrderMapper.class);
 
@@ -52,7 +51,16 @@ public class PurchaseOrderController {
 
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody @Valid PurchaseOrderAddrequest purchaseOrderAddrequest, BindingResult bindingResult) {
-        System.out.println(purchaseOrderAddrequest);
+
+        code++;
+        Date d = new Date();
+
+        String year = String.valueOf(d).substring(25,29);
+
+        String Code = year.concat("/").concat(String.valueOf(code));
+        System.out.println("CODE :" + Code);
+
+        purchaseOrderAddrequest.setPurchaseNumber(Code);
 
         FinancialCompany EmitFinancialCompany = financialCompanyRepository.findAllBy_id(purchaseOrderAddrequest.getCompanyEmit().get_id());
         Currency currency = currencyRepository.findAllBy_id(purchaseOrderAddrequest.getCurrency().get_id());

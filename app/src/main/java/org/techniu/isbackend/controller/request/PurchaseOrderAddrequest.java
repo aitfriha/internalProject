@@ -18,6 +18,7 @@ public class PurchaseOrderAddrequest {
     // @NotBlank(message = IVA_CODE_NOT_BLANK)
     // @NotBlank(message = IVA_NAME_NOT_BLANK)
     private String purchaseOrderId;
+    private String purchaseNumber;
     private String factor;
     private String companyNIF;
     private String companyAddress;

@@ -86,6 +86,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         purchaseOrder.setCompanyEmit(EmitFinancialCompany);
         purchaseOrder.setCurrency(currency);
         purchaseOrder.setIva(iva);
+        purchaseOrder.setPurchaseNumber(purchaseOrderDto.getPurchaseNumber());
 
         purchaseOrder.setFactor(purchaseOrderDto.getFactor());
         purchaseOrder.setCompanyNIF(purchaseOrderDto.getCompanyNIF());

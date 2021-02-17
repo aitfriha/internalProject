@@ -23,6 +23,7 @@ public class PurchaseOrderDto {
 
     @NotNull
     private String purchaseOrderId;
+    private String purchaseNumber;
     private String factor;
     private String companyNIF;
     private String companyAddress;

@@ -18,6 +18,7 @@ public class PurchaseOrder {
 
     @Id
     private String _id;
+    private String purchaseNumber;
     private String factor;
     private String companyNIF;
     private String companyAddress;
