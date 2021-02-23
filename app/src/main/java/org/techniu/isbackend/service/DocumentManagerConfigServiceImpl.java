@@ -49,15 +49,11 @@ public class DocumentManagerConfigServiceImpl implements DocumentManagerConfigSe
                             break;
                         }
                         case "onlyoffice": {
-                            data.put("dominio", config.getProperty("onlyoffice"));
-                            break;
-                        }
-                        case "color": {
-                            data.put("color", config.getProperty("color"));
+                            data.put("onlyoffice", config.getProperty("onlyoffice"));
                             break;
                         }
                         case "configurado": {
-                            data.put("configurado", config.getProperty("configurado"));
+                            data.put("configurado", Boolean.valueOf(config.getProperty("configurado")));
                             break;
                         }
                         default: {
@@ -77,7 +73,6 @@ public class DocumentManagerConfigServiceImpl implements DocumentManagerConfigSe
     public void updateConfiguration(HashMap data) {
         if (new File(CONFIGURATION_FILE).exists()) {
             try {
-
                 Properties config = new Properties();
                 OutputStream output = new FileOutputStream(CONFIGURATION_FILE);
                 String urlnuxeo = (String) data.get("urlnuxeo");
@@ -90,8 +85,6 @@ public class DocumentManagerConfigServiceImpl implements DocumentManagerConfigSe
                 config.setProperty("dominio", dominio);
                 String onlyoffice = (String) data.get("onlyoffice");
                 config.setProperty("onlyoffice", onlyoffice);
-                String color = (String) data.get("color");
-                config.setProperty("color", color);
                 config.setProperty("configurado", "true");
 
                 config.store(output, null);
