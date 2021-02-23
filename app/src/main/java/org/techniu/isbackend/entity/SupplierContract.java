@@ -22,6 +22,7 @@ public class SupplierContract implements Serializable {
     private String codeSupplier;
     private String document;
     private String type;
+    private String typeClient;
 
     private float contractTradeVolume;
     private float changeFactor;
@@ -35,5 +36,14 @@ public class SupplierContract implements Serializable {
 
     @DBRef
     private Currency currency;
+
+    @DBRef
+    private Client client;
+
+    @DBRef
+    private FinancialContract financialContract;
+
+    @DBRef
+    private PurchaseOrder purchaseOrder;
 
 }

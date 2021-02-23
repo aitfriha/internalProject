@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.techniu.isbackend.entity.Currency;
-import org.techniu.isbackend.entity.ExternalSupplier;
-import org.techniu.isbackend.entity.FinancialCompany;
+import org.techniu.isbackend.entity.*;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +20,7 @@ public class SupplierContractUpdaterequest {
     private String codeSupplier;
     private String document;
     private String type;
+    private String typeClient;
 
     private float contractTradeVolume;
     private float changeFactor;
@@ -30,5 +29,8 @@ public class SupplierContractUpdaterequest {
     private FinancialCompany financialCompany;
     private ExternalSupplier externalSupplier;
     private Currency currency;
+    private Client client;
+    private FinancialContract financialContract;
+    private PurchaseOrder purchaseOrder;
 
 }
