@@ -75,8 +75,8 @@ public class DocumentManagerConfigServiceImpl implements DocumentManagerConfigSe
             try {
                 Properties config = new Properties();
                 OutputStream output = new FileOutputStream(CONFIGURATION_FILE);
-                String urlnuxeo = (String) data.get("urlnuxeo");
-                config.setProperty("urlnuxeo", urlnuxeo);
+                String nuxeourl = (String) data.get("nuxeourl");
+                config.setProperty("nuxeourl", nuxeourl);
                 String user = (String) data.get("user");
                 config.setProperty("user", user);
                 String password = (String) data.get("password");
