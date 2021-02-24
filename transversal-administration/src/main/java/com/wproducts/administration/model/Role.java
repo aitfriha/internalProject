@@ -26,6 +26,7 @@ public class Role {
 	private String roleDescription;
 	@DBRef
 	private Collection<Action> roleActions;
+	Map<String,Boolean> actionsNames = new HashMap<String,Boolean>();
 	private Instant roleCreatedAt;
 	private Instant roleUpdatedAt;
 

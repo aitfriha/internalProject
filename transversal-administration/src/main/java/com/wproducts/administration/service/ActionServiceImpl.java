@@ -2,8 +2,9 @@ package com.wproducts.administration.service;
 import com.wproducts.administration.dto.mapper.ActionMapper;
 import com.wproducts.administration.dto.model.ActionDto;
 import com.wproducts.administration.model.Action;
-import com.wproducts.administration.model.Action;
+import com.wproducts.administration.model.Role;
 import com.wproducts.administration.repository.ActionRepository;
+import com.wproducts.administration.repository.RoleRepository;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -22,10 +23,12 @@ import static org.techniu.isbackend.exception.ExceptionType.*;
 public class ActionServiceImpl implements ActionService {
 
     private final ActionRepository actionRepository;
+    private final RoleRepository roleRepository;
     private final ActionMapper actionMapper = Mappers.getMapper(ActionMapper.class);
 
-    public ActionServiceImpl(ActionRepository actionRepository) {
+    public ActionServiceImpl(ActionRepository actionRepository, RoleRepository roleRepository) {
         this.actionRepository = actionRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -35,45 +38,27 @@ public class ActionServiceImpl implements ActionService {
      */
     @Override
     public void save(ActionDto actionDto) {
-        actionDto.setActionCode(actionDto.getActionCode().toLowerCase());
-
-        List<Action> actions = actionRepository.findByActionConcerns(actionDto.getActionConcerns());
-        if (actionDto.getActionCode().contains(" ")) {
-            throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
-        }
-        for (Action action : actions) {
-            if(action.getActionCode().equals(actionDto.getActionCode().toLowerCase())){
-                throw exception(DUPLICATE_ENTITY);
-            }
-        }
+        Role role =roleRepository.findBy_id(actionDto.getRoleId());
         Action action1 = actionMapper.dtoToModel(actionDto)
          .setActionCreatedAt(Instant.now());
+        action1.setRole(role);
+        System.out.println(action1);
         actionRepository.save(action1);
     }
     
 
     @Override
     public void updateAction(ActionDto actionDto) {
-        actionDto.setActionCode(actionDto.getActionCode().toLowerCase());
-
-        if (actionDto.getActionCode().contains(" ")) {
-            throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
-        }
         Optional<Action> action = Optional.ofNullable(actionRepository.findBy_id(actionDto.getActionId()));
         if (!action.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-        Optional<Action> actionCode = Optional.ofNullable(actionRepository.findByActionCode(actionDto.getActionCode()));
-
-        if (actionCode.isPresent() && !(action.get().getActionCode().equals(actionDto.getActionCode())) ) {
-            throw exception(DUPLICATE_ENTITY);
-        }
-        List<Action> actions = actionRepository.findByActionConcerns(actionDto.getActionConcerns());
+        /*List<Action> actions = actionRepository.findByActionConcerns(actionDto.getActionConcerns());
         for (Action action1 : actions) {
             if(action1.getActionCode().equals(actionDto.getActionCode())){
                 throw exception(DUPLICATE_ENTITY);
             }
-        }
+        }*/
         Action action2 = actionMapper.dtoToModel(actionDto);
         action2.setActionUpdatedAt(Instant.now());
         action2.setActionCreatedAt(action.get().getActionCreatedAt());

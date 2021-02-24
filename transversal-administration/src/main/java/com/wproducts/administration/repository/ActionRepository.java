@@ -9,8 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ActionRepository extends MongoRepository<Action, String> {
-    Action findByActionCode(String s);
     Action findBy_id(String s);
-    List<Action> findByActionConcerns(String s);
-
 }

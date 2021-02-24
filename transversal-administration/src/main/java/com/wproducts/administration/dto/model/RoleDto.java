@@ -10,6 +10,8 @@ import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -24,8 +26,9 @@ public class RoleDto {
     private String roleId;
     private String roleName;
     private String roleDescription;
-    private Collection<ActionDto> roleActions;
+    /*private Collection<ActionDto> roleActions;*/
     private String roleCreatedAt;
     private String roleUpdatedAt;
-    private Set<String> roleActionsIds;
+    /*private Set<String> roleActionsIds;*/
+    Map<String,Boolean> actionsNames = new HashMap<String,Boolean>();
 }

@@ -8,10 +8,14 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 @Data
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -19,9 +23,8 @@ import java.time.Instant;
 public class ActionDto {
 
     private String actionId;
-    private String actionCode;
-    private String actionConcerns;
-    private String actionDescription;
+    private String  roleId;
     private String actionCreatedAt;
     private String actionUpdatedAt;
+    Map<String,Boolean> actionsNames = new HashMap<String,Boolean>();
 }

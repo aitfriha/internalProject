@@ -65,6 +65,7 @@ public class RoleController {
 //                roleAbilities.add(abilityMapper.modelToDto(abilityRepository.findAbilityBy_id(roleAbility)));
 //            }
 //        }
+        System.out.println(roleMapper.addRequestToDto(roleAddRequest));
         roleService.save(roleMapper.addRequestToDto(roleAddRequest));
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Role, ADDED)), HttpStatus.OK);
     }
@@ -97,12 +98,12 @@ public class RoleController {
         ArrayList<ActionDto> roleActions = new ArrayList<>();
         if (roleActionsIds != null) {
             for (String roleAction : roleActionsIds) {
-                List<Action> action= actionRepository.findByActionConcerns(roleAction);
+               // List<Action> action= actionRepository.findByActionConcerns(roleAction);
                // roleActions.add(action.get(0));
-                 roleActions.add(actionMapper.modelToDto(action.get(0)));
+               //  roleActions.add(actionMapper.modelToDto(action.get(0)));
             }
         }
-        roleService.updateRole(roleMapper.updateRequestToDto(roleUpdateRequest).setRoleActions(roleActions));
+        roleService.updateRole(roleMapper.updateRequestToDto(roleUpdateRequest));
         return new ResponseEntity<Response>(Response.ok().setPayload(
                 getMessageTemplate(Role, UPDATED)), HttpStatus.OK);
     }

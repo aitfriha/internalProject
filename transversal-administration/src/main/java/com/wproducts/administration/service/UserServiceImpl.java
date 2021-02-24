@@ -66,14 +66,14 @@ public class UserServiceImpl implements UserService {
         userAddRequest.setUserEmail(userAddRequest.getUserEmail().toLowerCase());
 
         Optional<User> user = Optional.ofNullable(userRepository.findByUserEmail(userAddRequest.getUserEmail()));
-        Department department = departmentRepository.findByDepartmentCode(userAddRequest.getUserDepartmentId());
+       // Department department = departmentRepository.findByDepartmentCode(userAddRequest.getUserDepartmentId());
         if (user.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
         }
         List<Role> roles = new ArrayList<>();
         if (userAddRequest.getUserRolesIds() != null) {
             for (String s : userAddRequest.getUserRolesIds()) {
-                Optional<Role> adminField = Optional.ofNullable(roleRepository.findByRoleName(s));
+                Optional<Role> adminField = Optional.ofNullable(roleRepository.findByRoleName(s.toLowerCase()));
                 adminField.ifPresent(roles::add);
             }
         }
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
         String code = new BigInteger(32, random).toString(16).toUpperCase();
         User user1 = userMapper.dtoToModel(userMapper.addRequestToDto(userAddRequest))
                 .setUserPassword(bCryptPasswordEncoder.encode(code))
-                .setUserDepartment(department)
+                //.setUserDepartment(department)
                 .setUserRoles(roles)
                 .setUserCreatedAt(Instant.now());
 
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
         List<Role> roles = new ArrayList<>();
         if (userUpdateRequest.getUserRolesIds() != null) {
             for (String s : userUpdateRequest.getUserRolesIds()) {
-                Optional<Role> role = Optional.ofNullable(roleRepository.findByRoleName(s));
+                Optional<Role> role = Optional.ofNullable(roleRepository.findByRoleName(s.toLowerCase()));
                 role.ifPresent(roles::add);
             }
         }
@@ -352,7 +352,7 @@ public class UserServiceImpl implements UserService {
             Set<String> rolesId = new HashSet<>();
             if (user.getUserRoles() != null) {
                 for (Role role : user.getUserRoles()) {
-                    rolesId.add(roleMapper.modelToDto(role).getRoleName());
+                    rolesId.add(roleMapper.modelToDto(role).getRoleName().toUpperCase());
                 }
             }
             if (user.getUserUpdatedAt() != null) {

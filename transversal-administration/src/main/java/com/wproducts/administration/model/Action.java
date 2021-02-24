@@ -7,9 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
+import java.util.*;
+
 @Data()
 @AllArgsConstructor()
 @NoArgsConstructor()
@@ -19,10 +22,9 @@ import java.time.Instant;
 public class Action {
 	@Id
 	private String _id;
-	private String actionCode;
-	private String actionConcerns;
-	private String actionDescription;
 	private Instant actionCreatedAt;
 	private Instant actionUpdatedAt;
-
+	Map<String,Boolean> actionsNames = new HashMap<String,Boolean>();
+	@DBRef
+	private Role role;
 }
