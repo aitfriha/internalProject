@@ -33,6 +33,8 @@ public class PurchaseOrderController {
     private ExternalSupplierRepository externalSupplierRepository;
     private IvaRepository ivaRepository;
     private CurrencyRepository currencyRepository;
+    private ClientRepository clientRepository;
+    private FinancialContractRepository financialContractRepository;
     private static int code = 0;
     private final MapValidationErrorService mapValidationErrorService;
     private final PurchaseOrderMapper purchaseOrderMapper = Mappers.getMapper(PurchaseOrderMapper.class);
@@ -40,13 +42,15 @@ public class PurchaseOrderController {
 
     public PurchaseOrderController (PurchaseOrderService purchaseOrderService, ExternalSupplierRepository externalSupplierRepository,
                                     MapValidationErrorService mapValidationErrorService, FinancialCompanyRepository financialCompanyRepository, ContractStatusRepository contractStatusRepository,
-                                    IvaRepository ivaRepository, CurrencyRepository currencyRepository) {
+                                    IvaRepository ivaRepository, CurrencyRepository currencyRepository, ClientRepository clientRepository, FinancialContractRepository financialContractRepository) {
         this.purchaseOrderService = purchaseOrderService;
         this.mapValidationErrorService = mapValidationErrorService;
         this.financialCompanyRepository = financialCompanyRepository;
         this.externalSupplierRepository = externalSupplierRepository;
         this.currencyRepository = currencyRepository;
         this.ivaRepository = ivaRepository;
+        this.clientRepository = clientRepository;
+        this.financialContractRepository = financialContractRepository;
     }
 
     @PostMapping("/add")
@@ -65,6 +69,8 @@ public class PurchaseOrderController {
         FinancialCompany EmitFinancialCompany = financialCompanyRepository.findAllBy_id(purchaseOrderAddrequest.getCompanyEmit().get_id());
         Currency currency = currencyRepository.findAllBy_id(purchaseOrderAddrequest.getCurrency().get_id());
         Iva iva = ivaRepository.findAllBy_id(purchaseOrderAddrequest.getIva().get_id());
+        Client client = clientRepository.findBy_id(purchaseOrderAddrequest.getClient().get_id());
+
         if (purchaseOrderAddrequest.getReceptionSupplierType().equals("external")) {
             ExternalSupplier ReceptionExternalSupplier = externalSupplierRepository.findAllBy_id(purchaseOrderAddrequest.getExternalSupplierReception().get_id());
             purchaseOrderAddrequest.setExternalSupplierReception(ReceptionExternalSupplier);
@@ -77,6 +83,14 @@ public class PurchaseOrderController {
             purchaseOrderAddrequest.setExternalSupplierReception(null);
         }
 
+        if (purchaseOrderAddrequest.getTypeClient().equals("contract") ) {
+            FinancialContract financialContract = financialContractRepository.findAllBy_id(purchaseOrderAddrequest.getFinancialContract().get_id());
+            purchaseOrderAddrequest.setFinancialContract(financialContract);
+        } else if (purchaseOrderAddrequest.getTypeClient().equals("po") ) {
+            purchaseOrderAddrequest.setFinancialContract(null);
+        }
+
+        purchaseOrderAddrequest.setClient(client);
         purchaseOrderAddrequest.setCompanyEmit(EmitFinancialCompany);
         purchaseOrderAddrequest.setCurrency(currency);
         purchaseOrderAddrequest.setIva(iva);

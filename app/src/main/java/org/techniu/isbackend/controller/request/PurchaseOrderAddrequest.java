@@ -29,6 +29,7 @@ public class PurchaseOrderAddrequest {
     private String supplierNIF;
     private String supplierResponsible;
     private String paymentMethod;
+    private String typeClient;
 
     private List<String> termDescription;
     private List<String> termTitle;
@@ -60,5 +61,7 @@ public class PurchaseOrderAddrequest {
     private ExternalSupplier externalSupplierReception;
     private Iva iva;
     private Currency currency;
+    private Client client;
+    private FinancialContract financialContract;
 
 }

@@ -29,6 +29,7 @@ public class PurchaseOrder {
     private String supplierNIF;
     private String supplierResponsible;
     private String paymentMethod;
+    private String typeClient;
 
     private List<String> termDescription;
     private List<String> termTitle;
@@ -70,6 +71,12 @@ public class PurchaseOrder {
 
     @DBRef
     private Currency currency;
+
+    @DBRef
+    private Client client;
+
+    @DBRef
+    private FinancialContract financialContract;
 
     private Date creationDate;
     private Date modificationDate;
