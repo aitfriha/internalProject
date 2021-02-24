@@ -25,15 +25,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private ExternalSupplierRepository externalSupplierRepository;
     private IvaRepository ivaRepository;
     private CurrencyRepository currencyRepository;
+    private ClientRepository clientRepository;
+    private FinancialContractRepository financialContractRepository;
     private final PurchaseOrderMapper purchaseOrderMapper = Mappers.getMapper(PurchaseOrderMapper.class);
 
     public PurchaseOrderServiceImpl(PurchaseOrderRepository purchaseOrderRepository, IvaRepository ivaRepository, ExternalSupplierRepository externalSupplierRepository,
-           FinancialCompanyRepository financialCompanyRepository, CurrencyRepository currencyRepository) {
+           FinancialCompanyRepository financialCompanyRepository, CurrencyRepository currencyRepository, ClientRepository clientRepository, FinancialContractRepository financialContractRepository) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.financialCompanyRepository = financialCompanyRepository;
         this.currencyRepository = currencyRepository;
         this.ivaRepository = ivaRepository;
         this.externalSupplierRepository = externalSupplierRepository;
+        this.clientRepository = clientRepository;
+        this.financialContractRepository = financialContractRepository;
     }
 
     @Override
@@ -73,6 +77,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         FinancialCompany EmitFinancialCompany = financialCompanyRepository.findAllBy_id(purchaseOrderDto.getCompanyEmit().get_id());
         Currency currency = currencyRepository.findAllBy_id(purchaseOrderDto.getCurrency().get_id());
         Iva iva = ivaRepository.findAllBy_id(purchaseOrderDto.getIva().get_id());
+        Client client = clientRepository.findBy_id(purchaseOrderDto.getClient().get_id());
+
+
         if (purchaseOrderDto.getReceptionSupplierType().equals("external")) {
             ExternalSupplier ReceptionExternalSupplier = externalSupplierRepository.findAllBy_id(purchaseOrderDto.getExternalSupplierReception().get_id());
             purchaseOrder.setExternalSupplierReception(ReceptionExternalSupplier);
@@ -83,11 +90,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
             purchaseOrder.setInternLogo(purchaseOrderDto.getInternLogo());
         }
 
+        if (purchaseOrderDto.getTypeClient().equals("contract") ) {
+            FinancialContract financialContract = financialContractRepository.findAllBy_id(purchaseOrderDto.getFinancialContract().get_id());
+            purchaseOrder.setFinancialContract(financialContract);
+        } else if (purchaseOrderDto.getTypeClient().equals("po") ) {
+            purchaseOrder.setFinancialContract(null);
+        }
+
         purchaseOrder.setCompanyEmit(EmitFinancialCompany);
         purchaseOrder.setCurrency(currency);
         purchaseOrder.setIva(iva);
+        purchaseOrder.setPurchaseNumber(purchaseOrderDto.getPurchaseNumber());
+        purchaseOrder.setClient(client);
 
         purchaseOrder.setFactor(purchaseOrderDto.getFactor());
+        purchaseOrder.setTypeClient(purchaseOrderDto.getTypeClient());
         purchaseOrder.setCompanyNIF(purchaseOrderDto.getCompanyNIF());
         purchaseOrder.setCompanyAddress(purchaseOrderDto.getCompanyAddress());
         purchaseOrder.setCompanyLogo(purchaseOrderDto.getCompanyLogo());

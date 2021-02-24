@@ -47,7 +47,9 @@ public enum ExceptionType {
     ASSOCIATED_WITH_SOME_TRAVEL_REQUEST("associated.with.some.travel.request"),
     ASSOCIATED_WITH_SOME_EXPENSE("associated.with.some.expense"),
     DUPLICATE_ACTION("duplicate.action"),
-    NOT_ASSOCIATED_DATA("not.associated.data");
+    NOT_ASSOCIATED_DATA("not.associated.data"),
+
+    CONFIG_FILE_NOT_FOUND("config.file.not.found");
 
     String value;
 

@@ -7,8 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.techniu.isbackend.entity.ExternalSupplier;
-import org.techniu.isbackend.entity.FinancialCompany;
+import org.techniu.isbackend.entity.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -29,11 +28,29 @@ public class SupplierContractDto {
     private String document;
     @NotNull
     private String type;
+    @NotNull
+    private String typeClient;
+
+    private float contractTradeVolume;
+    private float changeFactor;
+    private float contractTradeVolumeEuro;
 
     @DBRef
     private FinancialCompany financialCompany;
 
     @DBRef
     private ExternalSupplier externalSupplier;
+
+    @DBRef
+    private Currency currency;
+
+    @DBRef
+    private Client client;
+
+    @DBRef
+    private FinancialContract financialContract;
+
+    @DBRef
+    private PurchaseOrder purchaseOrder;
 
 }

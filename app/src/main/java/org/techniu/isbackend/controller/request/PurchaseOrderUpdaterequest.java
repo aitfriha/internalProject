@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.techniu.isbackend.entity.Currency;
-import org.techniu.isbackend.entity.ExternalSupplier;
-import org.techniu.isbackend.entity.FinancialCompany;
-import org.techniu.isbackend.entity.Iva;
+import org.techniu.isbackend.entity.*;
 
 import java.util.List;
 
@@ -19,6 +16,7 @@ public class PurchaseOrderUpdaterequest {
     // @NotBlank(message = IVA_CODE_NOT_BLANK)
     // @NotBlank(message = IVA_NAME_NOT_BLANK)
     private String purchaseOrderId;
+    private String purchaseNumber;
     private String factor;
     private String companyNIF;
     private String companyAddress;
@@ -29,6 +27,7 @@ public class PurchaseOrderUpdaterequest {
     private String supplierNIF;
     private String supplierResponsible;
     private String paymentMethod;
+    private String typeClient;
 
     private List<String> termDescription;
     private List<String> termTitle;
@@ -60,5 +59,7 @@ public class PurchaseOrderUpdaterequest {
     private ExternalSupplier externalSupplierReception;
     private Iva iva;
     private Currency currency;
+    private Client client;
+    private FinancialContract financialContract;
 
 }

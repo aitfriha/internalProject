@@ -25,7 +25,7 @@ public class Util {
 
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
-        calendar.set(Calendar.WEEK_OF_YEAR, weekOfYear);
+        calendar.set(Calendar.WEEK_OF_YEAR, weekOfYear + 1);
         calendar.set(Calendar.YEAR, year);
 
         result.put("start", calendar.getTime());

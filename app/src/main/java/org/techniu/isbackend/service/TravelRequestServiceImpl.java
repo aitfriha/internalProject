@@ -90,7 +90,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
     @Override
     public List<TravelRequestDto> getAllTravelRequests(HashMap data) {
         List<TravelRequestDto> result = new ArrayList<>();
-        String requesterId = data.containsKey("requesterId") ? (String) data.get("requesterId") : "";
+        String companyEmail = data.containsKey("companyEmail") ? (String) data.get("companyEmail") : "";
         String period = (String) data.get("period");
         Date sDate = null;
         Date eDate = null;
@@ -104,7 +104,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Staff requester = !requesterId.isEmpty() ? staffRepository.findAllByStaffId(requesterId) : null;
+        Staff requester = !companyEmail.isEmpty() ? staffRepository.findByCompanyEmail(companyEmail) : null;
         List<TravelRequest> travelRequestsList = requester != null ? travelRequestRepository.findAllByRequester(requester) : travelRequestRepository.findAll();
 
         Collections.sort(travelRequestsList, Comparator.comparing(TravelRequest::getRequestDate).reversed());
@@ -292,7 +292,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
     @Override
     public File exportTravelRequests(HashMap data) {
 
-        String requesterId = data.containsKey("requesterId") ? (String) data.get("requesterId") : "";
+        String companyEmail = data.containsKey("companyEmail") ? (String) data.get("companyEmail") : "";
         String fileType = String.valueOf(data.get("fileType"));
 
         String period = (String) data.get("period");
@@ -309,7 +309,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
             e.printStackTrace();
         }
 
-        Staff requester = !requesterId.isEmpty() ? staffRepository.findAllByStaffId(requesterId) : null;
+        Staff requester = !companyEmail.isEmpty() ? staffRepository.findByCompanyEmail(companyEmail) : null;
 
         List<TravelRequest> initialList = requester != null ? travelRequestRepository.findAllByRequester(requester) : travelRequestRepository.findAll();
         List<TravelRequest> travelRequestList = new ArrayList<>();

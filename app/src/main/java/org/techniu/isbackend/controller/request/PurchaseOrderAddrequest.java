@@ -18,6 +18,7 @@ public class PurchaseOrderAddrequest {
     // @NotBlank(message = IVA_CODE_NOT_BLANK)
     // @NotBlank(message = IVA_NAME_NOT_BLANK)
     private String purchaseOrderId;
+    private String purchaseNumber;
     private String factor;
     private String companyNIF;
     private String companyAddress;
@@ -28,6 +29,7 @@ public class PurchaseOrderAddrequest {
     private String supplierNIF;
     private String supplierResponsible;
     private String paymentMethod;
+    private String typeClient;
 
     private List<String> termDescription;
     private List<String> termTitle;
@@ -59,5 +61,7 @@ public class PurchaseOrderAddrequest {
     private ExternalSupplier externalSupplierReception;
     private Iva iva;
     private Currency currency;
+    private Client client;
+    private FinancialContract financialContract;
 
 }

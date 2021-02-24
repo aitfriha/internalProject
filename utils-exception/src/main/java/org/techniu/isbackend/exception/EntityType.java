@@ -66,5 +66,7 @@ public enum EntityType {
     RequestStatus,
     WeeklyReport,
     WeeklyReportConfig,
-    PasswordResetToken
+    PasswordResetToken,
+
+    DocumentManagerConfig
 }

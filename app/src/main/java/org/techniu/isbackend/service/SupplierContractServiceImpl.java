@@ -5,15 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.SupplierContractMapper;
 import org.techniu.isbackend.dto.model.SupplierContractDto;
-import org.techniu.isbackend.entity.ExternalSupplier;
-import org.techniu.isbackend.entity.FinancialCompany;
-import org.techniu.isbackend.entity.SupplierContract;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
-import org.techniu.isbackend.repository.ExternalSupplierRepository;
-import org.techniu.isbackend.repository.FinancialCompanyRepository;
-import org.techniu.isbackend.repository.SupplierContractRepository;
+import org.techniu.isbackend.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +23,23 @@ public class SupplierContractServiceImpl implements SupplierContractService {
     private SupplierContractRepository supplierContractRepository;
     private FinancialCompanyRepository financialCompanyRepository;
     private ExternalSupplierRepository externalSupplierRepository;
+    private ClientRepository clientRepository;
+    private FinancialContractRepository financialContractRepository;
+    private PurchaseOrderRepository purchaseOrderRepository;
+    private CurrencyRepository currencyRepository;
     private static int code = 0;
     private final SupplierContractMapper supplierContractMapper = Mappers.getMapper(SupplierContractMapper.class);
 
-    public SupplierContractServiceImpl(SupplierContractRepository supplierContractRepository,
-                                       FinancialCompanyRepository financialCompanyRepository,
-                                       ExternalSupplierRepository externalSupplierRepository) {
+    public SupplierContractServiceImpl(SupplierContractRepository supplierContractRepository, CurrencyRepository currencyRepository,
+                                       FinancialCompanyRepository financialCompanyRepository, ClientRepository clientRepository,
+                                       ExternalSupplierRepository externalSupplierRepository, FinancialContractRepository financialContractRepository, PurchaseOrderRepository purchaseOrderRepository) {
         this.supplierContractRepository = supplierContractRepository;
         this.financialCompanyRepository = financialCompanyRepository;
         this.externalSupplierRepository = externalSupplierRepository;
+        this.clientRepository = clientRepository;
+        this.financialContractRepository = financialContractRepository;
+        this.purchaseOrderRepository = purchaseOrderRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     @Override
@@ -52,8 +56,21 @@ public class SupplierContractServiceImpl implements SupplierContractService {
             supplierContractDto.setExternalSupplier(externalSupplier);
             supplierContractDto.setFinancialCompany(null);
         }
+        if (supplierContractDto.getTypeClient().equals("contract") ) {
+            FinancialContract financialContract = financialContractRepository.findAllBy_id(supplierContractDto.getFinancialContract().get_id());
+            supplierContractDto.setFinancialContract(financialContract);
+            supplierContractDto.setPurchaseOrder(null);
+        } else if (supplierContractDto.getTypeClient().equals("po") ) {
+            PurchaseOrder purchaseOrder = purchaseOrderRepository.findAllBy_id(supplierContractDto.getPurchaseOrder().get_id());
+            supplierContractDto.setPurchaseOrder(purchaseOrder);
+            supplierContractDto.setFinancialContract(null);
+        }
         System.out.println("CODE :" + supplierContractDto.getCodeSupplier().concat(String.valueOf(code)));
         supplierContractDto.setCodeContract(supplierContractDto.getCodeSupplier().concat(String.valueOf(code)));
+        Currency currency = currencyRepository.findAllBy_id(supplierContractDto.getCurrency().get_id());
+        supplierContractDto.setCurrency(currency);
+        Client client = clientRepository.findBy_id(supplierContractDto.getClient().get_id());
+        supplierContractDto.setClient(client);
         supplierContractRepository.save(supplierContractMapper.dtoToModel(supplierContractDto));
     }
 
@@ -91,16 +108,35 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         if (supplierContractDto.getType().equals("internal") ) {
             FinancialCompany financialCompany = financialCompanyRepository.findAllBy_id(supplierContractDto.getFinancialCompany().get_id());
             supplierContract.setFinancialCompany(financialCompany);
+            supplierContract.setExternalSupplier(null);
         } else if (supplierContractDto.getType().equals("external") ) {
             ExternalSupplier externalSupplier = externalSupplierRepository.findAllBy_id(supplierContractDto.getExternalSupplier().get_id());
             supplierContract.setExternalSupplier(externalSupplier);
+            supplierContract.setFinancialCompany(null);
         }
+        if (supplierContractDto.getTypeClient().equals("contract") ) {
+            FinancialContract financialContract = financialContractRepository.findAllBy_id(supplierContractDto.getFinancialContract().get_id());
+            supplierContract.setFinancialContract(financialContract);
+            supplierContract.setPurchaseOrder(null);
+        } else if (supplierContractDto.getTypeClient().equals("po") ) {
+            PurchaseOrder purchaseOrder = purchaseOrderRepository.findAllBy_id(supplierContractDto.getPurchaseOrder().get_id());
+            supplierContract.setPurchaseOrder(purchaseOrder);
+            supplierContract.setFinancialContract(null);
+        }
+
+        Currency currency = currencyRepository.findAllBy_id(supplierContractDto.getCurrency().get_id());
+        supplierContract.setCurrency(currency);
+        Client client = clientRepository.findBy_id(supplierContractDto.getClient().get_id());
+        supplierContract.setClient(client);
 
         supplierContract.setName(supplierContractDto.getName());
         supplierContract.setCodeSupplier(supplierContractDto.getCodeSupplier());
         supplierContract.setDocument(supplierContractDto.getDocument());
         supplierContract.setType(supplierContractDto.getType());
-        supplierContract.setCodeContract(supplierContractDto.getType());
+        supplierContract.setTypeClient(supplierContractDto.getTypeClient());
+        supplierContract.setContractTradeVolume(supplierContractDto.getContractTradeVolume());
+        supplierContract.setChangeFactor(supplierContractDto.getChangeFactor());
+        supplierContract.setContractTradeVolumeEuro(supplierContractDto.getContractTradeVolumeEuro());
 
         System.out.println(supplierContract);
 

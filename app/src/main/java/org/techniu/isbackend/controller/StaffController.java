@@ -171,8 +171,8 @@ public class StaffController {
     }
 
     @RequestMapping(path = "staff-by-company-email/{companyEmail}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public StaffDto getStaffByCompanyEmail(@PathVariable("companyEmail") String companyEmail){
-        return staffService.getStaffByCompanyEmail(companyEmail);
+    public ResponseEntity getStaffByCompanyEmail(@PathVariable("companyEmail") String companyEmail){
+       return new ResponseEntity<Response>(Response.ok().setPayload(staffService.getStaffByCompanyEmail(companyEmail)), HttpStatus.OK);
     }
 
     /**
