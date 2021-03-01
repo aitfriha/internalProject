@@ -113,12 +113,12 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
                                 calendar.setTime(sDate);
                                 int sYear = calendar.get(Calendar.YEAR);
                                 int sWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-                                proceed = year >= sYear && week >= sWeek;
+                                proceed =  year > sYear || (year == sYear && week >= sWeek);    //year >= sYear && week >= sWeek;
                             } else {
                                 calendar.setTime(eDate);
                                 int eYear = calendar.get(Calendar.YEAR);
                                 int eWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-                                proceed = year <= eYear && week <= eWeek;
+                                proceed = year < eYear || (year == eYear && week <= eWeek); //year <= eYear && week <= eWeek;
                             }
                         } else {
                             calendar.setTime(sDate);
