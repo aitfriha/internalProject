@@ -24,6 +24,7 @@ import static org.techniu.isbackend.exception.ValidationConstants.ROLE_NAME_NOT_
 public class RoleAddRequest {
     @NotBlank(message = ROLE_NAME_NOT_BLANK)
     private String roleName;
+    private String oldRoleName;
     private String roleDescription;
     /*private Set<String> roleActionsIds;*/
     Map<String,Boolean> actionsNames = new HashMap<String,Boolean>();

@@ -58,15 +58,16 @@ public class RoleController {
     @PostMapping("/add")
     public ResponseEntity signup(@RequestBody @Valid RoleAddRequest roleAddRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
-//        List<String> roleAbilitiesIds = roleAddRequest.getRoleAbilities();
-//        ArrayList<AbilityDto> roleAbilities = new ArrayList<>();
-//        if(roleAbilitiesIds != null) {
-//            for (String roleAbility : roleAbilitiesIds) {
-//                roleAbilities.add(abilityMapper.modelToDto(abilityRepository.findAbilityBy_id(roleAbility)));
-//            }
-//        }
-        System.out.println(roleMapper.addRequestToDto(roleAddRequest));
-        roleService.save(roleMapper.addRequestToDto(roleAddRequest));
+        System.out.println(roleAddRequest);
+        //System.out.println(roleMapper.addRequestToDto(roleAddRequest));
+        if(roleAddRequest.getOldRoleName().equals("")) {
+            roleService.save(roleMapper.addRequestToDto(roleAddRequest));
+        }
+        else
+        {
+            roleService.updateRole(roleMapper.addRequestToDto(roleAddRequest),roleAddRequest.getOldRoleName().toLowerCase());
+            return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Role, UPDATED)), HttpStatus.OK);
+        }
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Role, ADDED)), HttpStatus.OK);
     }
 
@@ -103,7 +104,7 @@ public class RoleController {
                //  roleActions.add(actionMapper.modelToDto(action.get(0)));
             }
         }
-        roleService.updateRole(roleMapper.updateRequestToDto(roleUpdateRequest));
+        roleService.updateRole(roleMapper.updateRequestToDto(roleUpdateRequest),"f");
         return new ResponseEntity<Response>(Response.ok().setPayload(
                 getMessageTemplate(Role, UPDATED)), HttpStatus.OK);
     }

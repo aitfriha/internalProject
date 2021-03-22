@@ -42,7 +42,6 @@ public class ActionServiceImpl implements ActionService {
         Action action1 = actionMapper.dtoToModel(actionDto)
          .setActionCreatedAt(Instant.now());
         action1.setRole(role);
-        System.out.println(action1);
         actionRepository.save(action1);
     }
     
