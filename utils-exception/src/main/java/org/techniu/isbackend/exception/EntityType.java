@@ -4,6 +4,7 @@ public enum EntityType {
     TypeOfCurrency,
     SupplierType,
     PurchaseOrder,
+    SupplierPayment,
     PurchaseOrderAcceptance,
     ExternalSupplier,
     EconomicStaffYear,
