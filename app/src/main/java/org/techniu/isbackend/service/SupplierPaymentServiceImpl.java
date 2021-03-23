@@ -26,9 +26,10 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
     private ClientRepository clientRepository;
     private FinancialContractRepository financialContractRepository;
     private PurchaseOrderRepository purchaseOrderRepository;
+    private CurrencyRepository currencyRepository;
     private final SupplierPaymentMapper supplierPaymentMapper = Mappers.getMapper(SupplierPaymentMapper.class);
 
-    public SupplierPaymentServiceImpl(SupplierPaymentRepository supplierPaymentRepository, FinancialCompanyRepository financialCompanyRepository, ClientRepository clientRepository,
+    public SupplierPaymentServiceImpl(SupplierPaymentRepository supplierPaymentRepository, CurrencyRepository currencyRepository, FinancialCompanyRepository financialCompanyRepository, ClientRepository clientRepository,
                                       ExternalSupplierRepository externalSupplierRepository, FinancialContractRepository financialContractRepository, PurchaseOrderRepository purchaseOrderRepository) {
         this.supplierPaymentRepository = supplierPaymentRepository;
         this.financialCompanyRepository = financialCompanyRepository;
@@ -36,6 +37,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         this.clientRepository = clientRepository;
         this.financialContractRepository = financialContractRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     @Override
@@ -62,6 +64,8 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             supplierPaymentDto.setFinancialContract(null);
         }
 
+        Currency currency = currencyRepository.findAllBy_id(supplierPaymentDto.getCurrency().get_id());
+        supplierPaymentDto.setCurrency(currency);
         Client client = clientRepository.findBy_id(supplierPaymentDto.getClient().get_id());
         supplierPaymentDto.setClient(client);
         supplierPaymentRepository.save(supplierPaymentMapper.dtoToModel(supplierPaymentDto));
@@ -119,6 +123,8 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
 
         Client client = clientRepository.findBy_id(supplierPaymentDto.getClient().get_id());
         supplierPayment.setClient(client);
+        Currency currency = currencyRepository.findAllBy_id(supplierPaymentDto.getCurrency().get_id());
+        supplierPayment.setCurrency(currency);
 
         supplierPayment.setCodeSupplier(supplierPaymentDto.getCodeSupplier());
         supplierPayment.setSupplierBill(supplierPaymentDto.getSupplierBill());

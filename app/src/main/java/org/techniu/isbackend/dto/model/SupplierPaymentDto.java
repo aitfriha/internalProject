@@ -27,6 +27,10 @@ public class SupplierPaymentDto {
     private String type;
     private String typeClient;
 
+    private float contractTradeVolume;
+    private float changeFactor;
+    private float contractTradeVolumeEuro;
+
     private Date paymentDate;
     private Date reelPaymentDate;
 
@@ -44,5 +48,8 @@ public class SupplierPaymentDto {
 
     @DBRef
     private PurchaseOrder purchaseOrder;
+
+    @DBRef
+    private Currency currency;
 
 }
