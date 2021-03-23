@@ -25,7 +25,7 @@ public interface RoleService {
      *
      * @param roleDto - roleDto
      */
-    void updateRole(RoleDto roleDto);
+    void updateRole(RoleDto roleDto,String oldRoleName);
 
     /**
      * delete Role

@@ -372,7 +372,7 @@ public class RoleServiceImpl implements RoleService {
             ///  actions.add(abilityService.saveAndReturnAbility(abilityAddRequest));
         }
 
-        role.setRoleActions(actions);
+      //  role.setRoleActions(actions);
         role.setRoleUpdatedAt(Instant.now());
 
         roleRepository.save(role);
@@ -380,31 +380,28 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void updateRole(RoleDto roleDto) {
+    public void updateRole(RoleDto roleDto,String oldRoleName) {
 
         roleDto.setRoleName(roleDto.getRoleName().toLowerCase());
         if (roleDto.getRoleName().contains(" ")) {
             throw exception(Name_SHOULD_NOT_CONTAIN_SPACES);
         }
-        Optional<Role> role = Optional.ofNullable(roleRepository.findBy_id(roleDto.getRoleId()));
+        Optional<Role> role = Optional.ofNullable(roleRepository.findByRoleName(oldRoleName));
         if (!role.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
 
-        Optional<Role> role1 = Optional.ofNullable(roleRepository.findByRoleName(roleDto.getRoleName()));
-        if (role1.isPresent() && !(role.get().getRoleName().equals(roleDto.getRoleName()))) {
+        Optional<Role> role1 = Optional.ofNullable(roleRepository.findByRoleName(oldRoleName));
+        if (role1.isPresent() && !(role.get().getRoleName().equals(oldRoleName))) {
             throw exception(DUPLICATE_ENTITY);
         }
-        /*ArrayList<Action> roleActions = new ArrayList<>();
-        for (ActionDto actionDto : roleDto.getRoleActions()) {
-            roleActions.add(actionMapper.dtoToModel(actionDto));
-        }*/
+
         Role role2 = roleMapper.dtoToModel(roleDto)
+                .set_id(role1.get().get_id())
                 .setRoleUpdatedAt(Instant.now())
                 .setRoleDescription(roleDto.getRoleDescription())
-               // .setRoleActions(roleActions)
                 .setRoleCreatedAt(role.get().getRoleCreatedAt());
-        // save role
+
         roleRepository.save(role2);
     }
 
@@ -438,7 +435,7 @@ public class RoleServiceImpl implements RoleService {
             ArrayList<ActionDto> actionDtos = new ArrayList<>();
             Set<String> actionsIds = new HashSet<>();
             RoleDto roleDto = roleMapper.modelToDto(role).setRoleName(role.getRoleName().toUpperCase());
-            if (role.getRoleActions() != null) {
+           /* if (role.getRoleActions() != null) {
                 for (Action action : role.getRoleActions()) {
                     ActionDto actionDto = actionMapper.modelToDto(action);
                     actionDto.setActionCreatedAt(action.getActionCreatedAt().toString());
@@ -446,9 +443,8 @@ public class RoleServiceImpl implements RoleService {
                         actionDto.setActionUpdatedAt(action.getActionUpdatedAt().toString());
                     }
                     actionDtos.add(actionDto);
-                    //actionsIds.add(action.getActionConcerns());
                 }
-            }
+            }*/
            // roleDto.setRoleActions(actionDtos);
             if (role.getRoleUpdatedAt() != null) {
                 roleDto.setRoleUpdatedAt(role.getRoleUpdatedAt().toString());
@@ -484,18 +480,18 @@ public class RoleServiceImpl implements RoleService {
         }
         RoleDto roleDto = roleMapper.modelToDto(role.get());
         ArrayList<ActionDto> actionDtos = new ArrayList<>();
-        if (role.get().getRoleActions() != null) {
+        /*if (role.get().getRoleActions() != null) {
             for (Action action : role.get().getRoleActions()) {
                 actionDtos.add(actionMapper.modelToDto(action));
             }
-        }
+        }*/
         if (role.get().getRoleUpdatedAt() != null) {
             roleDto.setRoleUpdatedAt(role.get().getRoleUpdatedAt().toString());
         }
         if (role.get().getRoleCreatedAt() != null) {
             roleDto.setRoleCreatedAt(role.get().getRoleCreatedAt().toString());
         }
-        if (role.get().getRoleActions() != null) {
+        /*if (role.get().getRoleActions() != null) {
             for (Action action : role.get().getRoleActions()) {
                 ActionDto actionDto = actionMapper.modelToDto(action);
                 actionDto.setActionCreatedAt(action.getActionCreatedAt().toString());
@@ -504,7 +500,7 @@ public class RoleServiceImpl implements RoleService {
                 }
                 actionDtos.add(actionDto);
             }
-        }
+        }*/
         //roleDto.setRoleActions(actionDtos);
         return roleDto;
     }

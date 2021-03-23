@@ -22,6 +22,10 @@ public class SupplierPaymentAddrequest {
     private String type;
     private String typeClient;
 
+    private float contractTradeVolume;
+    private float changeFactor;
+    private float contractTradeVolumeEuro;
+
     private Date paymentDate;
     private Date reelPaymentDate;
 
@@ -30,5 +34,6 @@ public class SupplierPaymentAddrequest {
     private Client client;
     private FinancialContract financialContract;
     private PurchaseOrder purchaseOrder;
+    private Currency currency;
 
 }

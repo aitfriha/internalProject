@@ -44,7 +44,6 @@ public class ActionController {
     @PostMapping("/add")
     public ResponseEntity signup(@RequestBody @Valid ActionAddRequest actionAddRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
-        System.out.println(actionAddRequest);
         actionService.save(actionMapper.addRequestToDto(actionAddRequest));
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Action, ADDED)), HttpStatus.OK);
     }
