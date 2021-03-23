@@ -307,7 +307,7 @@ public class StaffServiceImpl implements StaffService {
         // Create a list of all staff dto
         ArrayList<StaffDto> staffDtos = new ArrayList<>();
             for (Staff staff : staffs) {
-
+                System.out.println(staff);
                 staffDtos.add(staffToStaffDto(staff));
             }
         return staffDtos;
