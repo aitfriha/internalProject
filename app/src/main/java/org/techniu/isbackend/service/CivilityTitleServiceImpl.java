@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.CivilityTitleMapper;
 import org.techniu.isbackend.dto.model.CivilityTitleDto;
 import org.techniu.isbackend.entity.CivilityTitle;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.Contact;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -23,10 +25,12 @@ import static org.techniu.isbackend.exception.ExceptionType.*;
 public class CivilityTitleServiceImpl implements CivilityTitleService{
     private CivilityTitleRepository civilityTitleRepository;
     private ContactRepository contactRepository;
+    private LogService logService;
     private final CivilityTitleMapper civilityTitleMapper = Mappers.getMapper(CivilityTitleMapper.class);
-    CivilityTitleServiceImpl(CivilityTitleRepository civilityTitleRepository, ContactRepository contactRepository) {
+    CivilityTitleServiceImpl(CivilityTitleRepository civilityTitleRepository, ContactRepository contactRepository, LogService logService) {
         this.civilityTitleRepository = civilityTitleRepository;
         this.contactRepository = contactRepository;
+        this.logService = logService;
     }
     @Override
     public void save(CivilityTitleDto civilityTitleDto) {
@@ -44,6 +48,8 @@ public class CivilityTitleServiceImpl implements CivilityTitleService{
         }
         CivilityTitle civilityTitle3 = civilityTitleMapper.dtoToModel(civilityTitleDto);
         civilityTitleRepository.save(civilityTitle3);
+        logService.addLog(LogType.CREATE, ClassType.TITLE_TYPE);
+
     }
 
     @Override
@@ -67,6 +73,7 @@ public class CivilityTitleServiceImpl implements CivilityTitleService{
             throw exception(DUPLICATE_ENTITY);
         }
          civilityTitleRepository.save(civilityTitleMapper.dtoToModel(civilityTitleDto));
+        logService.addLog(LogType.UPDATE, ClassType.TITLE_TYPE);
     }
 
     @Override
@@ -104,6 +111,7 @@ public class CivilityTitleServiceImpl implements CivilityTitleService{
             throw exception(ENTITY_NOT_FOUND);
         }
         civilityTitleRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.TITLE_TYPE);
     }
 
 
