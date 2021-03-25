@@ -36,7 +36,7 @@ public class CountryConfigServiceImpl implements CountryConfigService {
         Staff leader = staffRepository.findById(countryConfigDto.getLeader()).get();
         Log log = new Log();
         log.setUserName("John Doe");
-        log.setActionDate(new Date());
+      //  log.setActionDate(new Date());
         log.setClassType(ClassType.COUNTRYCONFIG);
         log.setLogType(LogType.CREATE);
         CountryConfig countryConfig = countryConfigMapper.dtoToModel(countryConfigDto);

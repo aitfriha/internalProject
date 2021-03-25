@@ -351,7 +351,7 @@ public class RoleServiceImpl implements RoleService {
         Role role1 = roleMapper.dtoToModel(roleDto)
                 .setRoleDescription(roleDto.getRoleDescription())
                 .setRoleCreatedAt(Instant.now());
-       // role1.setActionsNames(actionsNames);
+
         roleRepository.save(role1);
     }
 
