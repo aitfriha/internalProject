@@ -11,7 +11,7 @@ public interface AssignmentService {
     Assignment saveAssignment(Assignment assignment);
     Assignment updateAssignment(String assignmentId, Assignment assignment);
     ResponseEntity<?> deleteAssignment(String assignmentId);
-    List<Assignment> getAllAssignment();
+    List<AssignmentDto> getAllAssignment();
     List<Assignment> getAssignmentByClient(String clientId);
     List<Assignment> getAssignmentByPeople(String staffId);
     List<Assignment> getAllAssignmentByStaff(String staffId);

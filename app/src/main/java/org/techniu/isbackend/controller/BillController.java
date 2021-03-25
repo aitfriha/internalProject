@@ -83,7 +83,6 @@ public class BillController {
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     public List<BillDto> getAllBill() {
         return billService.getAllBill();
-
     }
 
     @PostMapping("/row/{Id}")
