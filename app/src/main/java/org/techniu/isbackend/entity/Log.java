@@ -15,7 +15,7 @@ import java.util.Date;
 public class Log implements Serializable {
     @Id
     private String logId;
-    private Date actionDate;
+    private String actionDate;
     private String userName;
     private LogType logType;
     private ClassType classType;

@@ -26,7 +26,7 @@ public class CountryServiceImpl implements CountryService {
     public Country saveCountry(Country country) {
         Log log = new Log();
         log.setUserName("John Doe");
-        log.setActionDate(new Date());
+       // log.setActionDate(new Date());
         log.setClassType(ClassType.COUNTRY);
         log.setLogType(LogType.CREATE);
         String[] countryNames = country.getCountryName().split(" ");
@@ -48,7 +48,7 @@ public class CountryServiceImpl implements CountryService {
         return countryRepository.findById(countryId).map(country1 -> {
             Log log = new Log();
             log.setUserName("John Doe");
-            log.setActionDate(new Date());
+            //log.setActionDate(new Date());
             log.setClassType(ClassType.COUNTRY);
             log.setLogType(LogType.UPDATE);
             country.setCountryId(country1.getCountryId());
@@ -73,7 +73,7 @@ public class CountryServiceImpl implements CountryService {
             countryRepository.delete(country);
             Log log = new Log();
             log.setUserName("John Doe");
-            log.setActionDate(new Date());
+            //log.setActionDate(new Date());
             log.setClassType(ClassType.COUNTRY);
             log.setLogType(LogType.DELETE);
             logService.saveLog(log);

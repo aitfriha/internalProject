@@ -2,6 +2,7 @@ package org.techniu.isbackend.service;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.ClientMapper;
@@ -12,6 +13,7 @@ import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static org.techniu.isbackend.exception.ExceptionType.IMPORTATION_STAFF_NOTE_EXIST;
 import static org.techniu.isbackend.exception.ExceptionType.STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL;
-
+import org.techniu.isbackend.entity.ClassType;
 @Service
 @Transactional
 public class ClientServiceImpl implements ClientService{
@@ -33,14 +35,15 @@ public class ClientServiceImpl implements ClientService{
     private StaffRepository staffRepository;
     private AssignmentRepository assignmentRepository;
     private CountryConfigRepository countryConfigRepository;
-
+    private final LogRepository logRepository;
+    private LogService logService;
     private CountryRepository countryRepository;
     private final ClientMapper clientMapper = Mappers.getMapper(ClientMapper.class);
     ClientServiceImpl(ClientRepository clientRepository, AddressRepository addressRepository, AddressService addressService, StaffService staffService,
                       CountryConfigRepository countryConfigRepository,
                       AssignmentService assignmentService,
                       AssignmentRepository assignmentRepository,
-                      StaffRepository staffRepository, CityRepository cityRepository, CountryRepository countryRepository) {
+                      StaffRepository staffRepository, CityRepository cityRepository, LogRepository logRepository, LogService logService, CountryRepository countryRepository) {
         this.clientRepository = clientRepository;
         this.addressRepository = addressRepository;
         this.addressService = addressService;
@@ -50,6 +53,8 @@ public class ClientServiceImpl implements ClientService{
         this.countryConfigRepository = countryConfigRepository;
         this.assignmentService = assignmentService;
         this.assignmentRepository = assignmentRepository;
+        this.logRepository = logRepository;
+        this.logService = logService;
         this.countryRepository = countryRepository;
     }
 
@@ -78,8 +83,8 @@ public class ClientServiceImpl implements ClientService{
        client.setAddress(addressService.saveAddress(address.setCity(city)));
        ///client.setAssistantCommercial(AssistantCommercial);
        ///client.setResponsibleCommercial(responsibleCommercial);
-
         clientRepository.save(client);
+        logService.addLog(LogType.CREATE,ClassType.CLIENT);
     }
 
     @Override
