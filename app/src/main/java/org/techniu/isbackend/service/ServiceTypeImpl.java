@@ -4,7 +4,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.ServiceTypeMapper;
 import org.techniu.isbackend.dto.model.ServiceTypeDto;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.CommercialOperation;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.ServiceType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -22,10 +24,12 @@ import static org.techniu.isbackend.exception.ExceptionType.*;
 public class ServiceTypeImpl implements ServiceTypeService{
     private ServiceTypeRepository serviceTypeRepository;
     private CommercialOperationRepository commercialOperationRepository;
+    private LogService logService;
     private final ServiceTypeMapper serviceTypeeMapper = Mappers.getMapper(ServiceTypeMapper.class);
-    ServiceTypeImpl(ServiceTypeRepository serviceTypeRepository, CommercialOperationRepository commercialOperationRepository) {
+    ServiceTypeImpl(ServiceTypeRepository serviceTypeRepository, CommercialOperationRepository commercialOperationRepository, LogService logService) {
         this.serviceTypeRepository = serviceTypeRepository;
         this.commercialOperationRepository = commercialOperationRepository;
+        this.logService = logService;
     }
     @Override
     public void save(ServiceTypeDto serviceTypeeDto) {
@@ -40,6 +44,7 @@ public class ServiceTypeImpl implements ServiceTypeService{
             throw exception(DUPLICATE_ENTITY);
         }
         serviceTypeRepository.save(serviceTypeeMapper.dtoToModel(serviceTypeeDto));
+        logService.addLog(LogType.CREATE, ClassType.SERVICE_TYPE);
     }
 
     @Override
@@ -59,6 +64,7 @@ public class ServiceTypeImpl implements ServiceTypeService{
             throw exception(DUPLICATE_ENTITY);
         }
          serviceTypeRepository.save(serviceTypeeMapper.dtoToModel(serviceTypeeDto));
+        logService.addLog(LogType.UPDATE, ClassType.SERVICE_TYPE);
     }
 
     @Override
@@ -105,6 +111,7 @@ public class ServiceTypeImpl implements ServiceTypeService{
         }
 
         serviceTypeRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.SERVICE_TYPE);
     }
 
     /**
@@ -159,6 +166,7 @@ public class ServiceTypeImpl implements ServiceTypeService{
 
             serviceTypeRepository.deleteById(serviceType.get().get_id());
         }
+        logService.addLog(LogType.DELETE, ClassType.SERVICE_TYPE);
     }
 
     /**

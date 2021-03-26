@@ -6,6 +6,8 @@ public enum  ClassType {
     CLIENT,
     COMMERCIAL,
     COUNTRYCONFIG,
-    TITLE_TYPE
+    TITLE_TYPE,
+    SECTOR,
+    SERVICE_TYPE
 
 }

@@ -4,7 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.model.SectorCompanyDto;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.Client;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.SectorCompany;
 
 import org.techniu.isbackend.exception.EntityType;
@@ -22,10 +24,12 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
     private SectorCompanyRepository sectorCompanyRepository;
     private ClientRepository clientRepository;
     private ClientService clientService;
-    SectorCompanyServiceImpl(SectorCompanyRepository sectorCompanyRepository, ClientRepository clientRepository, ClientService clientService) {
+    private LogService logService;
+    SectorCompanyServiceImpl(SectorCompanyRepository sectorCompanyRepository, ClientRepository clientRepository, ClientService clientService, LogService logService) {
         this.sectorCompanyRepository = sectorCompanyRepository;
         this.clientRepository = clientRepository;
         this.clientService = clientService;
+        this.logService = logService;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
         {
             return secondSector;
         }*/
+        logService.addLog(LogType.CREATE, ClassType.SECTOR);
         return sectorCompanyRepository.save(sectorCompany);
     }
 
@@ -256,7 +261,6 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
                 } else {
                     clientService.deleteSectorFromclient(null,secondSector2,null);
                     sectorCompanyRepository.delete(secondSector2);
-
                 }
             }
             //when secondSectorName is null
@@ -264,8 +268,8 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
                 SectorCompany secondSector2 = sectorCompanyRepository.findByName(firstSectorName);
                 clientService.deleteSectorFromclient(null,secondSector2,null);
                 sectorCompanyRepository.delete(secondSector2);
-
             }
+        logService.addLog(LogType.DELETE, ClassType.SECTOR);
     }
 
     @Override
@@ -304,7 +308,6 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
                 sectorCompanyDtos.add(sectorCompanyDto);
             }
         }
-        System.out.println(sectorCompanyDtos);
         return sectorCompanyDtos;
     }
 
