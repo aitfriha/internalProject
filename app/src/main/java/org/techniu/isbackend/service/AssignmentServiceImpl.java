@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.AssignmentMapper;
 import org.techniu.isbackend.dto.model.AssignmentDto;
+import org.techniu.isbackend.dto.model.BillDto;
 import org.techniu.isbackend.entity.Assignment;
+import org.techniu.isbackend.entity.Bill;
 import org.techniu.isbackend.entity.Client;
 import org.techniu.isbackend.entity.Staff;
 import org.techniu.isbackend.exception.EntityType;
@@ -15,6 +17,7 @@ import org.techniu.isbackend.repository.AssignmentRepository;
 import org.techniu.isbackend.repository.ClientRepository;
 import org.techniu.isbackend.repository.StaffRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,8 +104,17 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public List<Assignment> getAllAssignment() {
-        return null;
+    public List<AssignmentDto> getAllAssignment() {
+        // Get all actions
+        List<Assignment> assignments = assignmentRepository.findAll();
+        // Create a list of all actions dto
+        ArrayList<AssignmentDto> assignmentsDtos = new ArrayList<>();
+
+        for (Assignment assignment1 : assignments) {
+            AssignmentDto assignmentDto = assignmentMapper.modelToDto(assignment1);
+            assignmentsDtos.add(assignmentDto);
+        }
+        return assignmentsDtos;
     }
 
     @Override
