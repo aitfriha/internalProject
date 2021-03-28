@@ -11,6 +11,8 @@ import org.techniu.isbackend.controller.request.AssignmentAddrequest;
 import org.techniu.isbackend.controller.request.CommercialOperationStatusAddrequest;
 import org.techniu.isbackend.dto.mapper.AssignmentMapper;
 import org.techniu.isbackend.dto.mapper.CommercialOperationStatusMapper;
+import org.techniu.isbackend.dto.model.AssignmentDto;
+import org.techniu.isbackend.dto.model.BillDto;
 import org.techniu.isbackend.entity.Assignment;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.AssignmentService;
@@ -73,5 +75,10 @@ public class AssignmentController {
     @RequestMapping(path = "client/assignment/people/{peopleId}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Assignment> getAssignmentByPeople(@PathVariable(value = "peopleId") String peopleId){
         return assignmentService.getAssignmentByPeople(peopleId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/all")
+    public List<AssignmentDto> getAllASS() {
+        return assignmentService.getAllAssignment();
     }
 }
