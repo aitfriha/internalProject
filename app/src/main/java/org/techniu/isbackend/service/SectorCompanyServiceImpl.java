@@ -39,7 +39,7 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
         {
             return secondSector;
         }*/
-        logService.addLog(LogType.CREATE, ClassType.SECTOR);
+        logService.addLog(LogType.CREATE, ClassType.SECTOR,"create sector "+sectorCompany.getName());
         return sectorCompanyRepository.save(sectorCompany);
     }
 
@@ -236,16 +236,21 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
                     if (sectorCompanys2.size() == 1) {
                         clientService.deleteSectorFromclient(secondSector1,secondSector2,secondSector3);
                         sectorCompanyRepository.delete(secondSector3);
+                        logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector3.getName());
                         sectorCompanyRepository.delete(secondSector2);
+                        logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector2.getName());
                         sectorCompanyRepository.delete(secondSector1);
+                        logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector1.getName());
 
                     } else {
                         clientService.deleteSectorFromclient(null,null,secondSector3);
                         sectorCompanyRepository.delete(secondSector3);
+                        logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector3.getName());
                     }
                 } else {
                     clientService.deleteSectorFromclient(null,null,secondSector3);
                     sectorCompanyRepository.delete(secondSector3);
+                    logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector3.getName());
                 }
             }
             //when thirdSectorName is null
@@ -257,10 +262,13 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
                 if (sectorCompanys2.size() == 1) {
                     clientService.deleteSectorFromclient(secondSector1,secondSector2,null);
                     sectorCompanyRepository.delete(secondSector2);
+                    logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector2.getName());
                     sectorCompanyRepository.delete(secondSector1);
+                    logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector1.getName());
                 } else {
                     clientService.deleteSectorFromclient(null,secondSector2,null);
                     sectorCompanyRepository.delete(secondSector2);
+                    logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector2.getName());
                 }
             }
             //when secondSectorName is null
@@ -268,8 +276,9 @@ public class SectorCompanyServiceImpl implements SectorCompanyService {
                 SectorCompany secondSector2 = sectorCompanyRepository.findByName(firstSectorName);
                 clientService.deleteSectorFromclient(null,secondSector2,null);
                 sectorCompanyRepository.delete(secondSector2);
+                logService.addLog(LogType.DELETE, ClassType.SECTOR,"delete sector "+secondSector2.getName());
             }
-        logService.addLog(LogType.DELETE, ClassType.SECTOR);
+
     }
 
     @Override

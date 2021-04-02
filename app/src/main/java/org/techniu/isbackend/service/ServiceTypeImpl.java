@@ -44,7 +44,7 @@ public class ServiceTypeImpl implements ServiceTypeService{
             throw exception(DUPLICATE_ENTITY);
         }
         serviceTypeRepository.save(serviceTypeeMapper.dtoToModel(serviceTypeeDto));
-        logService.addLog(LogType.CREATE, ClassType.SERVICE_TYPE);
+        logService.addLog(LogType.CREATE, ClassType.SERVICE_TYPE,"create service type "+serviceTypeeDto.getName());
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ServiceTypeImpl implements ServiceTypeService{
             throw exception(DUPLICATE_ENTITY);
         }
          serviceTypeRepository.save(serviceTypeeMapper.dtoToModel(serviceTypeeDto));
-        logService.addLog(LogType.UPDATE, ClassType.SERVICE_TYPE);
+        logService.addLog(LogType.UPDATE, ClassType.SERVICE_TYPE,"update service type "+serviceTypeeDto.getName());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ServiceTypeImpl implements ServiceTypeService{
         }
 
         serviceTypeRepository.deleteById(id);
-        logService.addLog(LogType.DELETE, ClassType.SERVICE_TYPE);
+        logService.addLog(LogType.DELETE, ClassType.SERVICE_TYPE,"delete service type "+action.get().getName());
     }
 
     /**
@@ -151,9 +151,9 @@ public class ServiceTypeImpl implements ServiceTypeService{
                     serviceTypetoDeleteOldx.add(sOld);
                 }
             }
-            System.out.println("delete " + serviceTypetoDeleteOldx);
             for (ServiceType serviceType : serviceTypetoDeleteOldx) {
                  serviceTypeRepository.deleteById(serviceType.get_id());
+                logService.addLog(LogType.DELETE, ClassType.SERVICE_TYPE,"delete service type "+ serviceType.getName());
             }
 
         }
@@ -165,8 +165,9 @@ public class ServiceTypeImpl implements ServiceTypeService{
             }
 
             serviceTypeRepository.deleteById(serviceType.get().get_id());
+            logService.addLog(LogType.DELETE, ClassType.SERVICE_TYPE,"delete service type "+ serviceType.get().getName());
         }
-        logService.addLog(LogType.DELETE, ClassType.SERVICE_TYPE);
+
     }
 
     /**

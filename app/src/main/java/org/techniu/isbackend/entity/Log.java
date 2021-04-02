@@ -19,5 +19,6 @@ public class Log implements Serializable {
     private String userName;
     private LogType logType;
     private ClassType classType;
+    private String description;
 
 }

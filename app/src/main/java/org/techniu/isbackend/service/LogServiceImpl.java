@@ -37,7 +37,7 @@ public class LogServiceImpl implements LogService {
             return logs;
         }
     @Override
-    public void  addLog(LogType logType, ClassType classType) {
+    public void  addLog(LogType logType, ClassType classType,String description) {
         Object user = SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         String username = user.toString();
@@ -48,6 +48,7 @@ public class LogServiceImpl implements LogService {
         log.setLogType(logType);
         log.setClassType(classType);
         log.setActionDate(dateString);
+        log.setDescription(description);
         logRepository.save(log);
     }
 }

@@ -48,7 +48,7 @@ public class CivilityTitleServiceImpl implements CivilityTitleService{
         }
         CivilityTitle civilityTitle3 = civilityTitleMapper.dtoToModel(civilityTitleDto);
         civilityTitleRepository.save(civilityTitle3);
-        logService.addLog(LogType.CREATE, ClassType.TITLE_TYPE);
+        logService.addLog(LogType.CREATE, ClassType.TITLE_TYPE,"create title type "+civilityTitleDto.getName());
 
     }
 
@@ -73,7 +73,7 @@ public class CivilityTitleServiceImpl implements CivilityTitleService{
             throw exception(DUPLICATE_ENTITY);
         }
          civilityTitleRepository.save(civilityTitleMapper.dtoToModel(civilityTitleDto));
-        logService.addLog(LogType.UPDATE, ClassType.TITLE_TYPE);
+        logService.addLog(LogType.UPDATE, ClassType.TITLE_TYPE,"update title type "+civilityTitleDto.getName());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class CivilityTitleServiceImpl implements CivilityTitleService{
             throw exception(ENTITY_NOT_FOUND);
         }
         civilityTitleRepository.deleteById(id);
-        logService.addLog(LogType.DELETE, ClassType.TITLE_TYPE);
+        logService.addLog(LogType.DELETE, ClassType.TITLE_TYPE,"delete title type "+action.get().getName());
     }
 
 
