@@ -52,6 +52,14 @@ public class DocumentManagerConfigServiceImpl implements DocumentManagerConfigSe
                             data.put("onlyoffice", config.getProperty("onlyoffice"));
                             break;
                         }
+                        case "storage": {
+                            data.put("storage", Double.parseDouble(config.getProperty("storage")));
+                            break;
+                        }
+                        case "storageuser": {
+                            data.put("storageuser", Double.parseDouble(config.getProperty("storageuser")));
+                            break;
+                        }
                         case "configurado": {
                             data.put("configurado", Boolean.valueOf(config.getProperty("configurado")));
                             break;
@@ -85,6 +93,10 @@ public class DocumentManagerConfigServiceImpl implements DocumentManagerConfigSe
                 config.setProperty("dominio", dominio);
                 String onlyoffice = (String) data.get("onlyoffice");
                 config.setProperty("onlyoffice", onlyoffice);
+                Double storage = Double.parseDouble((String)data.get("storage"));
+                config.setProperty("storage", String.valueOf(storage));
+                Double storageuser = Double.parseDouble((String)data.get("storageuser"));
+                config.setProperty("storageuser", String.valueOf(storageuser));
                 config.setProperty("configurado", "true");
 
                 config.store(output, null);
