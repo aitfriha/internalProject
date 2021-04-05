@@ -40,7 +40,6 @@ public class CommercialOperation{
     private Float contractVolumeInEuro;
     private Float estimatedTradeVolumeInEuro;
    // private int progress;
-
     @DBRef
     private List<Contact> Contacts;
 
