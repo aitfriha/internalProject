@@ -16,5 +16,5 @@ public interface LogService {
      */
     List<Log> getAll();
 
-    void  addLog(LogType logType, ClassType classType);
+    void  addLog(LogType logType, ClassType classType,String description);
 }

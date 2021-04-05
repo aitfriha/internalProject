@@ -84,7 +84,7 @@ public class ClientServiceImpl implements ClientService{
        ///client.setAssistantCommercial(AssistantCommercial);
        ///client.setResponsibleCommercial(responsibleCommercial);
         clientRepository.save(client);
-        logService.addLog(LogType.CREATE,ClassType.CLIENT);
+        logService.addLog(LogType.CREATE,ClassType.CLIENT,"create client "+client.getName());
     }
 
     @Override
