@@ -8,6 +8,6 @@ public enum  ClassType {
     COUNTRYCONFIG,
     TITLE_TYPE,
     SECTOR,
-    SERVICE_TYPE
-
+    SERVICE_TYPE,
+    CONTACT_TYPE
 }

@@ -4,9 +4,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.ContactByOperationMapper;
 import org.techniu.isbackend.dto.model.ContactByOperationDto;
-import org.techniu.isbackend.entity.CommercialOperation;
-import org.techniu.isbackend.entity.CommercialOperationStatus;
-import org.techniu.isbackend.entity.ContactByOperation;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -24,9 +22,11 @@ public class ContactByOperationServiceImpl implements ContactByOperationService{
     private ContactByOperationRepository contactByOperationRepository;
     private CommercialOperationStatusRepository commercialOperationStatusRepository;
     private final ContactByOperationMapper contactByOperationMapper = Mappers.getMapper(ContactByOperationMapper.class);
-    ContactByOperationServiceImpl(ContactByOperationRepository contactByOperationRepository, CommercialOperationStatusRepository commercialOperationStatusRepository) {
+    private LogService logService;
+    ContactByOperationServiceImpl(ContactByOperationRepository contactByOperationRepository, CommercialOperationStatusRepository commercialOperationStatusRepository, LogService logService) {
         this.contactByOperationRepository = contactByOperationRepository;
         this.commercialOperationStatusRepository = commercialOperationStatusRepository;
+        this.logService = logService;
     }
     @Override
     public void save(ContactByOperationDto contactByOperationDto) {
@@ -37,6 +37,7 @@ public class ContactByOperationServiceImpl implements ContactByOperationService{
         ContactByOperation contactByOperation1 =contactByOperationMapper.dtoToModel(contactByOperationDto);
         contactByOperation1.setStatus(commercialOperationStatus.get());
         contactByOperationRepository.save(contactByOperation1);
+        logService.addLog(LogType.CREATE, ClassType.CONTACT_TYPE,"create contact type "+contactByOperation1.getContactsType()+ " for commercial operation "+contactByOperation1.getStatus().getName());
     }
     /*
     @Override
@@ -58,6 +59,7 @@ public class ContactByOperationServiceImpl implements ContactByOperationService{
         }
 
          contactByOperationRepository.save(contactByOperation1.get().setMandatoryAttributes(contactByOperationDto.getMandatoryAttributes()));
+        logService.addLog(LogType.UPDATE, ClassType.CONTACT_TYPE,"update contact type "+contactByOperation1.get().getContactsType()+ " for commercial operation "+contactByOperation1.get().getStatus().getName());
     }
 
     @Override
@@ -87,6 +89,7 @@ public class ContactByOperationServiceImpl implements ContactByOperationService{
             throw exception(ENTITY_NOT_FOUND);
         }
         contactByOperationRepository.delete(contactByOperation.get());
+        logService.addLog(LogType.DELETE, ClassType.CONTACT_TYPE,"delete contact type name "+contactTypeName+ " from commercial operation "+contactByOperation.get().getStatus().getName());
     }
 
     @Override
