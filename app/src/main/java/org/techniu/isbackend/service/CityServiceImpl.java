@@ -4,14 +4,8 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.CityMapper;
-import org.techniu.isbackend.dto.mapper.StateCountryMapper;
 import org.techniu.isbackend.dto.model.CityDto;
-import org.techniu.isbackend.dto.model.StaffDto;
-import org.techniu.isbackend.dto.model.StateCountryDto;
-import org.techniu.isbackend.entity.City;
-import org.techniu.isbackend.entity.Country;
-import org.techniu.isbackend.entity.Staff;
-import org.techniu.isbackend.entity.StateCountry;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -22,17 +16,19 @@ import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import static org.techniu.isbackend.exception.ExceptionType.*;
-import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
+
 @Service
 public class CityServiceImpl implements CityService{
     private CityRepository cityRepository;
     private CountryRepository countryRepository;
     private StateCountryRepository stateCountryRepository;
+    private LogService logService;
     private final CityMapper cityMapper = Mappers.getMapper(CityMapper.class);
-    CityServiceImpl(CityRepository cityRepository, StateCountryRepository stateCountryRepository,CountryRepository countryRepository) {
+    CityServiceImpl(CityRepository cityRepository, StateCountryRepository stateCountryRepository, CountryRepository countryRepository, LogService logService) {
         this.cityRepository = cityRepository;
         this.countryRepository = countryRepository;
         this.stateCountryRepository = stateCountryRepository;
+        this.logService = logService;
     }
     @Override
     public City saveCity(Country country, StateCountry stateCountry, City city) {
@@ -46,6 +42,7 @@ public class CityServiceImpl implements CityService{
         }
         else {
              country1=countryRepository.save(country);
+            logService.addLog(LogType.CREATE, ClassType.COUNTRY,"create country "+country.getCountryName());
         }
         // save state if note existe
         Optional<StateCountry> stateCountry2 = Optional.ofNullable(stateCountryRepository.getByStateName(stateCountry.getStateName()));
@@ -55,14 +52,18 @@ public class CityServiceImpl implements CityService{
         else {
             // save country if note existe
             stateCountry1=stateCountryRepository.save(stateCountry);
+          //  logService.addLog(LogType.CREATE, ClassType.STATE,"create STATE "+stateCountry.getStateName());
         }
         StateCountry stateCountry3=stateCountryRepository.save(stateCountry1.setCountry(country1));
+        logService.addLog(LogType.CREATE, ClassType.STATE,"create STATE "+stateCountry3.getStateName()+" for country "+stateCountry3.getCountry().getCountryName());
         // save state if note existe
         Optional<City> city2 = Optional.ofNullable(cityRepository.findCityByCityName(city.getCityName()));
         if (city2.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
         }
+        logService.addLog(LogType.CREATE, ClassType.CITY,"create city "+city.getCityName()+" for state "+stateCountry3.getStateName());
         return cityRepository.save(city.setStateCountry(stateCountry3));
+
     }
 
     @Override

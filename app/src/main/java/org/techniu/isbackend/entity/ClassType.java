@@ -9,5 +9,9 @@ public enum  ClassType {
     TITLE_TYPE,
     SECTOR,
     SERVICE_TYPE,
-    CONTACT_TYPE
+    CONTACT_TYPE,
+    STATUS,
+    STATE,
+    CITY,
+    ASSIGNMENT
 }

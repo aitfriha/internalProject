@@ -4,7 +4,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.CommercialOperationStatusMapper;
 import org.techniu.isbackend.dto.model.CommercialOperationStatusDto;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.CommercialOperationStatus;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -19,9 +21,11 @@ import static org.techniu.isbackend.exception.ExceptionType.*;
 @Service
 public class CommercialOperationStatusServiceImpl implements CommercialOperationStatusService{
     private CommercialOperationStatusRepository commercialOperationStatusRepository;
+    private LogService logService;
     private final CommercialOperationStatusMapper commercialOperationStatusMapper = Mappers.getMapper(CommercialOperationStatusMapper.class);
-    CommercialOperationStatusServiceImpl(CommercialOperationStatusRepository commercialOperationStatusRepository) {
+    CommercialOperationStatusServiceImpl(CommercialOperationStatusRepository commercialOperationStatusRepository, LogService logService) {
         this.commercialOperationStatusRepository = commercialOperationStatusRepository;
+        this.logService = logService;
     }
     @Override
     public void save(CommercialOperationStatusDto commercialOperationStatusDto) {
@@ -40,6 +44,7 @@ public class CommercialOperationStatusServiceImpl implements CommercialOperation
             throw exception(DUPLICATE_ENTITY);
         }
         commercialOperationStatusRepository.save(commercialOperationStatusMapper.dtoToModel(commercialOperationStatusDto));
+        logService.addLog(LogType.CREATE, ClassType.STATUS,"create status of commercial operation "+commercialOperationStatusDto.getName());
     }
 
     @Override
@@ -63,6 +68,7 @@ public class CommercialOperationStatusServiceImpl implements CommercialOperation
             throw exception(DUPLICATE_ENTITY);
         }
          commercialOperationStatusRepository.save(commercialOperationStatusMapper.dtoToModel(commercialOperationStatusDto));
+        logService.addLog(LogType.UPDATE, ClassType.STATUS,"update status of commercial operation "+commercialOperationStatusDto.getName());
     }
 
     @Override
@@ -91,6 +97,7 @@ public class CommercialOperationStatusServiceImpl implements CommercialOperation
             throw exception(ENTITY_NOT_FOUND);
         }
         commercialOperationStatusRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.STATUS,"delete status of commercial operation "+action.get().getName());
     }
 
 
