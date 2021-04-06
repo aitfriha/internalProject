@@ -13,5 +13,7 @@ public enum  ClassType {
     STATUS,
     STATE,
     CITY,
-    ASSIGNMENT
+    ASSIGNMENT,
+    OPERATION,
+    CONTACT
 }

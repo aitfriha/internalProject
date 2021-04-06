@@ -26,13 +26,15 @@ public class ContactServiceImpl implements ContactService{
     private CityRepository cityRepository;
     private CivilityTitleRepository civilityTitleRepository;
     private AddressRepository addressRepository;
+    private LogService logService;
     private final ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
-    ContactServiceImpl(ContactRepository contactRepository, ClientRepository clientRepository, CityRepository cityRepository, CivilityTitleRepository civilityTitleRepository, AddressRepository addressRepository) {
+    ContactServiceImpl(ContactRepository contactRepository, ClientRepository clientRepository, CityRepository cityRepository, CivilityTitleRepository civilityTitleRepository, AddressRepository addressRepository, LogService logService) {
         this.contactRepository = contactRepository;
         this.clientRepository = clientRepository;
         this.cityRepository = cityRepository;
         this.civilityTitleRepository = civilityTitleRepository;
         this.addressRepository = addressRepository;
+        this.logService = logService;
     }
     @Override
     public void save(ContactDto contactDto, String companyId, Address address, String cityId) {
@@ -45,11 +47,12 @@ public class ContactServiceImpl implements ContactService{
             throw exception(DUPLICATE_ENTITY);
         }
         Contact contact1=contactMapper.dtoToModel(contactDto);
-        System.out.println(contact1);
+        //System.out.println(contact1);
         contact1.setClient(client);
         contact1.setCivilityTitle(civilityTitle);
         contact1.setAddress(addressRepository.save(address.setCity(city)));
         contactRepository.save(contact1);
+        logService.addLog(LogType.CREATE, ClassType.CONTACT,"create contact "+contact1.getMotherFamilyName());
     }
 
     @Override
@@ -72,6 +75,7 @@ public class ContactServiceImpl implements ContactService{
         address1.setPostCode(contactDto.getPostCode());
         contact3.setAddress(addressRepository.save(address1));
          contactRepository.save(contact3);
+        logService.addLog(LogType.UPDATE, ClassType.CONTACT,"update contact "+contact3.getMotherFamilyName());
     }
 
     @Override
@@ -111,6 +115,7 @@ public class ContactServiceImpl implements ContactService{
             throw exception(ENTITY_NOT_FOUND);
         }
         contactRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.CONTACT,"update contact "+action.get().getMotherFamilyName());
     }
 
 

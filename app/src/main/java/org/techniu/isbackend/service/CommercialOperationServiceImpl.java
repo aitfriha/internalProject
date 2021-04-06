@@ -24,18 +24,20 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
     private ClientRepository clientRepository;
     private ContactRepository contactRepository;
     private ServiceTypeService serviceTypeService;
+    private LogService logService;
     private ServiceTypeRepository serviceTypeRepository;
     private CommercialOperationStatusRepository commercialOperationStatusRepository;
     private final ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
     private final CommercialOperationMapper commercialOperationMapper = Mappers.getMapper(CommercialOperationMapper.class);
     CommercialOperationServiceImpl(CommercialOperationRepository commercialOperationRepository,
                                    CommercialOperationStatusRepository commercialOperationStatusRepository,
-                                   ClientRepository clientRepository, ContactRepository contactRepository, ServiceTypeService serviceTypeService, ServiceTypeRepository serviceTypeRepository) {
+                                   ClientRepository clientRepository, ContactRepository contactRepository, ServiceTypeService serviceTypeService, LogService logService, ServiceTypeRepository serviceTypeRepository) {
         this.commercialOperationRepository = commercialOperationRepository;
         this.clientRepository = clientRepository;
         this.commercialOperationStatusRepository = commercialOperationStatusRepository;
         this.contactRepository = contactRepository;
         this.serviceTypeService = serviceTypeService;
+        this.logService = logService;
         this.serviceTypeRepository = serviceTypeRepository;
     }
     @Override
@@ -44,7 +46,7 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
         commercialOperationDto.setName(commercialOperationDto.getName().toLowerCase());
        Client client = clientRepository.getBy_id(commercialOperationDto.getClientId());
         CommercialOperationStatus commercialOperationStatus = commercialOperationStatusRepository.findBy_id(commercialOperationDto.getStateId());
-        System.out.println(commercialOperationDto.getStateId());
+        //System.out.println(commercialOperationDto.getStateId());
         int len = this.getAll().size();
         String code;
         //City city=cityRepository.findCityBy_id(cityId);
@@ -90,6 +92,7 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
         }
         commercialOperation3.setContacts(contacts);
         commercialOperationRepository.save(commercialOperation3);
+        logService.addLog(LogType.CREATE, ClassType.OPERATION,"create operation "+commercialOperationDto.getName());
     }
 
     @Override
@@ -113,6 +116,7 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
             throw exception(DUPLICATE_ENTITY);
         }
          commercialOperationRepository.save(commercialOperationMapper.dtoToModel(commercialOperationDto));
+        logService.addLog(LogType.UPDATE, ClassType.OPERATION,"update operation "+commercialOperationDto.getName());
     }
 
     @Override
@@ -183,6 +187,7 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
             throw exception(ENTITY_NOT_FOUND);
         }
         commercialOperationRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.OPERATION,"delete operation "+action.get().getName());
     }
 
 
