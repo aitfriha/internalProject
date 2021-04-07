@@ -42,6 +42,7 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
     }
     @Override
     public void save(CommercialOperationDto commercialOperationDto) {
+        System.out.println(commercialOperationDto);
         // save country if note existe
         commercialOperationDto.setName(commercialOperationDto.getName().toLowerCase());
        Client client = clientRepository.getBy_id(commercialOperationDto.getClientId());
@@ -115,6 +116,11 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
         if (commercialOperation3.isPresent() && !(commercialOperation1.get().getCode().equals(commercialOperationDto.getCode())) ) {
             throw exception(DUPLICATE_ENTITY);
         }
+
+        Client client = clientRepository.findBy_id(commercialOperationDto.getClientId());
+        commercialOperationDto.setClient(client);
+        CommercialOperationStatus commercialOperationStatus = commercialOperationStatusRepository.findBy_id(commercialOperationDto.getStateId());
+        commercialOperationDto.setState(commercialOperationStatus);
          commercialOperationRepository.save(commercialOperationMapper.dtoToModel(commercialOperationDto));
         logService.addLog(LogType.UPDATE, ClassType.OPERATION,"update operation "+commercialOperationDto.getName());
     }
@@ -129,6 +135,9 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
         for (CommercialOperation commercialOperation : commercialOperations) {
             CommercialOperationDto commercialOperationDto = commercialOperationMapper.modelToDto(commercialOperation);
             commercialOperationDto.setClientName(commercialOperation.getClient().getName());
+            commercialOperationDto.setClientId(commercialOperation.getClient().get_id());
+            commercialOperationDto.setStateId(commercialOperation.getState().get_id());
+            commercialOperationDto.setStateName(commercialOperation.getState().getName());
             commercialOperationDto.setSector1(commercialOperation.getClient().getSector1());
             commercialOperationDto.setSector2(commercialOperation.getClient().getSector2());
             commercialOperationDto.setSector3(commercialOperation.getClient().getSector3());
