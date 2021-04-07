@@ -6,11 +6,10 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.techniu.isbackend.controller.request.SelectionTypeEvaluationAddrequest;
 import org.techniu.isbackend.dto.mapper.SelectionTypeEvaluationMapper;
 import org.techniu.isbackend.dto.model.SelectionTypeEvaluationDto;
-import org.techniu.isbackend.dto.model.StaffDto;
-import org.techniu.isbackend.entity.LegalCategoryType;
+import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.SelectionTypeEvaluation;
 import org.techniu.isbackend.entity.Staff;
 import org.techniu.isbackend.exception.EntityType;
@@ -30,12 +29,14 @@ import static org.techniu.isbackend.exception.ExceptionType.DUPLICATE_ENTITY;
 public class SelectionTypeEvaluationServiceImpl implements SelectionTypeEvaluationService {
     private SelectionTypeEvaluationRepository selectionTypeEvaluationRepository;
     private StaffRepository staffRepository;
+    private LogService logService;
     private final SelectionTypeEvaluationMapper selectionTypeEvaluationMapper = Mappers.getMapper(SelectionTypeEvaluationMapper.class);
     SelectionTypeEvaluationServiceImpl(
             SelectionTypeEvaluationRepository selectionTypeEvaluationRepository,
-            StaffRepository staffRepository) {
+            StaffRepository staffRepository, LogService logService) {
         this.selectionTypeEvaluationRepository = selectionTypeEvaluationRepository;
         this.staffRepository = staffRepository;
+        this.logService = logService;
     }
     @Override
     public void save(List<SelectionTypeEvaluationDto> selectionTypeEvaluationDtos) {
@@ -47,6 +48,7 @@ public class SelectionTypeEvaluationServiceImpl implements SelectionTypeEvaluati
                 throw exception(DUPLICATE_ENTITY);
             }
             child = selectionTypeEvaluationRepository.save(selectionTypeEvaluationMapper.dtoToModel(selectionTypeEvaluationDtos.get(1)));
+            logService.addLog(LogType.CREATE, ClassType.SELECTIONTYPEEVALUATION,"create selection Type Evaluation "+child.getName());
         }
 
         SelectionTypeEvaluation parent = selectionTypeEvaluationRepository.findByName(selectionTypeEvaluationDtos.get(0).getName());
@@ -61,15 +63,16 @@ public class SelectionTypeEvaluationServiceImpl implements SelectionTypeEvaluati
             parent = selectionTypeEvaluationMapper.dtoToModel(selectionTypeEvaluationDtos.get(0));
             parent.setChilds(list1);
         }
-        System.out.println(child);
+        //System.out.println(child);
         selectionTypeEvaluationRepository.save(parent);
+        logService.addLog(LogType.CREATE, ClassType.SELECTIONTYPEEVALUATION,"create selection Type Evaluation "+parent.getName());
     }
 
     @Override
     public void update(SelectionTypeEvaluationDto selectionTypeEvaluationDto) {
 
         Optional<SelectionTypeEvaluation>  selectionType = Optional.ofNullable(selectionTypeEvaluationRepository.findByName(selectionTypeEvaluationDto.getName()));
-        System.out.println(selectionTypeEvaluationDto.getSelectionTypeId());
+       // System.out.println(selectionTypeEvaluationDto.getSelectionTypeId());
         if (selectionType.isPresent()) {
             if(!selectionType.get().get_id().equals(selectionTypeEvaluationDto.getSelectionTypeId())) {
                 throw exception(DUPLICATE_ENTITY);
@@ -80,6 +83,7 @@ public class SelectionTypeEvaluationServiceImpl implements SelectionTypeEvaluati
         SelectionTypeEvaluation selectionTypeEvaluation1 = selectionTypeEvaluationMapper.dtoToModel(selectionTypeEvaluationDto);
         selectionTypeEvaluation1.setChilds(selectionTypeEvaluation.getChilds());
         selectionTypeEvaluationRepository.save(selectionTypeEvaluation1);
+        logService.addLog(LogType.UPDATE, ClassType.SELECTIONTYPEEVALUATION,"update selection Type Evaluation "+selectionTypeEvaluation1.getName());
     }
 
     @Override
@@ -96,7 +100,9 @@ public class SelectionTypeEvaluationServiceImpl implements SelectionTypeEvaluati
                 selectionTypeEvaluationRepository.delete(type);
             });
         }
+        logService.addLog(LogType.DELETE, ClassType.SELECTIONTYPEEVALUATION,"delete selection Type Evaluation "+selectionTypeEvaluation.getName());
         selectionTypeEvaluationRepository.delete(selectionTypeEvaluation);
+
         return null;
     }
 

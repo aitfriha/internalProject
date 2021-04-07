@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.AbsenceTypeMapper;
 import org.techniu.isbackend.dto.model.AbsenceTypeDto;
-import org.techniu.isbackend.dto.model.StaffDto;
 import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.entity.AbsenceType;
 import org.techniu.isbackend.exception.EntityType;
@@ -31,16 +30,18 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
     private StateCountryRepository stateCountryRepository;
     private StaffRepository staffRepository;
     private AbsenceRequestRepository absenceRequestRepository;
+    private LogService logService;
     private final AbsenceTypeMapper absenceTypeMapper = Mappers.getMapper(AbsenceTypeMapper.class);
 
     AbsenceTypeServiceImpl(AbsenceTypeRepository absenceTypeRepository,
                            StateCountryRepository stateCountryRepository,
                            StaffRepository staffRepository,
-                           AbsenceRequestRepository absenceRequestRepository) {
+                           AbsenceRequestRepository absenceRequestRepository, LogService logService) {
         this.absenceTypeRepository = absenceTypeRepository;
         this.stateCountryRepository = stateCountryRepository;
         this.staffRepository = staffRepository;
         this.absenceRequestRepository = absenceRequestRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -73,11 +74,12 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         absenceType.setInCopyResponsible(inCopyResponsible);
 
         absenceTypeRepository.save(absenceType);
+        logService.addLog(LogType.CREATE, ClassType.ABSENCETYPE,"create absence type "+absenceTypeDto.getName());
     }
 
     @Override
     public void update(AbsenceTypeDto absenceTypeDto) {
-        System.out.println(absenceTypeDto.getAbsenceTypeId());
+        //System.out.println(absenceTypeDto.getAbsenceTypeId());
         AbsenceType absenceType = absenceTypeRepository.findById(absenceTypeDto.getAbsenceTypeId()).get();
 
 
@@ -110,6 +112,7 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         Staff inCopyResponsible = staffRepository.findById(absenceTypeDto.getInCopyResponsibleId()).get();
         absenceType.setInCopyResponsible(inCopyResponsible);
         absenceTypeRepository.save(absenceType);
+        logService.addLog(LogType.UPDATE, ClassType.ABSENCETYPE,"update absence type "+absenceType.getName());
     }
 
     @Override
@@ -123,6 +126,7 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         List<AbsenceRequest> list = absenceRequestRepository.findAllByAbsenceType(absenceType);
         absenceRequestRepository.deleteAll(list);
         absenceTypeRepository.delete(absenceType);
+        logService.addLog(LogType.DELETE, ClassType.ABSENCETYPE,"delete absence type "+absenceType.getName());
     }
 
     @Override
