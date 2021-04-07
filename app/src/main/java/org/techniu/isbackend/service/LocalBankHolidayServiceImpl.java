@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.LocalBankHolidayMapper;
 import org.techniu.isbackend.dto.model.LocalBankHolidayDto;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.FinancialCompany;
 import org.techniu.isbackend.entity.LocalBankHoliday;
-import org.techniu.isbackend.entity.StaffContract;
-import org.techniu.isbackend.entity.StaffContractHistory;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -18,7 +18,6 @@ import org.techniu.isbackend.repository.StaffContractHistoryRepository;
 import org.techniu.isbackend.repository.StaffContractRepository;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,14 +31,15 @@ public class LocalBankHolidayServiceImpl implements LocalBankHolidayService {
     private LocalBankHolidayRepository localBankHolidayRepository;
     private FinancialCompanyRepository financialCompanyRepository;
     private final LocalBankHolidayMapper localBankHolidayMapper = Mappers.getMapper(LocalBankHolidayMapper.class);
-
+    private LogService logService;
     LocalBankHolidayServiceImpl(
             LocalBankHolidayRepository localBankHolidayRepository,
             FinancialCompanyRepository financialCompanyRepository,
             StaffContractRepository staffContractRepository,
-            StaffContractHistoryRepository staffContractHistoryRepository) {
+            StaffContractHistoryRepository staffContractHistoryRepository, LogService logService) {
         this.localBankHolidayRepository = localBankHolidayRepository;
         this.financialCompanyRepository = financialCompanyRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -54,6 +54,7 @@ public class LocalBankHolidayServiceImpl implements LocalBankHolidayService {
 
         localBankHoliday.setCompany(financialCompany);
         localBankHolidayRepository.save(localBankHoliday);
+        logService.addLog(LogType.CREATE, ClassType.LOCALBANKHOLIDAY,"create local bank holiday "+localBankHolidayDto.getName());
     }
 
     @Override
@@ -70,6 +71,7 @@ public class LocalBankHolidayServiceImpl implements LocalBankHolidayService {
         LocalBankHoliday localBankHoliday2 = localBankHolidayMapper.dtoToModel(localBankHolidayDto);
         localBankHoliday2.setCompany(localBankHoliday.getCompany());
         localBankHolidayRepository.save(localBankHoliday2);
+        logService.addLog(LogType.CREATE, ClassType.LOCALBANKHOLIDAY,"update local bank holiday "+localBankHolidayDto.getName());
     }
 
     @Override
@@ -81,6 +83,7 @@ public class LocalBankHolidayServiceImpl implements LocalBankHolidayService {
         }
 
         localBankHolidayRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.LOCALBANKHOLIDAY,"delete local bank holiday "+action.get().getName());
     }
 
     @Override
@@ -96,7 +99,6 @@ public class LocalBankHolidayServiceImpl implements LocalBankHolidayService {
             localBankHolidayDto.setCompanyName(localBankHoliday.getCompany().getName());
             localBankHolidayDtos.add(localBankHolidayDto);
         }
-        System.out.println(localBankHolidayDtos);
         return localBankHolidayDtos;
     }
 
@@ -114,7 +116,6 @@ public class LocalBankHolidayServiceImpl implements LocalBankHolidayService {
             localBankHolidayDto.setCompanyName(localBankHoliday.getCompany().getName());
             localBankHolidayDtos.add(localBankHolidayDto);
         }
-        System.out.println(localBankHolidayDtos);
         return localBankHolidayDtos;
     }
 

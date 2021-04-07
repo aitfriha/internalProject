@@ -15,5 +15,7 @@ public enum  ClassType {
     CITY,
     ASSIGNMENT,
     OPERATION,
-    CONTACT
+    CONTACT,
+    CONTRACTMODEL,
+    LOCALBANKHOLIDAY
 }

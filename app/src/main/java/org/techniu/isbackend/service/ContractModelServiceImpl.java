@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.ContractModelMapper;
 import org.techniu.isbackend.dto.model.ContractModelDto;
-import org.techniu.isbackend.entity.ContractModel;
-import org.techniu.isbackend.entity.StaffContract;
-import org.techniu.isbackend.entity.StaffContractHistory;
-import org.techniu.isbackend.entity.StateCountry;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -32,17 +29,19 @@ public class ContractModelServiceImpl implements ContractModelService {
     private StateCountryRepository stateCountryRepository;
     private StaffContractRepository staffContractRepository;
     private StaffContractHistoryRepository staffContractHistoryRepository;
+    private LogService logService;
     private final ContractModelMapper contractModelMapper = Mappers.getMapper(ContractModelMapper.class);
 
     ContractModelServiceImpl(
             ContractModelRepository contractModelRepository,
             StateCountryRepository stateCountryRepository,
             StaffContractRepository staffContractRepository,
-            StaffContractHistoryRepository staffContractHistoryRepository) {
+            StaffContractHistoryRepository staffContractHistoryRepository, LogService logService) {
         this.contractModelRepository = contractModelRepository;
         this.stateCountryRepository = stateCountryRepository;
         this.staffContractRepository = staffContractRepository;
         this.staffContractHistoryRepository = staffContractHistoryRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -62,12 +61,12 @@ public class ContractModelServiceImpl implements ContractModelService {
         }
 
         contractModelRepository.save(contractModel);
+        logService.addLog(LogType.CREATE, ClassType.CONTRACTMODEL,"create contact model "+contractModelDto.getName());
     }
 
     @Override
     public void update(ContractModelDto contractModelDto) {
         ContractModel contractModel = contractModelRepository.findById(contractModelDto.getContractModelId()).get();
-
         if (contractModelDto.getCode().contains(" ")) {
             throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
@@ -91,6 +90,7 @@ public class ContractModelServiceImpl implements ContractModelService {
         contractModel.setDescription(contractModelDto.getDescription());
 
         contractModelRepository.save(contractModel);
+        logService.addLog(LogType.UPDATE, ClassType.CONTRACTMODEL,"update contact model "+contractModel.getName());
     }
 
     @Override
@@ -121,6 +121,7 @@ public class ContractModelServiceImpl implements ContractModelService {
         });
 
         contractModelRepository.deleteById(oldId);
+        logService.addLog(LogType.DELETE, ClassType.CONTRACTMODEL,"delete contact model "+action.get().getName());
     }
 
     @Override
