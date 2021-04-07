@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.ContractTypeMapper;
 import org.techniu.isbackend.dto.model.ContractTypeDto;
-import org.techniu.isbackend.entity.ContractType;
-import org.techniu.isbackend.entity.StaffContract;
-import org.techniu.isbackend.entity.StaffContractHistory;
-import org.techniu.isbackend.entity.StateCountry;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -33,17 +30,19 @@ public class ContractTypeServiceImpl implements ContractTypeService {
     private StateCountryRepository stateCountryRepository;
     private StaffContractRepository staffContractRepository;
     private StaffContractHistoryRepository staffContractHistoryRepository;
+    private LogService logService;
     private final ContractTypeMapper contractTypeMapper = Mappers.getMapper(ContractTypeMapper.class);
 
     ContractTypeServiceImpl(
             ContractTypeRepository contractTypeRepository,
             StateCountryRepository stateCountryRepository,
             StaffContractRepository staffContractRepository,
-            StaffContractHistoryRepository staffContractHistoryRepository) {
+            StaffContractHistoryRepository staffContractHistoryRepository, LogService logService) {
         this.contractTypeRepository = contractTypeRepository;
         this.stateCountryRepository = stateCountryRepository;
         this.staffContractRepository = staffContractRepository;
         this.staffContractHistoryRepository = staffContractHistoryRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -66,6 +65,7 @@ public class ContractTypeServiceImpl implements ContractTypeService {
 
         contractType.setState(stateCountry);
         contractTypeRepository.save(contractType);
+        logService.addLog(LogType.CREATE, ClassType.CONTRACTTYPE,"create contract type "+contractTypeDto.getName());
     }
 
     @Override
@@ -95,6 +95,7 @@ public class ContractTypeServiceImpl implements ContractTypeService {
         contractType.setDescription(contractTypeDto.getDescription());
 
         contractTypeRepository.save(contractType);
+        logService.addLog(LogType.UPDATE, ClassType.CONTRACTTYPE,"update contract type "+contractType.getName());
     }
 
     @Override
@@ -124,6 +125,7 @@ public class ContractTypeServiceImpl implements ContractTypeService {
         });
 
         contractTypeRepository.deleteById(oldId);
+        logService.addLog(LogType.DELETE, ClassType.CONTRACTTYPE,"delete contract type "+action.get().getName());
     }
 
     @Override

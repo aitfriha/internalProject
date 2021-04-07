@@ -30,17 +30,19 @@ public class LegalCategoryTypeServiceImpl implements LegalCategoryTypeService {
     private FinancialCompanyRepository financialCompanyRepository;
     private StaffContractRepository staffContractRepository;
     private StaffContractHistoryRepository staffContractHistoryRepository;
+    private LogService logService;
     private final LegalCategoryTypeMapper legalCategoryTypeMapper = Mappers.getMapper(LegalCategoryTypeMapper.class);
 
     LegalCategoryTypeServiceImpl(
             LegalCategoryTypeRepository legalCategoryTypeRepository,
             FinancialCompanyRepository financialCompanyRepository,
             StaffContractRepository staffContractRepository,
-            StaffContractHistoryRepository staffContractHistoryRepository) {
+            StaffContractHistoryRepository staffContractHistoryRepository, LogService logService) {
         this.legalCategoryTypeRepository = legalCategoryTypeRepository;
         this.financialCompanyRepository = financialCompanyRepository;
         this.staffContractRepository = staffContractRepository;
         this.staffContractHistoryRepository = staffContractHistoryRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -55,6 +57,7 @@ public class LegalCategoryTypeServiceImpl implements LegalCategoryTypeService {
 
         legalCategoryType.setCompany(financialCompany);
         legalCategoryTypeRepository.save(legalCategoryType);
+        logService.addLog(LogType.CREATE, ClassType.LEGALCATEGORYTYPE,"create legal category type "+legalCategoryTypeDto.getName());
     }
 
     @Override
@@ -71,6 +74,7 @@ public class LegalCategoryTypeServiceImpl implements LegalCategoryTypeService {
         legalCategoryType.setName(legalCategoryTypeDto.getName());
         legalCategoryType.setFunctions(legalCategoryTypeDto.getFunctions());
         legalCategoryTypeRepository.save(legalCategoryType);
+        logService.addLog(LogType.UPDATE, ClassType.LEGALCATEGORYTYPE,"update legal category type "+legalCategoryTypeDto.getName());
     }
 
     @Override
@@ -98,7 +102,7 @@ public class LegalCategoryTypeServiceImpl implements LegalCategoryTypeService {
                 staffContractHistoryRepository.delete(staffContractHistory);
             }
         });
-
+        logService.addLog(LogType.DELETE, ClassType.LEGALCATEGORYTYPE,"delete legal category type "+action.get().getName());
         legalCategoryTypeRepository.deleteById(oldId);
     }
 
