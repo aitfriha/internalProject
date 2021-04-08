@@ -19,8 +19,6 @@ import org.techniu.isbackend.repository.StaffRepository;
 import org.techniu.isbackend.repository.StateCountryRepository;
 import org.techniu.isbackend.service.utilities.MailMail;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,16 +33,18 @@ public class AbsenceRequestServiceImpl implements AbsenceRequestService {
     private StateCountryRepository stateCountryRepository;
     private StaffRepository staffRepository;
     private AbsenceTypeRepository absenceTypeRepository;
+    private LogService logService;
     private final AbsenceRequestMapper absenceRequestMapper = Mappers.getMapper(AbsenceRequestMapper.class);
 
     AbsenceRequestServiceImpl(AbsenceRequestRepository absenceRequestRepository,
                               StateCountryRepository stateCountryRepository,
                               StaffRepository staffRepository,
-                              AbsenceTypeRepository absenceTypeRepository) {
+                              AbsenceTypeRepository absenceTypeRepository, LogService logService) {
         this.absenceRequestRepository = absenceRequestRepository;
         this.stateCountryRepository = stateCountryRepository;
         this.staffRepository = staffRepository;
         this.absenceTypeRepository = absenceTypeRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -56,6 +56,7 @@ public class AbsenceRequestServiceImpl implements AbsenceRequestService {
         absenceRequest.setAbsenceType(absenceType);
         absenceRequest.setState("In progress");
         absenceRequestRepository.save(absenceRequest);
+        logService.addLog(LogType.CREATE, ClassType.ABSENCEREQUEST,"create absence request for staff "+staff.getMotherFamilyName());
         Resource resource=new ClassPathResource("applicationContext.xml");
         BeanFactory b=new XmlBeanFactory(resource);
         MailMail m=(MailMail)b.getBean("mailMail");
@@ -76,6 +77,7 @@ public class AbsenceRequestServiceImpl implements AbsenceRequestService {
         AbsenceRequest absenceRequest = absenceRequestRepository.findById(absenceRequestDto.getAbsenceRequestId()).get();
         absenceRequest.setState(absenceRequestDto.getState());
         absenceRequestRepository.save(absenceRequest);
+        logService.addLog(LogType.UPDATE, ClassType.ABSENCEREQUEST,absenceRequestDto.getState()+" absence request for staff "+absenceRequest.getStaff().getMotherFamilyName());
         Resource resource=new ClassPathResource("applicationContext.xml");
         BeanFactory b=new XmlBeanFactory(resource);
         MailMail m=(MailMail)b.getBean("mailMail");
@@ -97,6 +99,7 @@ public class AbsenceRequestServiceImpl implements AbsenceRequestService {
         if (!absenceRequest.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
+        logService.addLog(LogType.DELETE, ClassType.ABSENCEREQUEST,"delete absence request for staff "+absenceRequest.get().getStaff().getMotherFamilyName());
         absenceRequestRepository.deleteById(id);
     }
 
