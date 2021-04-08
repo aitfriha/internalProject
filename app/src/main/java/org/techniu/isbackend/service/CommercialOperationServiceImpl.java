@@ -48,7 +48,7 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
        Client client = clientRepository.getBy_id(commercialOperationDto.getClientId());
         CommercialOperationStatus commercialOperationStatus = commercialOperationStatusRepository.findBy_id(commercialOperationDto.getStateId());
         //System.out.println(commercialOperationDto.getStateId());
-        int len = this.getAll().size();
+        int len = this.getAll().size() + 1;
         String code;
         //City city=cityRepository.findCityBy_id(cityId);
        // String country = city.getStateCountry().getCountry().getCountryName().length() > 3 ? city.getStateCountry().getCountry().getCountryName().substring(0,3).toUpperCase() : city.getStateCountry().getCountry().getCountryName().toUpperCase();
@@ -66,7 +66,7 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
             code =  "-" + len;
             commercialOperationDto.setCode(code);
         }
-
+        System.out.println(commercialOperationDto);
         if (commercialOperationDto.getName().contains(" ")) {
              throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
