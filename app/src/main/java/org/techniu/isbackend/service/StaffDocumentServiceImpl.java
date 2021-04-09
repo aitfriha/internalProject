@@ -4,8 +4,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.StaffDocumentMapper;
-import org.techniu.isbackend.dto.mapper.StaffMapper;
 import org.techniu.isbackend.dto.model.StaffDocumentDto;
+import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.Staff;
 import org.techniu.isbackend.entity.StaffDocument;
 import org.techniu.isbackend.exception.EntityType;
@@ -26,12 +27,13 @@ public class StaffDocumentServiceImpl implements StaffDocumentService {
 
     private StaffDocumentRepository staffDocumentRepository;
     private StaffRepository staffRepository;
-
+    private LogService logService;
     private final StaffDocumentMapper staffDocumentMapper = Mappers.getMapper(StaffDocumentMapper.class);
 
-    StaffDocumentServiceImpl(StaffDocumentRepository staffDocumentRepository, StaffRepository staffRepository) {
+    StaffDocumentServiceImpl(StaffDocumentRepository staffDocumentRepository, StaffRepository staffRepository, LogService logService) {
         this.staffDocumentRepository = staffDocumentRepository;
         this.staffRepository = staffRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -75,6 +77,7 @@ public class StaffDocumentServiceImpl implements StaffDocumentService {
         list.remove(staffDocument);
         staff.setStaffDocuments(list);
         staffRepository.save(staff);
+        logService.addLog(LogType.DELETE, ClassType.STAFF,"delete document "+staffDocument.getName()+" from staff "+staff.getMotherFamilyName()+" "+staff.getFatherFamilyName() + " "+staff.getFirstName());
         staffDocumentRepository.delete(staffDocument);
     }
 

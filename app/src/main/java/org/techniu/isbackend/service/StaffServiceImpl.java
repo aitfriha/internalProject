@@ -44,6 +44,7 @@ public class StaffServiceImpl implements StaffService {
     private AdministrativeStructureAssignationHistoryRepository administrativeStructureAssignationHistoryRepository;
     private CurrencyRepository currencyRepository;
     private final UserService userService;
+    private LogService logService;
     private final StaffMapper staffMapper = Mappers.getMapper(StaffMapper.class);
 
     StaffServiceImpl(
@@ -62,7 +63,7 @@ public class StaffServiceImpl implements StaffService {
             StaffEconomicContractInformationHistoryRepository staffEconomicContractInformationHistoryRepository,
             FunctionalStructureAssignationHistoryRepository functionalStructureAssignationHistoryRepository,
             AdministrativeStructureAssignationHistoryRepository administrativeStructureAssignationHistoryRepository,
-            CurrencyRepository currencyRepository, UserService userService) {
+            CurrencyRepository currencyRepository, UserService userService, LogService logService) {
         this.staffRepository = staffRepository;
         this.functionalStructureLevelRepository = functionalStructureLevelRepository;
         this.administrativeStructureLevelRepository = administrativeStructureLevelRepository;
@@ -81,6 +82,7 @@ public class StaffServiceImpl implements StaffService {
         this.administrativeStructureAssignationHistoryRepository = administrativeStructureAssignationHistoryRepository;
         this.currencyRepository = currencyRepository;
         this.userService = userService;
+        this.logService = logService;
     }
 
     @Override
@@ -181,12 +183,13 @@ public class StaffServiceImpl implements StaffService {
         staff.setStaffDocuments(staffDocumentRepository.saveAll(staffDocumentList));
         staff.setFunctionalStructureLevels(new ArrayList<>());
         staff.setAdministrativeStructureLevels(new ArrayList<>());
+        logService.addLog(LogType.CREATE, ClassType.STAFF,"create staff "+staff.getMotherFamilyName()+" "+staff.getFatherFamilyName() + " "+staff.getFirstName());
         return staffRepository.save(staff);
     }
 
     @Override
     public Staff update(StaffDto staffDto, Address address) {
-        System.out.println(staffDto);
+      //  System.out.println(staffDto);
         if(
                 staffDto.getFirstName().equals("")
                         || staffDto.getFatherFamilyName().equals("")
@@ -244,7 +247,7 @@ public class StaffServiceImpl implements StaffService {
         address.setCity( cityRepository.findById(staffDto.getCityId()).get());
         Staff staff = staffRepository.findById(staffDto.getStaffId()).get();
         Staff staff7 = staffMapper.dtoToModel(staffDto);
-        System.out.println(staff1);
+        //System.out.println(staff1);
         staff7.setAddress(addressRepository.save(address));
         staff7.setStaffContract(staff.getStaffContract());
         staff7.setStaffEconomicContractInformation(staff.getStaffEconomicContractInformation());
@@ -253,6 +256,7 @@ public class StaffServiceImpl implements StaffService {
         staff7.setIsAdministrativeLeader(staff.getIsAdministrativeLeader());
         staff7.setFunctionalStructureLevels(staff.getFunctionalStructureLevels());
         staff7.setAdministrativeStructureLevels(staff.getAdministrativeStructureLevels());
+        logService.addLog(LogType.UPDATE, ClassType.STAFF,"update staff "+staff7.getMotherFamilyName()+" "+staff7.getFatherFamilyName() + " "+staff7.getFirstName());
         return staffRepository.save(staff7);
     }
 
@@ -283,6 +287,7 @@ public class StaffServiceImpl implements StaffService {
         Optional<Staff> staff = staffRepository.findById(staffId);
         if (staff.isPresent()) {
             staffRepository.delete(staff.get());
+            logService.addLog(LogType.UPDATE, ClassType.STAFF,"update staff "+staff.get().getMotherFamilyName()+" "+staff.get().getFatherFamilyName() + " "+staff.get().getFirstName());
             return "done";
         } else return "invalide to delete";
 
