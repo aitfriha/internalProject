@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.FinancialCompanyMapper;
 import org.techniu.isbackend.dto.model.FinancialCompanyDto;
-import org.techniu.isbackend.entity.Address;
-import org.techniu.isbackend.entity.City;
-import org.techniu.isbackend.entity.FinancialCompany;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -28,19 +26,22 @@ public class FinancialCompanyServiceImpl implements FinancialCompanyService {
     private CityRepository cityRepository;
     private AddressRepository addressRepository;
     private AddressService addressService;
+    private LogService logService;
     private final FinancialCompanyMapper financialCompanyMapper = Mappers.getMapper(FinancialCompanyMapper.class);
 
     public FinancialCompanyServiceImpl(FinancialCompanyRepository financialCompanyRepository, AddressService addressService,
-                                       AddressRepository addressRepository, CityRepository cityRepository) {
+                                       AddressRepository addressRepository, CityRepository cityRepository, LogService logService) {
         this.financialCompanyRepository = financialCompanyRepository;
         this.cityRepository = cityRepository ;
         this.addressRepository = addressRepository;
         this.addressService = addressService;
+        this.logService = logService;
     }
 
     @Override
     public void saveFinancialCompany(FinancialCompanyDto financialCompanyDto) {
         financialCompanyRepository.save(financialCompanyMapper.dtoToModel(financialCompanyDto));
+        logService.addLog(LogType.CREATE, ClassType.COMPANY,"create company "+financialCompanyDto.getName());
     }
 
     @Override
@@ -91,6 +92,7 @@ public class FinancialCompanyServiceImpl implements FinancialCompanyService {
         financialCompany.setLogo(financialCompanyDto.getLogo());
 
         financialCompanyRepository.save(financialCompany);
+        logService.addLog(LogType.UPDATE, ClassType.COMPANY,"update company "+financialCompany.getName());
         return getAllFinancialCompany();
     }
 
@@ -102,6 +104,7 @@ public class FinancialCompanyServiceImpl implements FinancialCompanyService {
             throw exception(ENTITY_NOT_FOUND);
         }
         financialCompanyRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.COMPANY,"delete company "+action.get().getName());
         return getAllFinancialCompany();
     }
 

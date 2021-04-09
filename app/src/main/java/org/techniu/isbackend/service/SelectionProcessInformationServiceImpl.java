@@ -24,14 +24,16 @@ public class SelectionProcessInformationServiceImpl implements SelectionProcessI
     private SelectionProcessInformationRepository selectionProcessInformationRepository;
     private SelectionTypeEvaluationRepository selectionTypeEvaluationRepository;
     private CurrencyRepository currencyRepository;
+    private LogService logService;
     private final SelectionProcessInformationMapper selectionProcessInformationMapper = Mappers.getMapper(SelectionProcessInformationMapper.class);
 
     SelectionProcessInformationServiceImpl(SelectionProcessInformationRepository selectionProcessInformationRepository,
                                            SelectionTypeEvaluationRepository selectionTypeEvaluationRepository,
-                                           CurrencyRepository currencyRepository) {
+                                           CurrencyRepository currencyRepository, LogService logService) {
         this.selectionProcessInformationRepository = selectionProcessInformationRepository;
         this.selectionTypeEvaluationRepository = selectionTypeEvaluationRepository;
         this.currencyRepository = currencyRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -47,6 +49,7 @@ public class SelectionProcessInformationServiceImpl implements SelectionProcessI
         selectionProcessInformation.setCurrency(currency);
 
         selectionProcessInformationRepository.save(selectionProcessInformation);
+        logService.addLog(LogType.CREATE, ClassType.SELECTIONPROCESSINFORMATION,"create selection process information of "+selectionProcessInformationDto.getMotherFamilyName()+" "+selectionProcessInformationDto.getFatherFamilyName() + " "+selectionProcessInformationDto.getFirstName());
     }
 
     @Override
@@ -62,6 +65,7 @@ public class SelectionProcessInformationServiceImpl implements SelectionProcessI
         selectionProcessInformation.setCurrency(currency);
 
         selectionProcessInformationRepository.save(selectionProcessInformation);
+        logService.addLog(LogType.UPDATE, ClassType.SELECTIONPROCESSINFORMATION,"update selection process information of "+selectionProcessInformationDto.getMotherFamilyName()+" "+selectionProcessInformationDto.getFatherFamilyName() + " "+selectionProcessInformationDto.getFirstName());
     }
 
     @Override
@@ -72,6 +76,7 @@ public class SelectionProcessInformationServiceImpl implements SelectionProcessI
             throw exception(ENTITY_NOT_FOUND);
         }
         SelectionProcessInformation selectionProcessInformation = action.get();
+        logService.addLog(LogType.DELETE, ClassType.SELECTIONPROCESSINFORMATION,"delete selection process information of "+action.get().getMotherFamilyName()+" "+action.get().getFatherFamilyName() + " "+action.get().getFirstName());
         selectionProcessInformationRepository.delete(selectionProcessInformation);
     }
 

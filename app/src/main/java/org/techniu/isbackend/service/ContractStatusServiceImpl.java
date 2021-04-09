@@ -1,13 +1,13 @@
 package org.techniu.isbackend.service;
 
 import org.mapstruct.factory.Mappers;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.ContractStatusMapper;
 import org.techniu.isbackend.dto.model.ContractStatusDto;
-import org.techniu.isbackend.entity.CommercialOperationStatus;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.ContractStatus;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -23,16 +23,19 @@ import static org.techniu.isbackend.exception.ExceptionType.*;
 @Transactional
 public class ContractStatusServiceImpl implements ContractStatusService {
     private ContractStatusRepository contractStatusRepository;
+    private LogService logService;
     private final ContractStatusMapper contractStatusMapper = Mappers.getMapper(ContractStatusMapper.class);
 
 
-    public ContractStatusServiceImpl(ContractStatusRepository contractStatusRepository) {
+    public ContractStatusServiceImpl(ContractStatusRepository contractStatusRepository, LogService logService) {
         this.contractStatusRepository = contractStatusRepository;
+        this.logService = logService;
     }
 
     @Override
     public void saveContractStatus(ContractStatusDto contractStatusDto) {
         contractStatusRepository.save(contractStatusMapper.dtoToModel(contractStatusDto));
+        logService.addLog(LogType.CREATE, ClassType.CONTRACTSTATUS,"create contract status "+contractStatusDto.getStatusName());
     }
 
     @Override
@@ -75,6 +78,7 @@ public class ContractStatusServiceImpl implements ContractStatusService {
 
         // System.out.println("new :" + status);
         contractStatusRepository.save(status);
+        logService.addLog(LogType.UPDATE, ClassType.CONTRACTSTATUS,"update contract status "+status.getStatusName());
         return getAllContractStatus2();
     }
 
@@ -86,6 +90,7 @@ public class ContractStatusServiceImpl implements ContractStatusService {
             throw exception(ENTITY_NOT_FOUND);
         }
         contractStatusRepository.deleteById(id);
+        logService.addLog(LogType.UPDATE, ClassType.CONTRACTSTATUS,"update contract status "+action.get().getStatusName());
         return getAllContractStatus2();
     }
 
