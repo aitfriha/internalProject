@@ -31,6 +31,7 @@ public class CommercialOperationDto {
     private String stateName;
     private String countryName;
     private String description;
+    private String objectif;
     private String plannedDateQ;
     private String commercialFlowQ;
     private Date documentationDate;
@@ -50,4 +51,7 @@ public class CommercialOperationDto {
     private String sector3;
     private List<String> contactsIds;
     private List<ContactDto> contactDtos;
+
+    private Client client;
+    private CommercialOperationStatus state;
 }
