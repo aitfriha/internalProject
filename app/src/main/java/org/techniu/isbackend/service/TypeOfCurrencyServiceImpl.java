@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.TypeOfCurrencyMapper;
 import org.techniu.isbackend.dto.model.TypeOfCurrencyDto;
+import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.TypeOfCurrency;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -22,14 +24,16 @@ import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 public class TypeOfCurrencyServiceImpl implements TypeOfCurrencyService {
     private TypeOfCurrencyRepository typeOfCurrencyRepository;
     private final TypeOfCurrencyMapper typeOfCurrencyMapper = Mappers.getMapper(TypeOfCurrencyMapper.class);
-
-    public TypeOfCurrencyServiceImpl(TypeOfCurrencyRepository typeOfCurrencyRepository) {
+    private LogService logService;
+    public TypeOfCurrencyServiceImpl(TypeOfCurrencyRepository typeOfCurrencyRepository, LogService logService) {
         this.typeOfCurrencyRepository = typeOfCurrencyRepository;
+        this.logService = logService;
     }
 
     @Override
     public void saveTypeOfCurrency(TypeOfCurrencyDto typeOfCurrencyDto) {
-        System.out.println("Implement part :" + typeOfCurrencyDto);
+        //System.out.println("Implement part :" + typeOfCurrencyDto);
+        logService.addLog(LogType.CREATE, ClassType.TYPEOFCURRENCY,"create type of currency "+typeOfCurrencyDto.getCurrencyName());
         typeOfCurrencyRepository.save(typeOfCurrencyMapper.dtoToModel(typeOfCurrencyDto));
     }
 
@@ -61,15 +65,12 @@ public class TypeOfCurrencyServiceImpl implements TypeOfCurrencyService {
         if (!typeOfCurrency1.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-
-        System.out.println(typeOfCurrency);
-
+        //System.out.println(typeOfCurrency);
         typeOfCurrency.setCurrencyCode(typeOfCurrencyDto.getCurrencyCode());
         typeOfCurrency.setCurrencyName(typeOfCurrencyDto.getCurrencyName());
-
-        System.out.println(typeOfCurrency);
-
+        //System.out.println(typeOfCurrency);
         typeOfCurrencyRepository.save(typeOfCurrency);
+        logService.addLog(LogType.UPDATE, ClassType.TYPEOFCURRENCY,"update type of currency "+typeOfCurrency.getCurrencyName());
         return getAllTypeOfCurrency();
     }
 
@@ -81,6 +82,7 @@ public class TypeOfCurrencyServiceImpl implements TypeOfCurrencyService {
             throw exception(ENTITY_NOT_FOUND);
         }
         typeOfCurrencyRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.TYPEOFCURRENCY,"delete type of currency "+action.get().getCurrencyName());
         return getAllTypeOfCurrency();
     }
 

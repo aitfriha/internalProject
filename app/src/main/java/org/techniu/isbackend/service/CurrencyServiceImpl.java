@@ -5,17 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.CurrencyMapper;
 import org.techniu.isbackend.dto.model.CurrencyDto;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.Currency;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.TypeOfCurrency;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.CurrencyRepository;
-import org.techniu.isbackend.repository.StateCountryRepository;
 import org.techniu.isbackend.repository.TypeOfCurrencyRepository;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
@@ -25,18 +24,23 @@ import static org.techniu.isbackend.exception.ExceptionType.NOT_ASSOCIATED_DATA;
 @Transactional
 public class CurrencyServiceImpl implements CurrencyService {
     private CurrencyRepository currencyRepository;
+    private LogService logService;
     private final CurrencyMapper currencyMapper = Mappers.getMapper(CurrencyMapper.class);
     private TypeOfCurrencyRepository typeOfCurrencyRepository;
 
 
-    public CurrencyServiceImpl(CurrencyRepository currencyRepository, TypeOfCurrencyRepository typeOfCurrencyRepository) {
+    public CurrencyServiceImpl(CurrencyRepository currencyRepository, LogService logService, TypeOfCurrencyRepository typeOfCurrencyRepository) {
         this.currencyRepository = currencyRepository;
+        this.logService = logService;
         this.typeOfCurrencyRepository = typeOfCurrencyRepository;
     }
 
     @Override
     public void saveCurrency(CurrencyDto currencyDto) {
-        currencyRepository.save(currencyMapper.dtoToModel(currencyDto));
+        Currency currency=currencyRepository.save(currencyMapper.dtoToModel(currencyDto));
+        Optional<TypeOfCurrency> typeOfCurrency=typeOfCurrencyRepository.findById(currency.getTypeOfCurrency().get_id());
+      //  System.out.println(typeOfCurrency.get());
+        logService.addLog(LogType.CREATE, ClassType.CURRENCY,"create currency of type of currency "+typeOfCurrency.get().getCurrencyName());
     }
 
     @Override
@@ -78,7 +82,7 @@ public class CurrencyServiceImpl implements CurrencyService {
             }
             if (newCurrency.getCurrencyId() != null && !NewT.contains(newCurrency)) NewT.add(newCurrency);
         }
-        System.out.println(NewT);
+       // System.out.println(NewT);
         return NewT;
     }
 
@@ -103,9 +107,8 @@ public class CurrencyServiceImpl implements CurrencyService {
         currency.setChangeFactor(currencyDto.getChangeFactor());
         currency.setYear(currencyDto.getYear());
         currency.setMonth(currencyDto.getMonth());
-
-        // System.out.println("new :" + currency);
         currencyRepository.save(currency);
+        logService.addLog(LogType.UPDATE, ClassType.CURRENCY,"update currency of type of currency "+currency.getTypeOfCurrency().getCurrencyName());
         return getAllCurrency();
     }
 
@@ -117,6 +120,7 @@ public class CurrencyServiceImpl implements CurrencyService {
             throw exception(ENTITY_NOT_FOUND);
         }
         currencyRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.CURRENCY,"delete currency of currency type "+action.get().getTypeOfCurrency().getCurrencyName());
         return getAllCurrency();
     }
 

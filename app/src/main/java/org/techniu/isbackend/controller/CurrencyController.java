@@ -42,8 +42,7 @@ public class CurrencyController {
     public ResponseEntity add(@RequestBody @Valid CurrencyAddrequest currencyAddrequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         // Save Contract Status
-        System.out.println(currencyAddrequest);
-
+        //System.out.println(currencyAddrequest);
         List<CurrencyDto> currencyList = currencyService.getAllCurrency();
         for (CurrencyDto currencyDto : currencyList) {
             if (currencyDto.getTypeOfCurrency().get_id().equals(currencyAddrequest.getTypeOfCurrency().get_id())
