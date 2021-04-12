@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.ExternalSupplierMapper;
 import org.techniu.isbackend.dto.model.ExternalSupplierDto;
-import org.techniu.isbackend.entity.Address;
-import org.techniu.isbackend.entity.City;
-import org.techniu.isbackend.entity.ExternalSupplier;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -28,19 +26,22 @@ public class ExternalSupplierServiceImpl implements ExternalSupplierService {
     private CityRepository cityRepository;
     private AddressRepository addressRepository;
     private AddressService addressService;
+    private LogService logService;
     private final ExternalSupplierMapper externalSupplierMapper = Mappers.getMapper(ExternalSupplierMapper.class);
 
     public ExternalSupplierServiceImpl(ExternalSupplierRepository externalSupplierRepository, AddressService addressService,
-                                       AddressRepository addressRepository, CityRepository cityRepository) {
+                                       AddressRepository addressRepository, CityRepository cityRepository, LogService logService) {
         this.externalSupplierRepository = externalSupplierRepository;
         this.cityRepository = cityRepository ;
         this.addressRepository = addressRepository;
         this.addressService = addressService;
+        this.logService = logService;
     }
 
     @Override
     public void saveExternalSupplier(ExternalSupplierDto externalSupplierDto) {
         externalSupplierRepository.save(externalSupplierMapper.dtoToModel(externalSupplierDto));
+        logService.addLog(LogType.CREATE, ClassType.EXTERNALSUPPLIER,"create external supplier code "+externalSupplierDto.getCode());
     }
 
     @Override
@@ -90,7 +91,7 @@ public class ExternalSupplierServiceImpl implements ExternalSupplierService {
         externalSupplier.setMotherFamilyName(externalSupplierDto.getMotherFamilyName());
         externalSupplier.setEmail(externalSupplierDto.getEmail());
         externalSupplier.setUrl(externalSupplierDto.getUrl());
-
+        logService.addLog(LogType.UPDATE, ClassType.EXTERNALSUPPLIER,"update external supplier code "+externalSupplierDto.getCode());
         externalSupplierRepository.save(externalSupplier);
         return getAllExternalSupplier();
     }
@@ -103,6 +104,7 @@ public class ExternalSupplierServiceImpl implements ExternalSupplierService {
             throw exception(ENTITY_NOT_FOUND);
         }
         externalSupplierRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.EXTERNALSUPPLIER,"delete external supplier code "+action.get().getCode());
         return getAllExternalSupplier();
     }
 

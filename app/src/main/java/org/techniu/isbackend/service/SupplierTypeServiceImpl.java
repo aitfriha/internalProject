@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.SupplierTypeMapper;
 import org.techniu.isbackend.dto.model.SupplierTypeDto;
+import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.SupplierType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -21,16 +23,18 @@ import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 @Transactional
 public class SupplierTypeServiceImpl implements SupplierTypeService {
     private SupplierTypeRepository supplierTypeRepository;
+    private LogService logService;
     private final SupplierTypeMapper supplierTypeMapper = Mappers.getMapper(SupplierTypeMapper.class);
 
-    public SupplierTypeServiceImpl(SupplierTypeRepository supplierTypeRepository) {
+    public SupplierTypeServiceImpl(SupplierTypeRepository supplierTypeRepository, LogService logService) {
         this.supplierTypeRepository = supplierTypeRepository;
+        this.logService = logService;
     }
 
     @Override
     public void saveSupplierType(SupplierTypeDto supplierTypeDto) {
-        System.out.println("Implement part :" + supplierTypeDto);
         supplierTypeRepository.save(supplierTypeMapper.dtoToModel(supplierTypeDto));
+        logService.addLog(LogType.CREATE, ClassType.SUPPLIERTYPE,"create supplier type "+supplierTypeDto.getName());
     }
 
     @Override
@@ -39,7 +43,6 @@ public class SupplierTypeServiceImpl implements SupplierTypeService {
         List<SupplierType> supplierType = supplierTypeRepository.findAll();
         // Create a list of all actions dto
         ArrayList<SupplierTypeDto> supplierTypeDtos = new ArrayList<>();
-
         for (SupplierType supplierType1 : supplierType) {
             SupplierTypeDto supplierTypeDto = supplierTypeMapper.modelToDto(supplierType1);
             supplierTypeDtos.add(supplierTypeDto);
@@ -57,21 +60,15 @@ public class SupplierTypeServiceImpl implements SupplierTypeService {
         // save country if note existe
         SupplierType supplierType = getById(id);
         Optional<SupplierType> supplierType1 = Optional.ofNullable(supplierTypeRepository.findAllBy_id(id));
-
         if (!supplierType1.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-
-        System.out.println(supplierType);
-
         supplierType.setName(supplierTypeDto.getName());
         supplierType.setDescription(supplierTypeDto.getDescription());
         supplierType.setInternalOrder(supplierTypeDto.isInternalOrder());
         supplierType.setOperationAssociated(supplierTypeDto.isOperationAssociated());
-
-        System.out.println(supplierType);
-
         supplierTypeRepository.save(supplierType);
+        logService.addLog(LogType.UPDATE, ClassType.SUPPLIERTYPE,"update supplier type "+supplierType1.get().getName());
         return getAllSupplierType();
     }
 
@@ -83,6 +80,7 @@ public class SupplierTypeServiceImpl implements SupplierTypeService {
             throw exception(ENTITY_NOT_FOUND);
         }
         supplierTypeRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.SUPPLIERTYPE,"delete supplier type "+action.get().getName());
         return getAllSupplierType();
     }
 
