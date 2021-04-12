@@ -74,7 +74,6 @@ public class CurrencyController {
 
     @PostMapping("/delete/{Id}")
     public List<CurrencyDto> deleteCurrencyById(@PathVariable String Id) {
-        System.out.println("test delete :" + Id);
         return currencyService.remove(Id);
 
     }
