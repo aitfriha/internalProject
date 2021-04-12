@@ -109,9 +109,6 @@ public class FinancialContractController {
         // Save Contract Status
         String Id = financialContractUpdaterequest.getFinancialContractId();
 
-        System.out.println(Id);
-        System.out.println(financialContractUpdaterequest);
-
         financialContractService.updateFinancialContract(financialContractMapper.updateRequestToDto(financialContractUpdaterequest), Id);
         return financialContractService.getAllFinancialContract();
     }

@@ -40,14 +40,11 @@ public class CommercialActionTypeController {
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody @Valid CommercialActionTypeAddrequest commercialActionTypeAddrequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
-        // Save Type Of Currency
-        System.out.println(commercialActionTypeAddrequest);
 
         List <CommercialActionTypeDto> actionTypeList = commercialActionTypeService.getAllCommercialActionType();
         for (CommercialActionTypeDto actionTypeDto : actionTypeList) {
             if (actionTypeDto.getTypeName().equals(commercialActionTypeAddrequest.getTypeName())) return null;
         }
-
 
         commercialActionTypeService.saveCommercialActionType(commercialActionTypeMapper.addRequestToDto(commercialActionTypeAddrequest));
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(CommercialActionType, ADDED)), HttpStatus.OK);
@@ -67,7 +64,6 @@ public class CommercialActionTypeController {
 
     @PostMapping("/delete/{Id}")
     public List<CommercialActionTypeDto> deleteCommercialActionTypeById(@PathVariable String Id) {
-        System.out.println("test delete :" +Id);
         return commercialActionTypeService.remove(Id);
 
     }
@@ -76,7 +72,6 @@ public class CommercialActionTypeController {
     public List<CommercialActionTypeDto> update(@RequestBody @Valid CommercialActionTypeUpdaterequest commercialActionTypeUpdaterequest) {
         // Save Contract Status
         String Id = commercialActionTypeUpdaterequest.getActionTypeId();
-        System.out.println(commercialActionTypeUpdaterequest + "" + Id);
         commercialActionTypeService.updateCommercialActionType(commercialActionTypeMapper.updateRequestToDto(commercialActionTypeUpdaterequest), Id);
         return commercialActionTypeService.getAllCommercialActionType();
     }

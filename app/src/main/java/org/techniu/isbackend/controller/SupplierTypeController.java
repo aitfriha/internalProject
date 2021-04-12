@@ -60,7 +60,6 @@ public class SupplierTypeController {
 
     @PostMapping("/delete/{Id}")
     public List<SupplierTypeDto> deleteSupplierTypeById(@PathVariable String Id) {
-        System.out.println("test delete :" +Id);
         return supplierTypeService.remove(Id);
 
     }
@@ -69,7 +68,6 @@ public class SupplierTypeController {
     public List<SupplierTypeDto> update(@RequestBody @Valid SupplierTypeUpdaterequest supplierTypeUpdaterequest) {
         // Save Contract Status
         String Id = supplierTypeUpdaterequest.getSupplierTypeId();
-        System.out.println(supplierTypeUpdaterequest + "" + Id);
         supplierTypeService.updateSupplierType(supplierTypeMapper.updateRequestToDto(supplierTypeUpdaterequest), Id);
         return supplierTypeService.getAllSupplierType();
     }

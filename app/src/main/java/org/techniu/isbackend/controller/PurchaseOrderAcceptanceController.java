@@ -60,7 +60,6 @@ public class PurchaseOrderAcceptanceController {
 
     @PostMapping("/delete/{Id}")
     public List<PurchaseOrderAcceptanceDto> deletePurchaseOrderAcceptanceById(@PathVariable String Id) {
-        System.out.println("test delete :" +Id);
         return purchaseOrderAcceptanceService.remove(Id);
 
     }
@@ -69,7 +68,6 @@ public class PurchaseOrderAcceptanceController {
     public List<PurchaseOrderAcceptanceDto> update(@RequestBody @Valid PurchaseOrderAcceptanceUpdaterequest purchaseOrderAcceptanceUpdaterequest) {
         // Save Contract Status
         String Id = purchaseOrderAcceptanceUpdaterequest.getPurchaseOrderAcceptanceId();
-        System.out.println(purchaseOrderAcceptanceUpdaterequest + "" + Id);
         purchaseOrderAcceptanceService.updatePurchaseOrderAcceptance(purchaseOrderAcceptanceMapper.updateRequestToDto(purchaseOrderAcceptanceUpdaterequest), Id);
         return purchaseOrderAcceptanceService.getAllPurchaseOrderAcceptance();
     }
