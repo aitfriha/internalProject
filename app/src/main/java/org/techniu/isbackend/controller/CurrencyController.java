@@ -82,7 +82,6 @@ public class CurrencyController {
     public List<CurrencyDto> update(@RequestBody @Valid CurrencyUpdaterequest currencyUpdaterequest) {
         // Save Contract Status
         String Id = currencyUpdaterequest.getCurrencyId();
-        System.out.println(currencyUpdaterequest + "" + Id);
         currencyService.updateCurrency(currencyMapper.updateRequestToDto(currencyUpdaterequest), Id);
         return currencyService.getAllCurrency();
     }
@@ -96,7 +95,6 @@ public class CurrencyController {
     @RequestMapping(method = RequestMethod.GET, value = "/lastDataAssociatedWithCurrencyTypes")
     public List<CurrencyDto> getLastDataByCurrencyType() {
         return currencyService.getLastDataAssociatedWithCurrencyTypes();
-
     }
 
 }

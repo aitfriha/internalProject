@@ -46,12 +46,8 @@ public class IvaController {
     public ResponseEntity add(@RequestBody @Valid IvaAddrequest ivaAddrequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         // Save  Iva
-        System.out.println(ivaAddrequest);
-
         StateCountry stateCountry = stateCountryRepository.findStateCountryBy_id(ivaAddrequest.getStateCountry().get_id());
-
         ivaAddrequest.setStateCountry(stateCountry);
-        System.out.println(ivaAddrequest);
 
         ivaService.saveIva(ivaMapper.addRequestToDto(ivaAddrequest));
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Iva, ADDED)), HttpStatus.OK);
@@ -80,7 +76,6 @@ public class IvaController {
 
     @PostMapping("/delete/{Id}")
     public List<IvaDto> deleteIvaById(@PathVariable String Id) {
-        System.out.println("test delete :" +Id);
         return ivaService.remove(Id);
 
     }

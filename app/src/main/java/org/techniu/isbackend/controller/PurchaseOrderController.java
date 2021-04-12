@@ -125,9 +125,6 @@ public class PurchaseOrderController {
         // Save Contract Status
         String Id = purchaseOrderUpdaterequest.getPurchaseOrderId();
 
-        System.out.println(Id);
-        System.out.println(purchaseOrderUpdaterequest);
-
         purchaseOrderService.updatePurchaseOrder(purchaseOrderMapper.updateRequestToDto(purchaseOrderUpdaterequest), Id);
         return purchaseOrderService.getAllPurchaseOrder();
     }

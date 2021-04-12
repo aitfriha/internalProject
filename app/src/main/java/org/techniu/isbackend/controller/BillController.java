@@ -56,7 +56,6 @@ public class BillController {
 
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody @Valid BillAddrequest billAddrequest, BindingResult bindingResult) {
-        System.out.println(billAddrequest);
 
         Client client = clientRepository.findBy_id(billAddrequest.getClient().get_id());
         Client clientSigned = clientRepository.findBy_id(billAddrequest.getClientSigned().get_id());
@@ -88,22 +87,17 @@ public class BillController {
     @PostMapping("/row/{Id}")
     public Bill getBillById(@PathVariable String Id) {
         return billService.getById(Id);
-
     }
 
     @PostMapping("/delete/{Id}")
     public List<BillDto> deleteBillById(@PathVariable String Id) {
         return billService.remove(Id);
-
     }
 
     @PostMapping("/update")
     public List<BillDto> update(@RequestBody @Valid BillUpdaterequest billUpdaterequest) {
         // Save Contract Status
         String Id = billUpdaterequest.getBillId();
-
-        System.out.println(Id);
-        System.out.println(billUpdaterequest);
 
         billService.updateBill(billMapper.updateRequestToDto(billUpdaterequest), Id);
         return billService.getAllBill();

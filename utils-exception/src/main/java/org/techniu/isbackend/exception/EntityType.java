@@ -47,7 +47,7 @@ public enum EntityType {
     SelectionTypeEvaluation,
     SelectionProcessInformation,
     Ability,Action,Department,Machine,Role,Subject,USER,
-
+    CommercialActionType,
     DefaultSentence,
     TranslateSentence,
 

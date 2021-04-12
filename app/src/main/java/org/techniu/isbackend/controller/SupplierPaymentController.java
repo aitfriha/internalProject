@@ -60,7 +60,6 @@ public class SupplierPaymentController {
 
     @PostMapping("/delete/{Id}")
     public List<SupplierPaymentDto> deleteSupplierPaymentById(@PathVariable String Id) {
-        System.out.println("test delete :" +Id);
         return supplierPaymentService.remove(Id);
 
     }
@@ -69,7 +68,6 @@ public class SupplierPaymentController {
     public List<SupplierPaymentDto> update(@RequestBody @Valid SupplierPaymentUpdaterequest supplierPaymentUpdaterequest) {
         // Save Contract Status
         String Id = supplierPaymentUpdaterequest.getSupplierPaymentId();
-        System.out.println(supplierPaymentUpdaterequest + "" + Id);
         supplierPaymentService.updateSupplierPayment(supplierPaymentMapper.updateRequestToDto(supplierPaymentUpdaterequest), Id);
         return supplierPaymentService.getAllSupplierPayment();
     }
