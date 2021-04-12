@@ -4,11 +4,10 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.IvaMapper;
-import org.techniu.isbackend.dto.model.ContractStatusDto;
-import org.techniu.isbackend.dto.model.CurrencyDto;
 import org.techniu.isbackend.dto.model.IvaDto;
-import org.techniu.isbackend.entity.ContractStatus;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.Iva;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.StateCountry;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -26,18 +25,20 @@ import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 @Transactional
 public class IvaServiceImpl implements IvaService {
     private IvaRepository ivaRepository;
+    private LogService logService;
     private final IvaMapper ivaMapper = Mappers.getMapper(IvaMapper.class);
     private StateCountryRepository stateCountryRepository;
 
-    public IvaServiceImpl(IvaRepository ivaRepository, StateCountryRepository stateCountryRepository) {
+    public IvaServiceImpl(IvaRepository ivaRepository, LogService logService, StateCountryRepository stateCountryRepository) {
         this.ivaRepository = ivaRepository;
+        this.logService = logService;
         this.stateCountryRepository = stateCountryRepository;
     }
 
     @Override
     public void saveIva(IvaDto ivaDto) {
-        System.out.println("Implement part :" + ivaDto);
         ivaRepository.save(ivaMapper.dtoToModel(ivaDto));
+        logService.addLog(LogType.CREATE, ClassType.IVA,"create iva code "+ivaDto.getIvaCode());
     }
 
     @Override
@@ -83,7 +84,7 @@ public class IvaServiceImpl implements IvaService {
             IvaDto ivaDto = ivaMapper.modelToDto(iva1);
             ivaDtos.add(ivaDto);
         }
-        System.out.println("Country :: " + CountryName);
+     //   System.out.println("Country :: " + CountryName);
         ArrayList<IvaDto> NewT = new ArrayList<>();
         for (IvaDto ivaDto : ivaDtos) {
             IvaDto newIvaDto = new IvaDto();
@@ -115,23 +116,15 @@ public class IvaServiceImpl implements IvaService {
         if (!iva1.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-
-        System.out.println(iva);
-
         StateCountry stateCountry = stateCountryRepository.findStateCountryBy_id(ivaDto.getStateCountry().get_id());
-
-        System.out.println(stateCountry);
-
         iva.setStateCountry(stateCountry);
         iva.setIvaCode(ivaDto.getIvaCode());
         iva.setValue(ivaDto.getValue());
         iva.setElectronicInvoice(ivaDto.isElectronicInvoice());
         iva.setStartingDate(ivaDto.getStartingDate());
         iva.setEndingDate(ivaDto.getEndingDate());
-
-        System.out.println(iva);
-
         ivaRepository.save(iva);
+        logService.addLog(LogType.UPDATE, ClassType.IVA,"update iva code "+ivaDto.getIvaCode());
         return getAllIva();
     }
 
@@ -143,6 +136,7 @@ public class IvaServiceImpl implements IvaService {
             throw exception(ENTITY_NOT_FOUND);
         }
         ivaRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.IVA,"delete iva code "+action.get().getIvaCode());
         return getAllIva();
     }
 
