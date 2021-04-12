@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.PurchaseOrderAcceptanceMapper;
 import org.techniu.isbackend.dto.model.PurchaseOrderAcceptanceDto;
+import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.PurchaseOrderAcceptance;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -22,15 +24,17 @@ import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 public class PurchaseOrderAcceptanceServiceImpl implements PurchaseOrderAcceptanceService {
     private PurchaseOrderAcceptanceRepository purchaseOrderAcceptanceRepository;
     private final PurchaseOrderAcceptanceMapper purchaseOrderAcceptanceMapper = Mappers.getMapper(PurchaseOrderAcceptanceMapper.class);
-
-    public PurchaseOrderAcceptanceServiceImpl(PurchaseOrderAcceptanceRepository purchaseOrderAcceptanceRepository) {
+    private LogService logService;
+    public PurchaseOrderAcceptanceServiceImpl(PurchaseOrderAcceptanceRepository purchaseOrderAcceptanceRepository, LogService logService) {
         this.purchaseOrderAcceptanceRepository = purchaseOrderAcceptanceRepository;
+        this.logService = logService;
     }
 
     @Override
     public void savePurchaseOrderAcceptance(PurchaseOrderAcceptanceDto purchaseOrderAcceptanceDto) {
-        System.out.println("Implement part :" + purchaseOrderAcceptanceDto);
+       // System.out.println("Implement part :" + purchaseOrderAcceptanceDto);
         purchaseOrderAcceptanceRepository.save(purchaseOrderAcceptanceMapper.dtoToModel(purchaseOrderAcceptanceDto));
+        logService.addLog(LogType.CREATE, ClassType.PURCHASEORDERACCEPTANCE,"create purchase order acceptance "+purchaseOrderAcceptanceDto.getGeneratedPurchase());
     }
 
     @Override
@@ -71,6 +75,7 @@ public class PurchaseOrderAcceptanceServiceImpl implements PurchaseOrderAcceptan
         System.out.println(purchaseOrderAcceptance);
 
         purchaseOrderAcceptanceRepository.save(purchaseOrderAcceptance);
+        logService.addLog(LogType.UPDATE, ClassType.PURCHASEORDERACCEPTANCE,"update purchase order acceptance "+purchaseOrderAcceptanceDto.getGeneratedPurchase());
         return getAllPurchaseOrderAcceptance();
     }
 
@@ -82,6 +87,7 @@ public class PurchaseOrderAcceptanceServiceImpl implements PurchaseOrderAcceptan
             throw exception(ENTITY_NOT_FOUND);
         }
         purchaseOrderAcceptanceRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.PURCHASEORDERACCEPTANCE,"delete purchase order acceptance "+action.get().getGeneratedPurchase());
         return getAllPurchaseOrderAcceptance();
     }
 
