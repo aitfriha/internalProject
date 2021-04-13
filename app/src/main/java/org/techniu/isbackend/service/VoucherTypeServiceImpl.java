@@ -4,6 +4,8 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.VoucherTypeMapper;
 import org.techniu.isbackend.dto.model.VoucherTypeDto;
+import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.VoucherType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -23,9 +25,10 @@ public class VoucherTypeServiceImpl implements VoucherTypeService {
 
     private VoucherTypeRepository voucherTypeRepository;
     private final VoucherTypeMapper voucherTypeMapper = Mappers.getMapper(VoucherTypeMapper.class);
-
-    public VoucherTypeServiceImpl(VoucherTypeRepository voucherTypeRepository) {
+    private LogService logService;
+    public VoucherTypeServiceImpl(VoucherTypeRepository voucherTypeRepository, LogService logService) {
         this.voucherTypeRepository = voucherTypeRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class VoucherTypeServiceImpl implements VoucherTypeService {
                 throw exception(DUPLICATE_ENTITY);
             } else {
                 voucherTypeRepository.save(voucherTypeMapper.dtoToModel(voucherTypeDto));
+                logService.addLog(LogType.CREATE, ClassType.VOUCHERTYPE,"create voucher type "+voucherTypeDto.getName());
             }
         }
     }
@@ -76,9 +80,9 @@ public class VoucherTypeServiceImpl implements VoucherTypeService {
                             .setDescription(voucherTypeDto.getDescription())
                             .setRemovable(voucherTypeDto.isRemovable())
                             .setMasterValue(voucherTypeDto.getMasterValue());
-
                     // Update voucher type data
                     voucherTypeRepository.save(voucherTypeModel);
+                    logService.addLog(LogType.UPDATE, ClassType.VOUCHERTYPE,"update voucher type "+voucherTypeDto.getName());
                 }
             }
         } else {
@@ -92,6 +96,7 @@ public class VoucherTypeServiceImpl implements VoucherTypeService {
         if (voucherType.isPresent()) {
             VoucherType object = voucherType.get();
             voucherTypeRepository.delete(object);
+            logService.addLog(LogType.DELETE, ClassType.VOUCHERTYPE,"delete voucher type "+voucherType.get().getName());
         } else {
             throw exception(ENTITY_NOT_FOUND);
         }

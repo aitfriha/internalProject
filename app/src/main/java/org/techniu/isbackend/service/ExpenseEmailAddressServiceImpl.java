@@ -4,7 +4,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.ExpenseEmailAddressMapper;
 import org.techniu.isbackend.dto.model.ExpenseEmailAddressDto;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.ExpenseEmailAddress;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -20,9 +22,10 @@ public class ExpenseEmailAddressServiceImpl implements ExpenseEmailAddressServic
 
     private ExpenseEmailAddressRepository expenseEmailAddressRepository;
     private final ExpenseEmailAddressMapper expenseEmailAddressMapper = Mappers.getMapper(ExpenseEmailAddressMapper.class);
-
-    public ExpenseEmailAddressServiceImpl(ExpenseEmailAddressRepository expenseEmailAddressRepository) {
+    private LogService logService;
+    public ExpenseEmailAddressServiceImpl(ExpenseEmailAddressRepository expenseEmailAddressRepository, LogService logService) {
         this.expenseEmailAddressRepository = expenseEmailAddressRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class ExpenseEmailAddressServiceImpl implements ExpenseEmailAddressServic
                 throw exception(DUPLICATE_ENTITY);
             } else {
                 expenseEmailAddressRepository.save(expenseEmailAddressMapper.dtoToModel(emailAddressDto));
+                logService.addLog(LogType.CREATE, ClassType.EXPENSEEMAILADDRESS,"create expense email address "+emailAddressDto.getEmail());
             }
         }
     }
@@ -74,6 +78,7 @@ public class ExpenseEmailAddressServiceImpl implements ExpenseEmailAddressServic
                     emailAddressModel.setEmail(emailAddressDto.getEmail());
                     // Update email address data
                     expenseEmailAddressRepository.save(emailAddressModel);
+                    logService.addLog(LogType.UPDATE, ClassType.EXPENSEEMAILADDRESS,"update expense email address "+emailAddressDto.getEmail());
                 }
             }
         } else {
@@ -87,6 +92,7 @@ public class ExpenseEmailAddressServiceImpl implements ExpenseEmailAddressServic
         if (emailAddress.isPresent()) {
             ExpenseEmailAddress object = emailAddress.get();
             expenseEmailAddressRepository.delete(object);
+            logService.addLog(LogType.DELETE, ClassType.EXPENSEEMAILADDRESS,"delete expense email address "+emailAddress.get().getEmail());
         } else {
             throw exception(ENTITY_NOT_FOUND);
         }
