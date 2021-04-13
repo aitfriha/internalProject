@@ -4,6 +4,8 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.PersonTypeMapper;
 import org.techniu.isbackend.dto.model.PersonTypeDto;
+import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.PersonType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -23,9 +25,10 @@ public class PersonTypeServiceImpl implements PersonTypeService {
 
     private PersonTypeRepository personTypeRepository;
     private final PersonTypeMapper personTypeMapper = Mappers.getMapper(PersonTypeMapper.class);
-
-    public PersonTypeServiceImpl(PersonTypeRepository personTypeRepository) {
+    private LogService logService;
+    public PersonTypeServiceImpl(PersonTypeRepository personTypeRepository, LogService logService) {
         this.personTypeRepository = personTypeRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -52,6 +55,7 @@ public class PersonTypeServiceImpl implements PersonTypeService {
             } else {
                 personTypeDto.setMasterValue(personTypeDto.getName().toUpperCase());
                 personTypeRepository.save(personTypeMapper.dtoToModel(personTypeDto));
+                logService.addLog(LogType.CREATE, ClassType.PERSONTYPE,"create person type "+personTypeDto.getName());
             }
         }
     }
@@ -80,6 +84,7 @@ public class PersonTypeServiceImpl implements PersonTypeService {
 
                     // Update person type data
                     personTypeRepository.save(personTypeModel);
+                    logService.addLog(LogType.UPDATE, ClassType.PERSONTYPE,"update person type "+personTypeDto.getName());
                 }
             }
         } else {
@@ -93,11 +98,11 @@ public class PersonTypeServiceImpl implements PersonTypeService {
         if (personType.isPresent()) {
             PersonType object = personType.get();
             personTypeRepository.delete(object);
+            logService.addLog(LogType.DELETE, ClassType.PERSONTYPE,"update person type "+personType.get().getName());
         } else {
             throw exception(ENTITY_NOT_FOUND);
         }
     }
-
 
 
     /**
