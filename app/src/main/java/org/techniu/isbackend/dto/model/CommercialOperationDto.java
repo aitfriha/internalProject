@@ -31,7 +31,6 @@ public class CommercialOperationDto {
     private String stateName;
     private String countryName;
     private String description;
-    private String objectif;
     private String plannedDateQ;
     private String commercialFlowQ;
     private Date documentationDate;
