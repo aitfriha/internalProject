@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.EconomicStaffMapper;
 import org.techniu.isbackend.dto.model.EconomicStaffDto;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.EconomicStaff;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -22,15 +24,17 @@ import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 public class EconomicStaffServiceImpl implements EconomicStaffService {
     private EconomicStaffRepository economicStaffRepository;
     private final EconomicStaffMapper economicStaffMapper = Mappers.getMapper(EconomicStaffMapper.class);
-
-
-    public EconomicStaffServiceImpl(EconomicStaffRepository economicStaffRepository) {
+    private LogService logService;
+    public EconomicStaffServiceImpl(EconomicStaffRepository economicStaffRepository, LogService logService) {
         this.economicStaffRepository = economicStaffRepository;
+        this.logService = logService;
     }
 
     @Override
     public void saveEconomicStaff(EconomicStaffDto economicStaffDto) {
         economicStaffRepository.save(economicStaffMapper.dtoToModel(economicStaffDto));
+        System.out.println(economicStaffDto.getFatherName());
+        logService.addLog(LogType.CREATE, ClassType.ECONOMICSTAFF,"create economic staff "+economicStaffDto.getFatherName());
     }
 
     @Override
@@ -61,7 +65,6 @@ public class EconomicStaffServiceImpl implements EconomicStaffService {
         if (!cs.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-
         economicStaff.setCompanyCost(economicStaffDto.getCompanyCost());
         economicStaff.setCompanyCostEuro(economicStaffDto.getCompanyCostEuro());
         economicStaff.setContributionSalary(economicStaffDto.getContributionSalary());
@@ -82,9 +85,8 @@ public class EconomicStaffServiceImpl implements EconomicStaffService {
         economicStaff.setMotherName(economicStaffDto.getMotherName());
         economicStaff.setHighDate(economicStaffDto.getHighDate());
         economicStaff.setLowDate(economicStaffDto.getLowDate());
-
-        // System.out.println("new :" + economicStaff);
         economicStaffRepository.save(economicStaff);
+        logService.addLog(LogType.UPDATE, ClassType.ECONOMICSTAFF,"update economic staff "+economicStaffDto.getFatherName());
         return getAllEconomicStaff();
     }
 
@@ -96,6 +98,7 @@ public class EconomicStaffServiceImpl implements EconomicStaffService {
             throw exception(ENTITY_NOT_FOUND);
         }
         economicStaffRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.ECONOMICSTAFF,"delete economic staff "+action.get().getFatherName());
         return getAllEconomicStaff();
     }
 
