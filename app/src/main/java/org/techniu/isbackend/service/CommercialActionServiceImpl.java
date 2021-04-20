@@ -46,20 +46,15 @@ public class CommercialActionServiceImpl implements CommercialActionService {
     @Override
     public void saveCommercialAction(CommercialActionDto commercialActionDto) {
 
-        System.out.println("dto part :" + commercialActionDto);
-
         CommercialActionType commercialActionType = commercialActionTypeRepository.findAllBy_id(commercialActionDto.getCommercialActionType().get_id());
         CommercialOperation commercialOperation = commercialOperationRepository.findBy_id(commercialActionDto.getCommercialOperation().get_id());
 
         ArrayList<Contact> contacts = new ArrayList<>();
         for (LinkedHashMap line : commercialActionDto.getContactsIds()){
-            System.out.println("looop :" + line.get("checked").toString());
             if (line.get("checked").toString().equals("true")) {
-                System.out.println("line part :" + line.get("_id"));
-                System.out.println(contactRepository.findBy_id(line.get("_id").toString()));
                 contacts.add(contactRepository.findBy_id(line.get("_id").toString()));
             }
-    }
+        }
 
         CommercialAction commercialAction = commercialActionMapper.dtoToModel(commercialActionDto);
         commercialAction.setCommercialOperation(commercialOperation);
@@ -98,7 +93,6 @@ public class CommercialActionServiceImpl implements CommercialActionService {
         if (!commercialAction1.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-
         System.out.println(commercialAction);
 
         commercialAction.setDescriptions(commercialActionDto.getDescriptions());
@@ -109,9 +103,16 @@ public class CommercialActionServiceImpl implements CommercialActionService {
 
         CommercialActionType commercialActionType = commercialActionTypeRepository.findAllBy_id(commercialActionDto.getCommercialActionType().get_id());
         commercialAction.setCommercialActionType(commercialActionType);
-
         CommercialOperation commercialOperation = commercialOperationRepository.findBy_id(commercialActionDto.getCommercialOperation().get_id());
         commercialAction.setCommercialOperation(commercialOperation);
+
+        ArrayList<Contact> contacts = new ArrayList<>();
+        for (LinkedHashMap line : commercialActionDto.getContactsIds()){
+            if (line.get("checked").toString().equals("true")) {
+                contacts.add(contactRepository.findBy_id(line.get("_id").toString()));
+            }
+        }
+        commercialAction.setContacts(contacts);
 
         System.out.println(commercialAction);
 
