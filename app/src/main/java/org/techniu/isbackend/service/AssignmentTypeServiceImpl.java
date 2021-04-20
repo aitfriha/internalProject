@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.techniu.isbackend.dto.mapper.AssignmentTypeMapper;
 import org.techniu.isbackend.dto.model.AssignmentTypeDto;
 import org.techniu.isbackend.entity.AssignmentType;
+import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.WeeklyWork;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -24,12 +26,12 @@ public class AssignmentTypeServiceImpl implements AssignmentTypeService {
     private AssignmentTypeRepository assignmentTypeRepository;
     private WeeklyWorkRepository weeklyWorkRepository;
     private final AssignmentTypeMapper assignmentTypeMapper = Mappers.getMapper(AssignmentTypeMapper.class);
-
-
+    private LogService logService;
     public AssignmentTypeServiceImpl(AssignmentTypeRepository assignmentTypeRepository,
-                                     WeeklyWorkRepository weeklyWorkRepository) {
+                                     WeeklyWorkRepository weeklyWorkRepository, LogService logService) {
         this.assignmentTypeRepository = assignmentTypeRepository;
         this.weeklyWorkRepository = weeklyWorkRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -57,6 +59,7 @@ public class AssignmentTypeServiceImpl implements AssignmentTypeService {
                 throw exception(DUPLICATE_ENTITY);
             } else {
                 assignmentTypeRepository.save(assignmentTypeMapper.dtoToModel(assignmentTypeDto));
+                logService.addLog(LogType.CREATE, ClassType.ASSIGNMENTTYPE,"create assignment Type "+assignmentTypeDto.getName());
             }
         }
     }
@@ -80,9 +83,9 @@ public class AssignmentTypeServiceImpl implements AssignmentTypeService {
                     assignmentTypeModel.setCode(assignmentTypeDto.getCode())
                             .setName(assignmentTypeDto.getName())
                             .setDescription(assignmentTypeDto.getDescription());
-
                     // Update assignment type data
                     assignmentTypeRepository.save(assignmentTypeModel);
+                    logService.addLog(LogType.UPDATE, ClassType.ASSIGNMENTTYPE,"update assignment Type "+assignmentTypeModel.getName());
                 }
             }
         } else {
@@ -98,6 +101,7 @@ public class AssignmentTypeServiceImpl implements AssignmentTypeService {
             ArrayList<WeeklyWork> associated = weeklyWorkRepository.findAllByAssignmentType(object);
             if (associated.size() == 0) {
                 assignmentTypeRepository.delete(object);
+                logService.addLog(LogType.DELETE, ClassType.ASSIGNMENTTYPE,"delete assignment Type "+object.getName());
             }else{
                 throw exception(ASSOCIATED_WITH_SOME_WEEKLY_WORK);
             }

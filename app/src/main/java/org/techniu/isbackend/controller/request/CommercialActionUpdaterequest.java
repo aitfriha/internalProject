@@ -22,9 +22,9 @@ public class CommercialActionUpdaterequest {
     private List<String> nbrActions;
     private List<String> actionDescriptions;
     private List<String> actionDates;
+    private List<Object> contactsIds;
 
     private CommercialOperation commercialOperation;
     private CommercialActionType commercialActionType;
-    private List<String> contactsIds;
 
 }

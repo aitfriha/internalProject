@@ -12,6 +12,7 @@ import org.techniu.isbackend.entity.CommercialOperation;
 import org.techniu.isbackend.entity.Contact;
 
 import javax.validation.constraints.NotNull;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Data
@@ -31,15 +32,13 @@ public class CommercialActionDto {
     private List<String> nbrActions;
     private List<String> actionDescriptions;
     private List<String> actionDates;
+    private List<LinkedHashMap> contactsIds;
+    private List<ContactDto> contactsDtos;
 
     @DBRef
     private CommercialOperation commercialOperation;
 
     @DBRef
     private CommercialActionType commercialActionType;
-
-    private List<String> contactsIds;
-
-    private List<ContactDto> contactsDtos;
 
 }

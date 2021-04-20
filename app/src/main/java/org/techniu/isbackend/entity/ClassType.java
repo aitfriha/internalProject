@@ -34,5 +34,8 @@ public enum  ClassType {
     PERSONTYPE,
     VOUCHERTYPE,
     EXPENSEEMAILADDRESS,
-    ECONOMICSTAFF
+    ECONOMICSTAFF,
+    ASSIGNMENTTYPE,
+    functionalStructureLevel,
+    administrativeStructureLevel
 }

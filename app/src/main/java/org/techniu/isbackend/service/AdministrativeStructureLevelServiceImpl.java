@@ -27,6 +27,7 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
     private AdministrativeStructureLevelRepository administrativeStructureLevelRepository;
     private AdministrativeStructureAssignationHistoryRepository administrativeStructureAssignationHistoryRepository;
     private StaffRepository staffRepository;
+    private LogService logService;
     private StaffContractRepository staffContractRepository;
     private FinancialCompanyRepository financialCompanyRepository;
     private final AdministrativeStructureLevelMapper administrativeStructureLevelMapper = Mappers.getMapper(AdministrativeStructureLevelMapper.class);
@@ -34,17 +35,17 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
             AdministrativeStructureLevelRepository administrativeStructureLevelRepository,
             AdministrativeStructureAssignationHistoryRepository administrativeStructureAssignationHistoryRepository,
             StaffRepository staffRepository,
-            StaffContractRepository staffContractRepository,
+            LogService logService, StaffContractRepository staffContractRepository,
             FinancialCompanyRepository financialCompanyRepository) {
         this.administrativeStructureLevelRepository = administrativeStructureLevelRepository;
         this.staffRepository = staffRepository;
+        this.logService = logService;
         this.staffContractRepository = staffContractRepository;
         this.financialCompanyRepository = financialCompanyRepository;
         this.administrativeStructureAssignationHistoryRepository = administrativeStructureAssignationHistoryRepository;
     }
     @Override
     public Boolean save(List<Object> objects) {
-
         ObjectMapper mapper = new ObjectMapper();
         List<AdministrativeStructureLevel> list = new ArrayList<>();
         List<StaffDto> leaders  = mapper.convertValue(objects.get(0), new TypeReference<List<StaffDto>>() { });
@@ -60,11 +61,13 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                 AdministrativeStructureLevel administrativeStructureLevel = administrativeStructureLevelMapper.dtoToModel(levelDto);
                 administrativeStructureLevel.setCompany(company);
                 lvl = administrativeStructureLevelRepository.save(administrativeStructureLevel);
+                logService.addLog(LogType.CREATE, ClassType.administrativeStructureLevel,"create administrative structure level "+lvl.getName());
                 List<AdministrativeStructureLevel> levels = staff1.getAdministrativeStructureLevels();
                 levels.add(lvl);
                 staff1.setAdministrativeStructureLevels(levels);
-                System.out.println(staff1);
+                //System.out.println(staff1);
                 staffRepository.save(staff1);
+                logService.addLog(LogType.UPDATE, ClassType.STAFF,"update administrative structure level of staff "+staff1.getMotherFamilyName()+" "+staff1.getFatherFamilyName()+" "+staff1.getFirstName());
             }
             if(lvl.getType().equals("Level 1")) {
                 List<StaffContract> staffContracts = staffContractRepository.findAllByCompany(company);
@@ -85,8 +88,8 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                     administrativeStructureAssignationHistory.setLevel(finalLvl);
                     administrativeStructureAssignationHistory.setStaff(staffRepository.save(staff));
                     administrativeStructureAssignationHistoryRepository.save(administrativeStructureAssignationHistory);
-                    System.out.println("staffDto related");
-                    System.out.println(staffDto.getFirstName());
+                    //System.out.println("staffDto related");
+                    //System.out.println(staffDto.getFirstName());
                 });
             }
             list.add(lvl);
@@ -113,6 +116,7 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
             }
             level.setChilds(childs);
             AdministrativeStructureLevel administrativeStructureLevel = administrativeStructureLevelRepository.save(level);
+            logService.addLog(LogType.CREATE, ClassType.administrativeStructureLevel,"create administrative structure level "+level.getName());
             list.set(i-1, administrativeStructureLevel);
         }
         return true;
