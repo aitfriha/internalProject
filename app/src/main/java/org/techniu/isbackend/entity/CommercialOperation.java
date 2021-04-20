@@ -26,7 +26,6 @@ public class CommercialOperation{
     @DBRef
     private CommercialOperationStatus state;
     private String description;
-    private String objectif;
     private String plannedDateQ;
     private String commercialFlowQ;
     private Date documentationDate;

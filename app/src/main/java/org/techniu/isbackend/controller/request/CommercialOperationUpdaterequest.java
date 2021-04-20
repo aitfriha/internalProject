@@ -18,7 +18,6 @@ public class CommercialOperationUpdaterequest {
     private String clientId;
     private String stateId;
     private String description;
-    private String objectif;
     private String plannedDateQ;
     private String commercialFlowQ;
     private Date documentationDate;

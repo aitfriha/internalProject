@@ -50,7 +50,7 @@ public enum EntityType {
     CommercialActionType,
     DefaultSentence,
     TranslateSentence,
-
+    CommercialAction,
     TravelRequest,
     EmailAddress,
     File,
