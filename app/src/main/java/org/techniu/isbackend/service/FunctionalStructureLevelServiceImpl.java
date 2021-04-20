@@ -10,7 +10,9 @@ import org.techniu.isbackend.controller.request.FunctionalStructureLevelAddreque
 import org.techniu.isbackend.dto.mapper.FunctionalStructureLevelMapper;
 import org.techniu.isbackend.dto.model.FunctionalStructureLevelDto;
 import org.techniu.isbackend.dto.model.StaffDto;
+import org.techniu.isbackend.entity.ClassType;
 import org.techniu.isbackend.entity.FunctionalStructureLevel;
+import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.Staff;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
@@ -22,20 +24,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.techniu.isbackend.exception.ExceptionType.DUPLICATE_ENTITY;
-
 @Service
 @Transactional
 public class FunctionalStructureLevelServiceImpl implements FunctionalStructureLevelService {
     private FunctionalStructureLevelRepository functionalStructureLevelRepository;
     private StaffRepository staffRepository;
+    private LogService logService;
     private final FunctionalStructureLevelMapper functionalStructureLevelMapper = Mappers.getMapper(FunctionalStructureLevelMapper.class);
     FunctionalStructureLevelServiceImpl(
             FunctionalStructureLevelRepository functionalStructureLevelRepository,
-            StaffRepository staffRepository) {
+            StaffRepository staffRepository, LogService logService) {
         this.functionalStructureLevelRepository = functionalStructureLevelRepository;
         this.staffRepository = staffRepository;
+        this.logService = logService;
     }
+    //add functionalStructureLevel
     @Override
     public Boolean save(List<Object> objects) {
         ObjectMapper mapper = new ObjectMapper();
@@ -50,11 +53,12 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
                 Staff staff1 = staffRepository.findById(staffDto.getStaffId()).get();
                 staff1.setIsFunctionalLeader("yes");
                 lvl = functionalStructureLevelRepository.save(functionalStructureLevelMapper.dtoToModel(levelDto));
+                logService.addLog(LogType.CREATE, ClassType.functionalStructureLevel,"create functional structure level "+lvl.getName());
                 List<FunctionalStructureLevel> levels = staff1.getFunctionalStructureLevels();
                 levels.add(lvl);
                 staff1.setFunctionalStructureLevels(levels);
-                System.out.println(staff1);
                 staffRepository.save(staff1);
+                logService.addLog(LogType.UPDATE, ClassType.STAFF,"update functional structure level of staff "+staff1.getMotherFamilyName()+" "+staff1.getFatherFamilyName()+" "+staff1.getFirstName());
             }
             list.add(lvl);
         }
@@ -80,6 +84,7 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
             }
             level.setChilds(childs);
             list.set(i-1,functionalStructureLevelRepository.save(level));
+            logService.addLog(LogType.CREATE, ClassType.functionalStructureLevel,"create functional structure level "+level.getName());
         }
         return true;
     }
@@ -175,15 +180,18 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
         List<FunctionalStructureLevel> functionalStructureLevels = functionalStructureLevelRepository.findAll();
         // Create a list of all actions dto
         List<FunctionalStructureLevelDto> functionalStructureLevelDtos = new ArrayList<>();
-
         for (FunctionalStructureLevel level : functionalStructureLevels) {
             FunctionalStructureLevelDto functionalStructureLevelDto=functionalStructureLevelMapper.modelToDto(level);
+            System.out.println("AAAAAAAAAAAAAAA");
             List<FunctionalStructureLevel> functionalStructureLevels1 = level.getChilds();
+            System.out.println("BBBBBBBBBBBB");
             if(functionalStructureLevels1 != null){
                 List<FunctionalStructureLevelDto> functionalStructureLevelDtos1 = new ArrayList<>();
                 for (FunctionalStructureLevel level1 : functionalStructureLevels1) {
                     FunctionalStructureLevelDto functionalStructureLevelDto1 = functionalStructureLevelMapper.modelToDto(level1);
+                    System.out.println("CCCCCCCCC");
                     List<FunctionalStructureLevel> functionalStructureLevels2 = level1.getChilds();
+                    System.out.println("DDDDDDDDD");
                     List<FunctionalStructureLevelDto> functionalStructureLevelDtos2 = new ArrayList<>();
                     if (functionalStructureLevels2 != null) {
                         for (FunctionalStructureLevel level2 : functionalStructureLevels2) {
