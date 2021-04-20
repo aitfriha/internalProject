@@ -8,14 +8,17 @@ import org.techniu.isbackend.dto.model.CommercialActionDto;
 import org.techniu.isbackend.entity.CommercialAction;
 import org.techniu.isbackend.entity.CommercialActionType;
 import org.techniu.isbackend.entity.CommercialOperation;
+import org.techniu.isbackend.entity.Contact;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.CommercialActionRepository;
 import org.techniu.isbackend.repository.CommercialActionTypeRepository;
 import org.techniu.isbackend.repository.CommercialOperationRepository;
+import org.techniu.isbackend.repository.ContactRepository;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,20 +30,44 @@ public class CommercialActionServiceImpl implements CommercialActionService {
     private CommercialActionRepository commercialActionRepository;
     private CommercialOperationRepository commercialOperationRepository;
     private CommercialActionTypeRepository commercialActionTypeRepository;
+    private ContactRepository contactRepository;
     private final CommercialActionMapper commercialActionMapper = Mappers.getMapper(CommercialActionMapper.class);
 
     public CommercialActionServiceImpl(CommercialActionRepository commercialActionRepository,
                                        CommercialOperationRepository commercialOperationRepository,
-                                       CommercialActionTypeRepository commercialActionTypeRepository) {
+                                       CommercialActionTypeRepository commercialActionTypeRepository,
+                                       ContactRepository contactRepository) {
         this.commercialActionRepository = commercialActionRepository;
         this.commercialOperationRepository = commercialOperationRepository;
         this.commercialActionTypeRepository = commercialActionTypeRepository;
+        this.contactRepository = contactRepository;
     }
 
     @Override
     public void saveCommercialAction(CommercialActionDto commercialActionDto) {
-        System.out.println("Implement part :" + commercialActionDto);
-        // commercialActionRepository.save(commercialActionMapper.dtoToModel(commercialActionDto));
+
+        System.out.println("dto part :" + commercialActionDto);
+
+        CommercialActionType commercialActionType = commercialActionTypeRepository.findAllBy_id(commercialActionDto.getCommercialActionType().get_id());
+        CommercialOperation commercialOperation = commercialOperationRepository.findBy_id(commercialActionDto.getCommercialOperation().get_id());
+
+        ArrayList<Contact> contacts = new ArrayList<>();
+        for (LinkedHashMap line : commercialActionDto.getContactsIds()){
+            System.out.println("looop :" + line.get("checked").toString());
+            if (line.get("checked").toString().equals("true")) {
+                System.out.println("line part :" + line.get("_id"));
+                System.out.println(contactRepository.findBy_id(line.get("_id").toString()));
+                contacts.add(contactRepository.findBy_id(line.get("_id").toString()));
+            }
+    }
+
+        CommercialAction commercialAction = commercialActionMapper.dtoToModel(commercialActionDto);
+        commercialAction.setCommercialOperation(commercialOperation);
+        commercialAction.setCommercialActionType(commercialActionType);
+        commercialAction.setContacts(contacts);
+
+        System.out.println("Service part :" + commercialAction);
+        commercialActionRepository.save(commercialAction);
     }
 
     @Override
