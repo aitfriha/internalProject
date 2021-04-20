@@ -17,9 +17,12 @@ import java.util.List;
 @Transactional
 public class CountryServiceImpl implements CountryService {
     private CountryRepository countryRepository;
+    private StateCountryService stateCountryService;
     private LogService logService;
-    CountryServiceImpl(CountryRepository countryRepository, LogService logService){
+
+    CountryServiceImpl(CountryRepository countryRepository, StateCountryService stateCountryService, LogService logService){
         this.countryRepository = countryRepository;
+        this.stateCountryService = stateCountryService;
         this.logService = logService;
     }
     @Override
@@ -83,6 +86,10 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public List<Country> getAllCountry() {
-        return countryRepository.findAll();
+        List<Country> countryList = countryRepository.findAll();
+        countryList.forEach(country -> {
+            country.setStateCountryList(stateCountryService.getAllState(country.getCountryId()));
+        });
+        return countryList;
     }
 }
