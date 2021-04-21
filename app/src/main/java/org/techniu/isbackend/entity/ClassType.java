@@ -37,5 +37,6 @@ public enum  ClassType {
     ECONOMICSTAFF,
     ASSIGNMENTTYPE,
     functionalStructureLevel,
-    administrativeStructureLevel
+    administrativeStructureLevel,
+    FinancialContract
 }

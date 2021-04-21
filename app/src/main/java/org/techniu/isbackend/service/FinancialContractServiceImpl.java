@@ -25,6 +25,7 @@ public class FinancialContractServiceImpl implements FinancialContractService {
     private AddressRepository addressRepository;
     private AddressService addressService;
     private ClientRepository clientRepository;
+    private LogService logService;
     private FinancialCompanyRepository financialCompanyRepository;
     private CommercialOperationRepository commercialOperationRepository;
     private ContractStatusRepository contractStatusRepository;
@@ -33,13 +34,14 @@ public class FinancialContractServiceImpl implements FinancialContractService {
     private final FinancialContractMapper financialContractMapper = Mappers.getMapper(FinancialContractMapper.class);
 
     public FinancialContractServiceImpl(FinancialContractRepository financialContractRepository, AddressService addressService, CommercialOperationRepository commercialOperationRepository,
-                                        AddressRepository addressRepository, CityRepository cityRepository, ClientRepository clientRepository, FinancialCompanyRepository financialCompanyRepository,
+                                        AddressRepository addressRepository, CityRepository cityRepository, ClientRepository clientRepository, LogService logService, FinancialCompanyRepository financialCompanyRepository,
                                         ContractStatusRepository contractStatusRepository, FunctionalStructureLevelRepository functionalStructureLevelRepository, CurrencyRepository currencyRepository) {
         this.financialContractRepository = financialContractRepository;
         this.cityRepository = cityRepository ;
         this.addressRepository = addressRepository;
         this.addressService = addressService;
         this.commercialOperationRepository = commercialOperationRepository;
+        this.logService = logService;
         this.financialCompanyRepository = financialCompanyRepository;
         this.currencyRepository = currencyRepository;
         this.contractStatusRepository = contractStatusRepository;
@@ -50,6 +52,7 @@ public class FinancialContractServiceImpl implements FinancialContractService {
     @Override
     public void saveFinancialContract(FinancialContractDto financialContractDto) {
         financialContractRepository.save(financialContractMapper.dtoToModel(financialContractDto));
+        logService.addLog(LogType.CREATE, ClassType.FinancialContract,"create financial contract status "+financialContractDto.getContractTitle());
     }
 
     @Override
@@ -145,6 +148,7 @@ public class FinancialContractServiceImpl implements FinancialContractService {
         financialContract.setPenaltyPer(financialContractDto.getPenaltyPer());
 
         financialContractRepository.save(financialContract);
+        logService.addLog(LogType.UPDATE, ClassType.FinancialContract,"update financial contract status "+financialContract.getContractTitle());
         return getAllFinancialContract();
     }
 
@@ -155,6 +159,7 @@ public class FinancialContractServiceImpl implements FinancialContractService {
         if (!action.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
+        logService.addLog(LogType.DELETE, ClassType.FinancialContract,"delete financial contract status "+action.get().getContractTitle());
         financialContractRepository.deleteById(id);
         return getAllFinancialContract();
     }
