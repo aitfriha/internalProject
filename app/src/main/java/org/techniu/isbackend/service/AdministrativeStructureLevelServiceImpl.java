@@ -172,6 +172,7 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                             staffRepository.save(staff);
                         });
                         administrativeStructureLevelRepository.delete(level3);
+                        logService.addLog(LogType.DELETE, ClassType.administrativeStructureLevel,"delete administrative structure level 3 "+level3.getName());
                     });
                 }
                 List<Staff> staffs = staffRepository.findAllByAdministrativeStructureLevelsContainingAndIsAdministrativeLeader(level2, "no");
@@ -185,6 +186,7 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                     staff.setAdministrativeStructureLevels(levels);
                     staffRepository.save(staff);
                 });
+                logService.addLog(LogType.DELETE, ClassType.administrativeStructureLevel,"delete administrative structure level 2 "+level2.getName());
                 administrativeStructureLevelRepository.delete(level2);
             });
         }
@@ -204,6 +206,7 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
             parent.setChilds(null);
             administrativeStructureLevelRepository.save(parent);
         }
+        logService.addLog(LogType.DELETE, ClassType.administrativeStructureLevel,"delete administrative structure level "+level.getName());
         administrativeStructureLevelRepository.delete(level);
         return null;
     }
