@@ -66,6 +66,7 @@ public class CommercialActionTypeServiceImpl implements CommercialActionTypeServ
 
         commercialActionType.setTypeName(commercialActionTypeDto.getTypeName());
         commercialActionType.setDescription(commercialActionTypeDto.getDescription());
+        commercialActionType.setPercentage(commercialActionTypeDto.getPercentage());
 
         System.out.println(commercialActionType);
 

@@ -15,4 +15,5 @@ public class CommercialActionTypeUpdaterequest {
     private String actionTypeId;
     private String typeName;
     private String description;
+    private int percentage;
 }
