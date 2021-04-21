@@ -18,5 +18,6 @@ public class CommercialActionType implements Serializable {
     private String _id;
     private String typeName;
     private String description;
+    private int percentage;
 
 }

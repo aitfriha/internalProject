@@ -23,5 +23,7 @@ public class CommercialActionTypeDto {
     private String typeName;
     @NotNull
     private String description;
+    @NotNull
+    private int percentage;
 
 }
