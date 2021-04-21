@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.techniu.isbackend.dto.model.StateCountryDto;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,6 +21,6 @@ public class Country  {
     private String countryName;
     private String phonePrefix;
     private String countryCode;
-    @DBRef
-    private List<StateCountry> stateCountryList;
+
+    private List<StateCountryDto> stateCountryList;
 }
