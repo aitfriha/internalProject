@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.CommercialOperationStatusMapper;
 import org.techniu.isbackend.dto.mapper.StateCountryMapper;
+import org.techniu.isbackend.dto.model.CityDto;
 import org.techniu.isbackend.dto.model.CommercialOperationStatusDto;
 import org.techniu.isbackend.dto.model.StateCountryDto;
 import org.techniu.isbackend.entity.*;
@@ -19,10 +20,12 @@ import java.util.List;
 @Transactional
 public class StateCountryServiceImpl implements StateCountryService {
     private StateCountryRepository stateCountryRepository;
+    private CityService cityService;
     private final StateCountryMapper stateCountryMapper = Mappers.getMapper(StateCountryMapper.class);
     private LogService logService;
-    StateCountryServiceImpl(StateCountryRepository stateCountryRepository, LogService logService){
+    StateCountryServiceImpl(StateCountryRepository stateCountryRepository, CityService cityService, LogService logService){
         this.stateCountryRepository = stateCountryRepository;
+        this.cityService = cityService;
         this.logService = logService;
     }
 
@@ -34,7 +37,9 @@ public class StateCountryServiceImpl implements StateCountryService {
         ArrayList<StateCountryDto> stateCountryDtos = new ArrayList<>();
 
         for (StateCountry stateCountry : stateCountries) {
+            List<CityDto> cityList = cityService.getAllCitiesByState(stateCountry.get_id());
             StateCountryDto stateCountryDto=stateCountryMapper.modelToDto(stateCountry);
+            stateCountryDto.setCities(cityList);
             stateCountryDtos.add(stateCountryDto);
         }
         return stateCountryDtos;

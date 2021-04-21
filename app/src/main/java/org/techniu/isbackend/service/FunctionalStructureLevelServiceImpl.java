@@ -102,14 +102,17 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
                 oldLeader.setIsFunctionalLeader("no");
             }
             staffRepository.save(oldLeader);
+            logService.addLog(LogType.UPDATE, ClassType.STAFF,"update functional structure level for staff "+oldLeader.getMotherFamilyName()+" "+oldLeader.getFatherFamilyName()+" "+oldLeader.getFirstName());
         }
         FunctionalStructureLevel functionalStructureLevel1 = functionalStructureLevelMapper.dtoToModel(functionalStructureLevelDto);
         functionalStructureLevel1.setChilds(functionalStructureLevel.getChilds());
         List<FunctionalStructureLevel> levels = newLeader.getFunctionalStructureLevels();
         levels.add(functionalStructureLevelRepository.save(functionalStructureLevel1));
+        logService.addLog(LogType.UPDATE, ClassType.functionalStructureLevel,"update functional structure level "+functionalStructureLevel1.getName());
         newLeader.setFunctionalStructureLevels(levels);
         newLeader.setIsFunctionalLeader("yes");
         staffRepository.save(newLeader);
+        logService.addLog(LogType.UPDATE, ClassType.STAFF,"update functional structure level for staff "+oldLeader.getMotherFamilyName()+" "+oldLeader.getFatherFamilyName()+" "+oldLeader.getFirstName());
         return null;
     }
 
@@ -139,6 +142,7 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
                             staffRepository.save(staff);
                         });
                         functionalStructureLevelRepository.delete(level3);
+                        logService.addLog(LogType.DELETE, ClassType.functionalStructureLevel,"delete functional structure level 3 "+level3.getName());
                     });
                 }
                 List<Staff> staffs = staffRepository.findAllByFunctionalStructureLevelsContainingAndIsFunctionalLeader(level2, "no");
@@ -153,6 +157,7 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
                     staffRepository.save(staff);
                 });
                 functionalStructureLevelRepository.delete(level2);
+                logService.addLog(LogType.DELETE, ClassType.functionalStructureLevel,"delete functional structure level 2 "+level2.getName());
             });
         }
         List<Staff> staffs = staffRepository.findAllByFunctionalStructureLevelsContainingAndIsFunctionalLeader(level, "no");
@@ -172,6 +177,7 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
             functionalStructureLevelRepository.save(parent);
         }
         functionalStructureLevelRepository.delete(level);
+        logService.addLog(LogType.DELETE, ClassType.functionalStructureLevel,"delete functional structure level "+level.getName());
         return null;
     }
 

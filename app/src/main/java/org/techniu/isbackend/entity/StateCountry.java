@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.techniu.isbackend.dto.model.CityDto;
 
 import java.util.List;
 
@@ -23,6 +24,6 @@ public class StateCountry{
     private String stateName;
     @DBRef
     private Country country;
-    @DBRef
+
     private List<City> cities;
 }

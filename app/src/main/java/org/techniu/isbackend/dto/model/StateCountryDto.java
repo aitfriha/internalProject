@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.techniu.isbackend.entity.City;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +20,6 @@ public class StateCountryDto {
 
     private String stateCountryId;
     private String stateName;
+
+    private List<CityDto> cities;
 }
