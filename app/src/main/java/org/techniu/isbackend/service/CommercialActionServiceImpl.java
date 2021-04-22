@@ -79,6 +79,13 @@ public class CommercialActionServiceImpl implements CommercialActionService {
     }
 
     @Override
+    public List<CommercialAction> getAllCommercialAction2() {
+        // Get all actions
+        List<CommercialAction> commercialActions = commercialActionRepository.findAll();
+        return commercialActions;
+    }
+
+    @Override
     public CommercialAction getById(String id) {
         return commercialActionRepository.findAllBy_id(id);
     }

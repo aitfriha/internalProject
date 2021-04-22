@@ -71,4 +71,12 @@ public class CommercialActionController {
         return new ResponseEntity<Response>(Response.ok().setPayload(commercialActionService.getAllCommercialAction()), HttpStatus.OK);
     }
 
+    /**
+     * display all commercialAction GET API "/api/commercialAction"
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/all2")
+    public ResponseEntity allCommercialAction2() {
+        return new ResponseEntity<Response>(Response.ok().setPayload(commercialActionService.getAllCommercialAction2()), HttpStatus.OK);
+    }
+
 }

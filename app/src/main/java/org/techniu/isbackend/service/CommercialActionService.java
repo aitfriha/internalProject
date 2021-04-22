@@ -11,6 +11,8 @@ public interface CommercialActionService {
 
     List<CommercialActionDto> getAllCommercialAction();
 
+    List<CommercialAction> getAllCommercialAction2();
+
     CommercialAction getById(String id);
 
     List<CommercialActionDto> updateCommercialAction(CommercialActionDto commercialActionDto, String id);
