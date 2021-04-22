@@ -60,7 +60,6 @@ public class FinancialContractController {
 
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody @Valid FinancialContractAddrequest financialContractAddrequest, BindingResult bindingResult) {
-        System.out.println(financialContractAddrequest);
         City city = cityRepository.findCityBy_id(financialContractAddrequest.getAddress().getCity().get_id());
         Address address = new Address();
         address.setCity(city);

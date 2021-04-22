@@ -27,11 +27,12 @@ public class BillServiceImpl implements BillService {
     private FinancialContractRepository financialContractRepository;
     private IvaRepository ivaRepository;
     private CurrencyRepository currencyRepository;
+    private LogService logService;
     private final BillMapper billMapper = Mappers.getMapper(BillMapper.class);
 
     public BillServiceImpl(BillRepository billRepository, AddressService addressService, CommercialOperationRepository commercialOperationRepository,
                            ClientRepository clientRepository, FinancialCompanyRepository financialCompanyRepository, IvaRepository ivaRepository,
-                           FinancialContractRepository financialContractRepository, CurrencyRepository currencyRepository) {
+                           FinancialContractRepository financialContractRepository, CurrencyRepository currencyRepository, LogService logService) {
         this.billRepository = billRepository;
         this.commercialOperationRepository = commercialOperationRepository;
         this.financialCompanyRepository = financialCompanyRepository;
@@ -39,11 +40,13 @@ public class BillServiceImpl implements BillService {
         this.financialContractRepository = financialContractRepository;
         this.clientRepository = clientRepository;
         this.ivaRepository = ivaRepository;
+        this.logService = logService;
     }
 
     @Override
     public void saveBill(BillDto billDto) {
         billRepository.save(billMapper.dtoToModel(billDto));
+        logService.addLog(LogType.CREATE, ClassType.Bill,"create Bill code "+billDto.getCode());
     }
 
     @Override
@@ -111,6 +114,7 @@ public class BillServiceImpl implements BillService {
         bill.setNbrConcepts(billDto.getNbrConcepts());
 
         billRepository.save(bill);
+        logService.addLog(LogType.UPDATE, ClassType.Bill,"update Bill code "+bill.getCode());
         return getAllBill();
     }
 
@@ -122,6 +126,7 @@ public class BillServiceImpl implements BillService {
             throw exception(ENTITY_NOT_FOUND);
         }
         billRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.Bill,"delete Bill code "+action.get().getCode());
         return getAllBill();
     }
 

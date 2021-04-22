@@ -37,5 +37,10 @@ public enum  ClassType {
     ECONOMICSTAFF,
     ASSIGNMENTTYPE,
     functionalStructureLevel,
-    administrativeStructureLevel
+    administrativeStructureLevel,
+    FinancialContract,
+    Bill,
+    supplierContract,
+    supplierPayment,
+    PurchaseOrder
 }

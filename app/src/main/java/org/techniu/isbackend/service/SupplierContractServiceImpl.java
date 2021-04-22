@@ -26,13 +26,14 @@ public class SupplierContractServiceImpl implements SupplierContractService {
     private ClientRepository clientRepository;
     private FinancialContractRepository financialContractRepository;
     private PurchaseOrderRepository purchaseOrderRepository;
+    private LogService logService;
     private CurrencyRepository currencyRepository;
     private static int code = 0;
     private final SupplierContractMapper supplierContractMapper = Mappers.getMapper(SupplierContractMapper.class);
 
     public SupplierContractServiceImpl(SupplierContractRepository supplierContractRepository, CurrencyRepository currencyRepository,
                                        FinancialCompanyRepository financialCompanyRepository, ClientRepository clientRepository,
-                                       ExternalSupplierRepository externalSupplierRepository, FinancialContractRepository financialContractRepository, PurchaseOrderRepository purchaseOrderRepository) {
+                                       ExternalSupplierRepository externalSupplierRepository, FinancialContractRepository financialContractRepository, PurchaseOrderRepository purchaseOrderRepository, LogService logService) {
         this.supplierContractRepository = supplierContractRepository;
         this.financialCompanyRepository = financialCompanyRepository;
         this.externalSupplierRepository = externalSupplierRepository;
@@ -40,12 +41,13 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         this.financialContractRepository = financialContractRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.currencyRepository = currencyRepository;
+        this.logService = logService;
     }
 
     @Override
     public void saveSupplierContract(SupplierContractDto supplierContractDto) {
         code++;
-        System.out.println("Implement part :" + supplierContractDto);
+       // System.out.println("Implement part :" + supplierContractDto);
 
         if (supplierContractDto.getType().equals("internal") ) {
             FinancialCompany financialCompany = financialCompanyRepository.findAllBy_id(supplierContractDto.getFinancialCompany().get_id());
@@ -72,6 +74,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         Client client = clientRepository.findBy_id(supplierContractDto.getClient().get_id());
         supplierContractDto.setClient(client);
         supplierContractRepository.save(supplierContractMapper.dtoToModel(supplierContractDto));
+        logService.addLog(LogType.CREATE, ClassType.supplierContract,"create supplier contract "+supplierContractDto.getName());
     }
 
     @Override
@@ -137,10 +140,8 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         supplierContract.setContractTradeVolume(supplierContractDto.getContractTradeVolume());
         supplierContract.setChangeFactor(supplierContractDto.getChangeFactor());
         supplierContract.setContractTradeVolumeEuro(supplierContractDto.getContractTradeVolumeEuro());
-
-        System.out.println(supplierContract);
-
         supplierContractRepository.save(supplierContract);
+        logService.addLog(LogType.UPDATE, ClassType.supplierContract,"update supplier contract "+supplierContractDto.getName());
         return getAllSupplierContract();
     }
 
@@ -152,6 +153,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
             throw exception(ENTITY_NOT_FOUND);
         }
         supplierContractRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.supplierContract,"delete supplier contract "+action.get().getName());
         return getAllSupplierContract();
     }
 
