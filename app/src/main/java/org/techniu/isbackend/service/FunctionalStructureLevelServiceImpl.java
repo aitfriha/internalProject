@@ -188,16 +188,12 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
         List<FunctionalStructureLevelDto> functionalStructureLevelDtos = new ArrayList<>();
         for (FunctionalStructureLevel level : functionalStructureLevels) {
             FunctionalStructureLevelDto functionalStructureLevelDto=functionalStructureLevelMapper.modelToDto(level);
-            System.out.println("AAAAAAAAAAAAAAA");
             List<FunctionalStructureLevel> functionalStructureLevels1 = level.getChilds();
-            System.out.println("BBBBBBBBBBBB");
             if(functionalStructureLevels1 != null){
                 List<FunctionalStructureLevelDto> functionalStructureLevelDtos1 = new ArrayList<>();
                 for (FunctionalStructureLevel level1 : functionalStructureLevels1) {
                     FunctionalStructureLevelDto functionalStructureLevelDto1 = functionalStructureLevelMapper.modelToDto(level1);
-                    System.out.println("CCCCCCCCC");
                     List<FunctionalStructureLevel> functionalStructureLevels2 = level1.getChilds();
-                    System.out.println("DDDDDDDDD");
                     List<FunctionalStructureLevelDto> functionalStructureLevelDtos2 = new ArrayList<>();
                     if (functionalStructureLevels2 != null) {
                         for (FunctionalStructureLevel level2 : functionalStructureLevels2) {

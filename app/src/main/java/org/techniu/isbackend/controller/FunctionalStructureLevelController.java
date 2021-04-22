@@ -44,7 +44,6 @@ public class FunctionalStructureLevelController {
 
     @GetMapping("/all")
     public ResponseEntity getAllFunctionalStructureLevels(){
-        System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
         return new ResponseEntity<Response>(Response.ok().setPayload(functionalStructureLevelService.getAll()), HttpStatus.OK);
     }
 
