@@ -24,15 +24,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private FinancialCompanyRepository financialCompanyRepository;
     private ExternalSupplierRepository externalSupplierRepository;
     private IvaRepository ivaRepository;
+    private LogService logService;
     private CurrencyRepository currencyRepository;
     private ClientRepository clientRepository;
     private FinancialContractRepository financialContractRepository;
     private final PurchaseOrderMapper purchaseOrderMapper = Mappers.getMapper(PurchaseOrderMapper.class);
 
     public PurchaseOrderServiceImpl(PurchaseOrderRepository purchaseOrderRepository, IvaRepository ivaRepository, ExternalSupplierRepository externalSupplierRepository,
-           FinancialCompanyRepository financialCompanyRepository, CurrencyRepository currencyRepository, ClientRepository clientRepository, FinancialContractRepository financialContractRepository) {
+                                    FinancialCompanyRepository financialCompanyRepository, LogService logService, CurrencyRepository currencyRepository, ClientRepository clientRepository, FinancialContractRepository financialContractRepository) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.financialCompanyRepository = financialCompanyRepository;
+        this.logService = logService;
         this.currencyRepository = currencyRepository;
         this.ivaRepository = ivaRepository;
         this.externalSupplierRepository = externalSupplierRepository;
@@ -43,6 +45,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Override
     public void savePurchaseOrder(PurchaseOrderDto purchaseOrderDto) {
         purchaseOrderRepository.save(purchaseOrderMapper.dtoToModel(purchaseOrderDto));
+        logService.addLog(LogType.CREATE, ClassType.PurchaseOrder,"create purchase order for client "+purchaseOrderDto.getClient().getName());
     }
 
     @Override
@@ -140,6 +143,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         purchaseOrder.setTotalIvaRetention(purchaseOrderDto.getTotalIvaRetention());
 
         purchaseOrderRepository.save(purchaseOrder);
+        logService.addLog(LogType.UPDATE, ClassType.PurchaseOrder,"update purchase order for client "+purchaseOrderDto.getClient().getName());
         return getAllPurchaseOrder();
     }
 
@@ -151,6 +155,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
             throw exception(ENTITY_NOT_FOUND);
         }
         purchaseOrderRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.PurchaseOrder,"delete purchase order for client "+action.get().getClient().getName());
         return getAllPurchaseOrder();
     }
 

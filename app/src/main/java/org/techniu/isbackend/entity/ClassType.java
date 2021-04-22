@@ -41,5 +41,6 @@ public enum  ClassType {
     FinancialContract,
     Bill,
     supplierContract,
-    supplierPayment
+    supplierPayment,
+    PurchaseOrder
 }
