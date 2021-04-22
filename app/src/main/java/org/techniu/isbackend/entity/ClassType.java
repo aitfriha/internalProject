@@ -39,5 +39,6 @@ public enum  ClassType {
     functionalStructureLevel,
     administrativeStructureLevel,
     FinancialContract,
-    Bill
+    Bill,
+    supplierContract
 }
