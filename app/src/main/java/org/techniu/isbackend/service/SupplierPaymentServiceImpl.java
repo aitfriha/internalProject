@@ -24,17 +24,19 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
     private FinancialCompanyRepository financialCompanyRepository;
     private ExternalSupplierRepository externalSupplierRepository;
     private ClientRepository clientRepository;
+    private LogService logService;
     private FinancialContractRepository financialContractRepository;
     private PurchaseOrderRepository purchaseOrderRepository;
     private CurrencyRepository currencyRepository;
     private final SupplierPaymentMapper supplierPaymentMapper = Mappers.getMapper(SupplierPaymentMapper.class);
 
     public SupplierPaymentServiceImpl(SupplierPaymentRepository supplierPaymentRepository, CurrencyRepository currencyRepository, FinancialCompanyRepository financialCompanyRepository, ClientRepository clientRepository,
-                                      ExternalSupplierRepository externalSupplierRepository, FinancialContractRepository financialContractRepository, PurchaseOrderRepository purchaseOrderRepository) {
+                                      ExternalSupplierRepository externalSupplierRepository, LogService logService, FinancialContractRepository financialContractRepository, PurchaseOrderRepository purchaseOrderRepository) {
         this.supplierPaymentRepository = supplierPaymentRepository;
         this.financialCompanyRepository = financialCompanyRepository;
         this.externalSupplierRepository = externalSupplierRepository;
         this.clientRepository = clientRepository;
+        this.logService = logService;
         this.financialContractRepository = financialContractRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.currencyRepository = currencyRepository;
@@ -42,9 +44,6 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
 
     @Override
     public void saveSupplierPayment(SupplierPaymentDto supplierPaymentDto) {
-
-        System.out.println("Implement part :" + supplierPaymentDto);
-
         if (supplierPaymentDto.getType().equals("internal") ) {
             FinancialCompany financialCompany = financialCompanyRepository.findAllBy_id(supplierPaymentDto.getFinancialCompany().get_id());
             supplierPaymentDto.setFinancialCompany(financialCompany);
@@ -69,6 +68,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         Client client = clientRepository.findBy_id(supplierPaymentDto.getClient().get_id());
         supplierPaymentDto.setClient(client);
         supplierPaymentRepository.save(supplierPaymentMapper.dtoToModel(supplierPaymentDto));
+        logService.addLog(LogType.CREATE, ClassType.supplierPayment,"create supplier payment code "+supplierPaymentDto.getCodeSupplier());
     }
 
     @Override
@@ -99,9 +99,6 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         if (!supplierPayment1.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-
-        System.out.println(supplierPayment);
-
         if (supplierPaymentDto.getType().equals("internal") ) {
             FinancialCompany financialCompany = financialCompanyRepository.findAllBy_id(supplierPaymentDto.getFinancialCompany().get_id());
             supplierPayment.setFinancialCompany(financialCompany);
@@ -132,10 +129,8 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         supplierPayment.setTypeClient(supplierPaymentDto.getTypeClient());
         supplierPayment.setPaymentDate(supplierPaymentDto.getPaymentDate());
         supplierPayment.setReelPaymentDate(supplierPaymentDto.getReelPaymentDate());
-
-        System.out.println(supplierPayment);
-
         supplierPaymentRepository.save(supplierPayment);
+        logService.addLog(LogType.UPDATE, ClassType.supplierPayment,"update supplier payment code "+supplierPayment.getCodeSupplier());
         return getAllSupplierPayment();
     }
 
@@ -147,6 +142,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             throw exception(ENTITY_NOT_FOUND);
         }
         supplierPaymentRepository.deleteById(id);
+        logService.addLog(LogType.DELETE, ClassType.supplierPayment,"delete supplier payment code "+action.get().getCodeSupplier());
         return getAllSupplierPayment();
     }
 

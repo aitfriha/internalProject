@@ -40,5 +40,6 @@ public enum  ClassType {
     administrativeStructureLevel,
     FinancialContract,
     Bill,
-    supplierContract
+    supplierContract,
+    supplierPayment
 }

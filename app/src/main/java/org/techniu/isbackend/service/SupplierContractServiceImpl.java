@@ -33,7 +33,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 
     public SupplierContractServiceImpl(SupplierContractRepository supplierContractRepository, CurrencyRepository currencyRepository,
                                        FinancialCompanyRepository financialCompanyRepository, ClientRepository clientRepository,
-                                       ExternalSupplierRepository externalSupplierRepository, FinancialContractRepository financialContractRepository, PurchaseOrderRepository purchaseOrderRepository) {
+                                       ExternalSupplierRepository externalSupplierRepository, FinancialContractRepository financialContractRepository, PurchaseOrderRepository purchaseOrderRepository, LogService logService) {
         this.supplierContractRepository = supplierContractRepository;
         this.financialCompanyRepository = financialCompanyRepository;
         this.externalSupplierRepository = externalSupplierRepository;
@@ -41,6 +41,7 @@ public class SupplierContractServiceImpl implements SupplierContractService {
         this.financialContractRepository = financialContractRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.currencyRepository = currencyRepository;
+        this.logService = logService;
     }
 
     @Override
