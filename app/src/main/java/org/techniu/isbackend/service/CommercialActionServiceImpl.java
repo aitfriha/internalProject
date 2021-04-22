@@ -17,10 +17,7 @@ import org.techniu.isbackend.repository.CommercialActionTypeRepository;
 import org.techniu.isbackend.repository.CommercialOperationRepository;
 import org.techniu.isbackend.repository.ContactRepository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 
@@ -55,11 +52,13 @@ public class CommercialActionServiceImpl implements CommercialActionService {
                 contacts.add(contactRepository.findBy_id(line.get("_id").toString()));
             }
         }
+        Date today = new Date();
 
         CommercialAction commercialAction = commercialActionMapper.dtoToModel(commercialActionDto);
         commercialAction.setCommercialOperation(commercialOperation);
         commercialAction.setCommercialActionType(commercialActionType);
         commercialAction.setContacts(contacts);
+        commercialAction.setCreationDate(today);
 
         System.out.println("Service part :" + commercialAction);
         commercialActionRepository.save(commercialAction);
@@ -94,7 +93,9 @@ public class CommercialActionServiceImpl implements CommercialActionService {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
         System.out.println(commercialAction);
+        Date today = new Date();
 
+        commercialAction.setModificationDate(today);
         commercialAction.setDescriptions(commercialActionDto.getDescriptions());
         commercialAction.setObjectifs(commercialActionDto.getObjectifs());
         commercialAction.setNbrActions(commercialActionDto.getNbrActions());

@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Document(value = "CommercialAction")
@@ -25,6 +26,9 @@ public class CommercialAction implements Serializable {
     private List<String> nbrActions;
     private List<String> actionDescriptions;
     private List<String> actionDates;
+
+    private Date creationDate;
+    private Date modificationDate;
 
     @DBRef
     private CommercialOperation commercialOperation;
