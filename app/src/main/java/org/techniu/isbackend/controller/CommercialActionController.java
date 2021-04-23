@@ -9,10 +9,14 @@ import org.techniu.isbackend.Response;
 import org.techniu.isbackend.controller.request.CommercialActionAddrequest;
 import org.techniu.isbackend.controller.request.CommercialActionUpdaterequest;
 import org.techniu.isbackend.dto.mapper.CommercialActionMapper;
+import org.techniu.isbackend.dto.model.CommercialActionTypeDto;
+import org.techniu.isbackend.entity.CommercialAction;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.CommercialActionService;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static org.techniu.isbackend.exception.EntityType.CommercialAction;
 import static org.techniu.isbackend.exception.ExceptionType.*;
@@ -52,15 +56,10 @@ public class CommercialActionController {
                 getMessageTemplate(CommercialAction, UPDATED)), HttpStatus.OK);
     }
 
-    /**
-     * Handles the incoming DELETE API "/commercialAction/delete"
-     *
-     * @param id action delete request
-     */
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity delete(@PathVariable String id) {
-        commercialActionService.remove(id);
-        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(CommercialAction, DELETED)), HttpStatus.OK);
+    @PostMapping("/delete/{Id}")
+    public List<org.techniu.isbackend.entity.CommercialAction> deleteCommercialAction(@PathVariable String Id) {
+        System.out.println(Id);
+        return commercialActionService.remove(Id);
     }
 
     /**

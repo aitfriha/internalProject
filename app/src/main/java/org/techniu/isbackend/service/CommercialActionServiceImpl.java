@@ -129,14 +129,14 @@ public class CommercialActionServiceImpl implements CommercialActionService {
     }
 
     @Override
-    public List<CommercialActionDto> remove(String id) {
+    public List<CommercialAction> remove(String id) {
         Optional<CommercialAction> action = Optional.ofNullable(commercialActionRepository.findAllBy_id(id));
         // If ContractStatus doesn't exists
         if (!action.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
         commercialActionRepository.deleteById(id);
-        return getAllCommercialAction();
+        return getAllCommercialAction2();
     }
 
 
