@@ -26,6 +26,8 @@ public class CommercialAction implements Serializable {
     private List<String> nbrActions;
     private List<String> actionDescriptions;
     private List<String> actionDates;
+    private List<String> nbrConclusions;
+    private List<String> conclusions;
 
     private Date creationDate;
     private Date modificationDate;

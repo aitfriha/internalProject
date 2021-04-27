@@ -9,8 +9,6 @@ import org.techniu.isbackend.Response;
 import org.techniu.isbackend.controller.request.CommercialActionAddrequest;
 import org.techniu.isbackend.controller.request.CommercialActionUpdaterequest;
 import org.techniu.isbackend.dto.mapper.CommercialActionMapper;
-import org.techniu.isbackend.dto.model.CommercialActionTypeDto;
-import org.techniu.isbackend.entity.CommercialAction;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.CommercialActionService;
 

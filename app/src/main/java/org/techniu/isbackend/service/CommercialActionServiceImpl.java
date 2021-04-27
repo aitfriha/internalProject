@@ -108,6 +108,8 @@ public class CommercialActionServiceImpl implements CommercialActionService {
         commercialAction.setNbrActions(commercialActionDto.getNbrActions());
         commercialAction.setActionDescriptions(commercialActionDto.getActionDescriptions());
         commercialAction.setActionDates(commercialActionDto.getActionDates());
+        commercialAction.setConclusions(commercialActionDto.getConclusions());
+        commercialAction.setNbrConclusions(commercialActionDto.getNbrConclusions());
 
         CommercialActionType commercialActionType = commercialActionTypeRepository.findAllBy_id(commercialActionDto.getCommercialActionType().get_id());
         commercialAction.setCommercialActionType(commercialActionType);
