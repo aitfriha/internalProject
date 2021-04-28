@@ -121,6 +121,9 @@ public class CommercialActionServiceImpl implements CommercialActionService {
             if (line.get("checked").toString().equals("true")) {
                 contacts.add(contactRepository.findBy_id(line.get("_id").toString()));
             }
+            if (line.get("checked").toString().equals("false")) {
+                contacts.remove(contactRepository.findBy_id(line.get("_id").toString()));
+            }
         }
         commercialAction.setContacts(contacts);
 
