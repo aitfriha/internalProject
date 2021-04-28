@@ -91,7 +91,7 @@ public class CommercialActionServiceImpl implements CommercialActionService {
     }
 
     @Override
-    public List<CommercialActionDto> updateCommercialAction(CommercialActionDto commercialActionDto, String id) {
+    public List<CommercialAction> updateCommercialAction(CommercialActionDto commercialActionDto, String id) {
         // save country if note existe
         CommercialAction commercialAction = getById(id);
         Optional<CommercialAction> commercialAction1 = Optional.ofNullable(commercialActionRepository.findAllBy_id(id));
@@ -127,7 +127,7 @@ public class CommercialActionServiceImpl implements CommercialActionService {
         System.out.println(commercialAction);
 
         commercialActionRepository.save(commercialAction);
-        return getAllCommercialAction();
+        return getAllCommercialAction2();
     }
 
     @Override

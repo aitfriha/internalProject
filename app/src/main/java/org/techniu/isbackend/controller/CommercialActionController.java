@@ -50,8 +50,7 @@ public class CommercialActionController {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         String Id = commercialActionUpdaterequest.getCommercialActionId();
         commercialActionService.updateCommercialAction(commercialActionMapper.updateRequestToDto(commercialActionUpdaterequest), Id);
-        return new ResponseEntity<Response>(Response.ok().setPayload(
-                getMessageTemplate(CommercialAction, UPDATED)), HttpStatus.OK);
+        return new ResponseEntity<Response>(Response.ok().setPayload(commercialActionService.getAllCommercialAction2()), HttpStatus.OK);
     }
 
     @PostMapping("/delete/{Id}")

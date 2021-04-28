@@ -15,7 +15,7 @@ public interface CommercialActionService {
 
     CommercialAction getById(String id);
 
-    List<CommercialActionDto> updateCommercialAction(CommercialActionDto commercialActionDto, String id);
+    List<CommercialAction> updateCommercialAction(CommercialActionDto commercialActionDto, String id);
 
     List<CommercialAction> remove(String id);
 }
