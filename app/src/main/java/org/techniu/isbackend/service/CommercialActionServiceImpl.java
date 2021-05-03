@@ -17,10 +17,7 @@ import org.techniu.isbackend.repository.CommercialActionTypeRepository;
 import org.techniu.isbackend.repository.CommercialOperationRepository;
 import org.techniu.isbackend.repository.ContactRepository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
 
@@ -55,11 +52,13 @@ public class CommercialActionServiceImpl implements CommercialActionService {
                 contacts.add(contactRepository.findBy_id(line.get("_id").toString()));
             }
         }
+        Date today = new Date();
 
         CommercialAction commercialAction = commercialActionMapper.dtoToModel(commercialActionDto);
         commercialAction.setCommercialOperation(commercialOperation);
         commercialAction.setCommercialActionType(commercialActionType);
         commercialAction.setContacts(contacts);
+        commercialAction.setCreationDate(today);
 
         System.out.println("Service part :" + commercialAction);
         commercialActionRepository.save(commercialAction);
@@ -80,12 +79,19 @@ public class CommercialActionServiceImpl implements CommercialActionService {
     }
 
     @Override
+    public List<CommercialAction> getAllCommercialAction2() {
+        // Get all actions
+        List<CommercialAction> commercialActions = commercialActionRepository.findAll();
+        return commercialActions;
+    }
+
+    @Override
     public CommercialAction getById(String id) {
         return commercialActionRepository.findAllBy_id(id);
     }
 
     @Override
-    public List<CommercialActionDto> updateCommercialAction(CommercialActionDto commercialActionDto, String id) {
+    public List<CommercialAction> updateCommercialAction(CommercialActionDto commercialActionDto, String id) {
         // save country if note existe
         CommercialAction commercialAction = getById(id);
         Optional<CommercialAction> commercialAction1 = Optional.ofNullable(commercialActionRepository.findAllBy_id(id));
@@ -94,12 +100,16 @@ public class CommercialActionServiceImpl implements CommercialActionService {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
         System.out.println(commercialAction);
+        Date today = new Date();
 
+        commercialAction.setModificationDate(today);
         commercialAction.setDescriptions(commercialActionDto.getDescriptions());
         commercialAction.setObjectifs(commercialActionDto.getObjectifs());
         commercialAction.setNbrActions(commercialActionDto.getNbrActions());
         commercialAction.setActionDescriptions(commercialActionDto.getActionDescriptions());
         commercialAction.setActionDates(commercialActionDto.getActionDates());
+        commercialAction.setConclusions(commercialActionDto.getConclusions());
+        commercialAction.setNbrConclusions(commercialActionDto.getNbrConclusions());
 
         CommercialActionType commercialActionType = commercialActionTypeRepository.findAllBy_id(commercialActionDto.getCommercialActionType().get_id());
         commercialAction.setCommercialActionType(commercialActionType);
@@ -111,24 +121,27 @@ public class CommercialActionServiceImpl implements CommercialActionService {
             if (line.get("checked").toString().equals("true")) {
                 contacts.add(contactRepository.findBy_id(line.get("_id").toString()));
             }
+            if (line.get("checked").toString().equals("false")) {
+                contacts.remove(contactRepository.findBy_id(line.get("_id").toString()));
+            }
         }
         commercialAction.setContacts(contacts);
 
         System.out.println(commercialAction);
 
         commercialActionRepository.save(commercialAction);
-        return getAllCommercialAction();
+        return getAllCommercialAction2();
     }
 
     @Override
-    public List<CommercialActionDto> remove(String id) {
+    public List<CommercialAction> remove(String id) {
         Optional<CommercialAction> action = Optional.ofNullable(commercialActionRepository.findAllBy_id(id));
         // If ContractStatus doesn't exists
         if (!action.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
         commercialActionRepository.deleteById(id);
-        return getAllCommercialAction();
+        return getAllCommercialAction2();
     }
 
 

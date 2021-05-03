@@ -32,6 +32,9 @@ public class CommercialActionDto {
     private List<String> nbrActions;
     private List<String> actionDescriptions;
     private List<String> actionDates;
+    private List<String> nbrConclusions;
+    private List<String> conclusions;
+
     private List<LinkedHashMap> contactsIds;
     private List<ContactDto> contactsDtos;
 

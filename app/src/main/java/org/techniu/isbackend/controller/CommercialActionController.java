@@ -14,6 +14,8 @@ import org.techniu.isbackend.service.CommercialActionService;
 
 import javax.validation.Valid;
 
+import java.util.List;
+
 import static org.techniu.isbackend.exception.EntityType.CommercialAction;
 import static org.techniu.isbackend.exception.ExceptionType.*;
 import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
@@ -48,19 +50,13 @@ public class CommercialActionController {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         String Id = commercialActionUpdaterequest.getCommercialActionId();
         commercialActionService.updateCommercialAction(commercialActionMapper.updateRequestToDto(commercialActionUpdaterequest), Id);
-        return new ResponseEntity<Response>(Response.ok().setPayload(
-                getMessageTemplate(CommercialAction, UPDATED)), HttpStatus.OK);
+        return new ResponseEntity<Response>(Response.ok().setPayload(commercialActionService.getAllCommercialAction2()), HttpStatus.OK);
     }
 
-    /**
-     * Handles the incoming DELETE API "/commercialAction/delete"
-     *
-     * @param id action delete request
-     */
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity delete(@PathVariable String id) {
-        commercialActionService.remove(id);
-        return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(CommercialAction, DELETED)), HttpStatus.OK);
+    @PostMapping("/delete/{Id}")
+    public List<org.techniu.isbackend.entity.CommercialAction> deleteCommercialAction(@PathVariable String Id) {
+        System.out.println(Id);
+        return commercialActionService.remove(Id);
     }
 
     /**
@@ -69,6 +65,14 @@ public class CommercialActionController {
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     public ResponseEntity allCommercialAction() {
         return new ResponseEntity<Response>(Response.ok().setPayload(commercialActionService.getAllCommercialAction()), HttpStatus.OK);
+    }
+
+    /**
+     * display all commercialAction GET API "/api/commercialAction"
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/all2")
+    public ResponseEntity allCommercialAction2() {
+        return new ResponseEntity<Response>(Response.ok().setPayload(commercialActionService.getAllCommercialAction2()), HttpStatus.OK);
     }
 
 }
