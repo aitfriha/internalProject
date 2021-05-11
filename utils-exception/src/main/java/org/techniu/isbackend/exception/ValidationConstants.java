@@ -244,7 +244,7 @@ public class ValidationConstants {
     private final static String INVALID_TOKEN_SENTENCE = "invalid Token";
     private final static String EXPIRED_TOKEN_SENTENCE= "expired Token";
     private final static String USER_IS_NOTE_ACTIVE_SENTENCE = "this user is note active";
-    private final static String STAFF_IS_NOTE_ACTIVE_SENTENCE = "this staff is note active";
+    private final static String STAFF_IS_NOTE_ACTIVE_SENTENCE = "this user has left the company";
     private final static String IMPORTATION_STAFF_NOTE_EXIST_SENTENCE = "Staff not exist in our data base";
     private final static String STAFF_NOT_ASIGNED_TO_COMMERCIAL_LEVEL_SENTENCE = "Staff is not assigned to a commercial level !";
     private final static String INDCOM_PROPERTY_ALREADY_HAS_A_METER_SENTENCE = "industrial commercial property has already meter";

@@ -23,5 +23,5 @@ public class AdministrativeStructureLevelUpdaterequest {
     private String type;
     private String oldLeaderId;
     private String newLeaderId;
-
+    private String companyId;
 }

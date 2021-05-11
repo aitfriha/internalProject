@@ -124,6 +124,7 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
 
     @Override
     public AdministrativeStructureLevel update(AdministrativeStructureLevelDto administrativeStructureLevelDto, String oldLeaderId, String newLeaderId) {
+        FinancialCompany company = financialCompanyRepository.findById(administrativeStructureLevelDto.getCompanyId()).get();
         Staff oldLeader = staffRepository.findById(oldLeaderId).get();
         Staff newLeader = staffRepository.findById(newLeaderId).get();
         AdministrativeStructureLevel administrativeStructureLevel = administrativeStructureLevelRepository.findById(administrativeStructureLevelDto.getLevelId()).get();
@@ -139,7 +140,9 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
         AdministrativeStructureLevel administrativeStructureLevel1 = administrativeStructureLevelMapper.dtoToModel(administrativeStructureLevelDto);
         administrativeStructureLevel1.setChilds(administrativeStructureLevel.getChilds());
         List<AdministrativeStructureLevel> levels = newLeader.getAdministrativeStructureLevels();
+        administrativeStructureLevel1.setCompany(company);
         levels.add(administrativeStructureLevelRepository.save(administrativeStructureLevel1));
+        logService.addLog(LogType.UPDATE, ClassType.administrativeStructureLevel,"update administrative structure level "+administrativeStructureLevelDto.getName());
         newLeader.setAdministrativeStructureLevels(levels);
         newLeader.setIsAdministrativeLeader("yes");
         staffRepository.save(newLeader);
