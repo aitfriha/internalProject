@@ -59,7 +59,7 @@ public class PurchaseOrderController {
         code++;
         Date d = new Date();
 
-        String year = String.valueOf(d).substring(25,29);
+        String year = String.valueOf(d).substring(25,28);
 
         String Code = year.concat("/").concat(String.valueOf(code));
         System.out.println("CODE :" + Code);
