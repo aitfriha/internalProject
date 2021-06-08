@@ -24,6 +24,7 @@
     </modules>
     <properties>
         <java.version>11</java.version>
+        <start-class>org.techniu.isbackend.IsBackendApplication</start-class>
     </properties>
 
     <repositories>
@@ -170,16 +171,18 @@
     </dependencies>
 
     <build>
+        <finalName>internal-project</finalName>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
+                    <executable>true</executable>
                     <source>1.8</source>
                     <target>1.8</target>
                     <annotationProcessorPaths>

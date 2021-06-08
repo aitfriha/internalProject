@@ -100,7 +100,6 @@ public class ContractModelServiceImpl implements ContractModelService {
         if (!action.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
-
         if(!newId.equals("")){
             List<StaffContract> staffContracts = staffContractRepository.findAllByContractModel(contractModelRepository.findById(oldId).get());
             ContractModel newContractModel = contractModelRepository.findById(newId).get();
@@ -114,12 +113,15 @@ public class ContractModelServiceImpl implements ContractModelService {
             });
         }
         List<StaffContractHistory> staffContractHistories = staffContractHistoryRepository.findAll();
-        staffContractHistories.forEach(staffContractHistory -> {
-            if(staffContractHistory.getStaffContractHistory().getContractModel().get_id().equals(oldId)) {
-                staffContractHistoryRepository.delete(staffContractHistory);
-            }
-        });
-
+        if(staffContractHistories.size()>0) {
+            staffContractHistories.forEach(staffContractHistory -> {
+                        if(staffContractHistory.getStaffContractHistory().getContractModel()!=null) {
+                            if (staffContractHistory.getStaffContractHistory().getContractModel().get_id().equals(oldId)) {
+                                staffContractHistoryRepository.delete(staffContractHistory);
+                            }
+                        }
+            });
+        }
         contractModelRepository.deleteById(oldId);
         logService.addLog(LogType.DELETE, ClassType.CONTRACTMODEL,"delete contact model "+action.get().getName());
     }
