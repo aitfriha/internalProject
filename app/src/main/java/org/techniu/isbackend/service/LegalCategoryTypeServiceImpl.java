@@ -97,11 +97,14 @@ public class LegalCategoryTypeServiceImpl implements LegalCategoryTypeService {
             });
         }
         List<StaffContractHistory> staffContractHistories = staffContractHistoryRepository.findAll();
-        staffContractHistories.forEach(staffContractHistory -> {
-            if(staffContractHistory.getStaffContractHistory().getLegalCategoryType().get_id().equals(oldId)) {
-                staffContractHistoryRepository.delete(staffContractHistory);
-            }
-        });
+
+            staffContractHistories.forEach(staffContractHistory -> {
+                if(staffContractHistory.getStaffContractHistory().getLegalCategoryType()!=null) {
+                if (staffContractHistory.getStaffContractHistory().getLegalCategoryType().get_id().equals(oldId)) {
+                    staffContractHistoryRepository.delete(staffContractHistory);
+                }}
+            });
+
         logService.addLog(LogType.DELETE, ClassType.LEGALCATEGORYTYPE,"delete legal category type "+action.get().getName());
         legalCategoryTypeRepository.deleteById(oldId);
     }

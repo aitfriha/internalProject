@@ -181,6 +181,7 @@ public class StaffController {
      */
     @GetMapping("/all")
     public ResponseEntity allStaff() {
+        System.out.println("****************");
         return new ResponseEntity<Response>(Response.ok().setPayload(staffService.getAll()), HttpStatus.OK);
     }
 
