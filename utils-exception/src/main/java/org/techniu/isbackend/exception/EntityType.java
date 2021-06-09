@@ -68,6 +68,7 @@ public enum EntityType {
     WeeklyReport,
     WeeklyReportConfig,
     PasswordResetToken,
+    ActionHistory,
 
     DocumentManagerConfig
 }
