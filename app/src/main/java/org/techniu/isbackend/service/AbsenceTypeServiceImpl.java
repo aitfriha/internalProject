@@ -16,6 +16,7 @@ import org.techniu.isbackend.repository.StaffRepository;
 import org.techniu.isbackend.repository.StateCountryRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,17 +117,25 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
     }
 
     @Override
-    public void remove(String id) {
-
-        Optional<AbsenceType> action = Optional.ofNullable(absenceTypeRepository.findBy_id(id));
+    public void remove(String oldId, String newId) {
+        Optional<AbsenceType> action = Optional.ofNullable(absenceTypeRepository.findById(oldId).get());
         if (!action.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
-        AbsenceType absenceType = absenceTypeRepository.findById(id).get();
-        List<AbsenceRequest> list = absenceRequestRepository.findAllByAbsenceType(absenceType);
-        absenceRequestRepository.deleteAll(list);
-        absenceTypeRepository.delete(absenceType);
-        logService.addLog(LogType.DELETE, ClassType.ABSENCETYPE,"delete absence type "+absenceType.getName());
+        if(!newId.equals("")){
+            Optional<AbsenceType> newAbsenceType = Optional.ofNullable(absenceTypeRepository.findById(newId).get());
+            AbsenceType absenceType = absenceTypeRepository.findById(oldId).get();
+            List<AbsenceRequest> list = absenceRequestRepository.findAllByAbsenceType(absenceType);
+            System.out.println(list.size());
+            if(list.size()>0) {
+                list.forEach(absenceType1 -> {
+                    absenceType1.setAbsenceType(newAbsenceType.get());
+                    absenceRequestRepository.save(absenceType1);
+                });
+            }
+        }
+        absenceTypeRepository.deleteById(oldId);
+        logService.addLog(LogType.DELETE, ClassType.ABSENCETYPE,"delete absence type "+action.get().getName());
     }
 
     @Override

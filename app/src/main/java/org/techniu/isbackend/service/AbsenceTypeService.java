@@ -8,7 +8,7 @@ import java.util.List;
 public interface AbsenceTypeService {
     void save(AbsenceTypeDto absenceTypeDto);
     void update(AbsenceTypeDto absenceTypeDto);
-    void remove(String id);
+    void remove(String oldId, String newId);
     List<AbsenceTypeDto> getAll();
     List<AbsenceTypeDto> getAllByState(String stateCountryId);
 }

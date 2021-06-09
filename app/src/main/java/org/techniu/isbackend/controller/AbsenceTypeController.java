@@ -82,9 +82,9 @@ public class AbsenceTypeController {
 
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable("id") String id) {
-        absenceTypeService.remove(id);
+    @DeleteMapping("/delete/oldId={oldId}&newId={newId}")
+    public ResponseEntity delete(@PathVariable("oldId") String oldId, @PathVariable("newId") String newId) {
+        absenceTypeService.remove(oldId, newId);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceType, DELETED)), HttpStatus.OK);
     }
 
