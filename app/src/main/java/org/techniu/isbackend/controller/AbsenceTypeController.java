@@ -50,7 +50,6 @@ public class AbsenceTypeController {
         AbsenceTypeDto absenceTypeDto = absenceTypeMapper.addRequestToDto(absenceTypeAddrequest);
         if(!doc.getContentType().equals("application/json")) {
             absenceTypeDto.setDocument(doc.getBytes());
-            System.out.println("set contract doc");
         };
         absenceTypeService.save(absenceTypeDto);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceType, ADDED)), HttpStatus.OK);

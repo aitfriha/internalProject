@@ -53,7 +53,7 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         if (absenceTypeDto.getCode().contains(" ")) {
             throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
-
+/*
         Optional<AbsenceType> absenceType1 = Optional.ofNullable(absenceTypeRepository.findByNameAndState(absenceTypeDto.getName(), stateCountry));
         if (absenceType1.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
@@ -61,13 +61,15 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         Optional<AbsenceType> absenceType2 = Optional.ofNullable(absenceTypeRepository.findByCodeAndState(absenceTypeDto.getCode(), stateCountry));
         if (absenceType2.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
+        }*/
+        Optional<AbsenceType> absenceType1 = Optional.ofNullable(absenceTypeRepository.findByCode(absenceTypeDto.getCode()));
+        if (absenceType1.isPresent()) {
+            throw exception(DUPLICATE_ENTITY);
         }
-
         if (absenceTypeDto.getDocument() != null) {
             absenceType.setDocument(absenceTypeDto.getDocument());
             absenceType.setDocExtension(absenceTypeDto.getDocExtension());
         }
-
         absenceType.setState(stateCountry);
         Staff absenceResponsible = staffRepository.findById(absenceTypeDto.getAbsenceResponsibleId()).get();
         absenceType.setAbsenceResponsible(absenceResponsible);
@@ -82,14 +84,11 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
     public void update(AbsenceTypeDto absenceTypeDto) {
         //System.out.println(absenceTypeDto.getAbsenceTypeId());
         AbsenceType absenceType = absenceTypeRepository.findById(absenceTypeDto.getAbsenceTypeId()).get();
-
-
         if (absenceTypeDto.getCode().contains(" ")) {
             throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
-
+        /*
         Optional<AbsenceType> absenceType1 = Optional.ofNullable(absenceTypeRepository.findByNameAndState(absenceTypeDto.getName(), absenceType.getState()));
-
         if (absenceType1.isPresent()) {
             if (!absenceType1.get().get_id().equals(absenceTypeDto.getAbsenceTypeId())) {
                 throw exception(DUPLICATE_ENTITY);
@@ -100,7 +99,17 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
             if (!absenceType2.get().get_id().equals(absenceTypeDto.getAbsenceTypeId())) {
                 throw exception(DUPLICATE_ENTITY);
             }
+        }*/
+        Optional<AbsenceType> absenceType1 = Optional.ofNullable(absenceTypeRepository.findBy_id(absenceTypeDto.getAbsenceTypeId()));
+        if (!absenceType1.isPresent()) {
+            throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
+
+        Optional<AbsenceType> absenceType3 = Optional.ofNullable(absenceTypeRepository.findByCode(absenceTypeDto.getCode()));
+        if (absenceType3.isPresent() && !(absenceType1.get().getCode().equals(absenceTypeDto.getCode())) ) {
+            throw exception(DUPLICATE_ENTITY);
+        }
+
         if (absenceTypeDto.getDocument() != null) {
             absenceType.setDocument(absenceTypeDto.getDocument());
             absenceType.setDocExtension(absenceTypeDto.getDocExtension());
