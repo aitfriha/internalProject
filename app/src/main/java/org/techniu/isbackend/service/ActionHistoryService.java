@@ -8,7 +8,7 @@ import java.util.List;
 public interface ActionHistoryService {
     void saveActionHistory(ActionHistoryDto actionHistoryDto);
 
-    List<ActionHistoryDto> getAllActionHistory();
+    List<ActionHistory> getAllActionHistory();
 
     ActionHistory getById(String id);
 

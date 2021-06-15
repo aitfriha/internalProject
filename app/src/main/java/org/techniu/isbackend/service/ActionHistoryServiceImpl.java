@@ -5,22 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.ActionHistoryMapper;
 import org.techniu.isbackend.dto.model.ActionHistoryDto;
-import org.techniu.isbackend.entity.ClassType;
-import org.techniu.isbackend.entity.Contact;
-import org.techniu.isbackend.entity.LogType;
-import org.techniu.isbackend.entity.ActionHistory;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.ActionHistoryRepository;
 import org.techniu.isbackend.repository.ContactRepository;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
-
-import static org.techniu.isbackend.exception.ExceptionType.ENTITY_NOT_FOUND;
+import java.util.*;
 
 @Service
 @Transactional
@@ -39,14 +31,24 @@ public class ActionHistoryServiceImpl implements ActionHistoryService {
     @Override
     public void saveActionHistory(ActionHistoryDto actionHistoryDto) {
         //System.out.println("Implement part :" + actionHistoryDto);
+        ArrayList<Contact> contacts = new ArrayList<>();
+        for (LinkedHashMap line : actionHistoryDto.getContactsIds()){
+            if (line.get("checked").toString().equals("true")) {
+                contacts.add(contactRepository.findBy_id(line.get("_id").toString()));
+            }
+        }
+        ActionHistory actionHistory = actionHistoryMapper.dtoToModel(actionHistoryDto);
+        actionHistory.setContacts(contacts);
+        actionHistory.setActionDate(new Date());
+
         logService.addLog(LogType.CREATE, ClassType.TYPEOFCURRENCY,"create history of commercial action "+actionHistoryDto.getOperationName());
-        actionHistoryRepository.save(actionHistoryMapper.dtoToModel(actionHistoryDto));
+        actionHistoryRepository.save(actionHistory);
     }
 
     @Override
-    public List<ActionHistoryDto> getAllActionHistory() {
-        // Get all actions
+    public List<ActionHistory> getAllActionHistory() {
         List<ActionHistory> actionHistory = actionHistoryRepository.findAll();
+        /*
         // Create a list of all actions dto
         ArrayList<ActionHistoryDto> actionHistoryDtos = new ArrayList<>();
 
@@ -54,7 +56,8 @@ public class ActionHistoryServiceImpl implements ActionHistoryService {
             ActionHistoryDto actionHistoryDto = actionHistoryMapper.modelToDto(actionHistory1);
             actionHistoryDtos.add(actionHistoryDto);
         }
-        return actionHistoryDtos;
+        */
+        return actionHistory;
     }
 
     @Override

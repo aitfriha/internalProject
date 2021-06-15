@@ -42,9 +42,6 @@ public class ActionHistoryController {
     public ResponseEntity add(@RequestBody @Valid ActionHistoryAddrequest actionHistoryAddrequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
         // Save action history
-
-        actionHistoryAddrequest.setActionDate(new Date());
-
         System.out.println(actionHistoryAddrequest);
 
         actionHistoryService.saveActionHistory(actionHistoryMapper.addRequestToDto(actionHistoryAddrequest));
@@ -52,7 +49,7 @@ public class ActionHistoryController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/all")
-    public List<ActionHistoryDto> getAllTypeOfCurrencies() {
+    public List<ActionHistory> getAllHistory() {
         return actionHistoryService.getAllActionHistory();
 
     }
