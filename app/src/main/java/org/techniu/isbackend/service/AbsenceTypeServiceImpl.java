@@ -16,6 +16,7 @@ import org.techniu.isbackend.repository.StaffRepository;
 import org.techniu.isbackend.repository.StateCountryRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +53,7 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         if (absenceTypeDto.getCode().contains(" ")) {
             throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
-
+/*
         Optional<AbsenceType> absenceType1 = Optional.ofNullable(absenceTypeRepository.findByNameAndState(absenceTypeDto.getName(), stateCountry));
         if (absenceType1.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
@@ -60,13 +61,15 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
         Optional<AbsenceType> absenceType2 = Optional.ofNullable(absenceTypeRepository.findByCodeAndState(absenceTypeDto.getCode(), stateCountry));
         if (absenceType2.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
+        }*/
+        Optional<AbsenceType> absenceType1 = Optional.ofNullable(absenceTypeRepository.findByCode(absenceTypeDto.getCode()));
+        if (absenceType1.isPresent()) {
+            throw exception(DUPLICATE_ENTITY);
         }
-
         if (absenceTypeDto.getDocument() != null) {
             absenceType.setDocument(absenceTypeDto.getDocument());
             absenceType.setDocExtension(absenceTypeDto.getDocExtension());
         }
-
         absenceType.setState(stateCountry);
         Staff absenceResponsible = staffRepository.findById(absenceTypeDto.getAbsenceResponsibleId()).get();
         absenceType.setAbsenceResponsible(absenceResponsible);
@@ -81,14 +84,11 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
     public void update(AbsenceTypeDto absenceTypeDto) {
         //System.out.println(absenceTypeDto.getAbsenceTypeId());
         AbsenceType absenceType = absenceTypeRepository.findById(absenceTypeDto.getAbsenceTypeId()).get();
-
-
         if (absenceTypeDto.getCode().contains(" ")) {
             throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
-
+        /*
         Optional<AbsenceType> absenceType1 = Optional.ofNullable(absenceTypeRepository.findByNameAndState(absenceTypeDto.getName(), absenceType.getState()));
-
         if (absenceType1.isPresent()) {
             if (!absenceType1.get().get_id().equals(absenceTypeDto.getAbsenceTypeId())) {
                 throw exception(DUPLICATE_ENTITY);
@@ -99,7 +99,17 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
             if (!absenceType2.get().get_id().equals(absenceTypeDto.getAbsenceTypeId())) {
                 throw exception(DUPLICATE_ENTITY);
             }
+        }*/
+        Optional<AbsenceType> absenceType1 = Optional.ofNullable(absenceTypeRepository.findBy_id(absenceTypeDto.getAbsenceTypeId()));
+        if (!absenceType1.isPresent()) {
+            throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
+
+        Optional<AbsenceType> absenceType3 = Optional.ofNullable(absenceTypeRepository.findByCode(absenceTypeDto.getCode()));
+        if (absenceType3.isPresent() && !(absenceType1.get().getCode().equals(absenceTypeDto.getCode())) ) {
+            throw exception(DUPLICATE_ENTITY);
+        }
+
         if (absenceTypeDto.getDocument() != null) {
             absenceType.setDocument(absenceTypeDto.getDocument());
             absenceType.setDocExtension(absenceTypeDto.getDocExtension());
@@ -116,17 +126,25 @@ public class AbsenceTypeServiceImpl implements AbsenceTypeService {
     }
 
     @Override
-    public void remove(String id) {
-
-        Optional<AbsenceType> action = Optional.ofNullable(absenceTypeRepository.findBy_id(id));
+    public void remove(String oldId, String newId) {
+        Optional<AbsenceType> action = Optional.ofNullable(absenceTypeRepository.findById(oldId).get());
         if (!action.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);
         }
-        AbsenceType absenceType = absenceTypeRepository.findById(id).get();
-        List<AbsenceRequest> list = absenceRequestRepository.findAllByAbsenceType(absenceType);
-        absenceRequestRepository.deleteAll(list);
-        absenceTypeRepository.delete(absenceType);
-        logService.addLog(LogType.DELETE, ClassType.ABSENCETYPE,"delete absence type "+absenceType.getName());
+        if(!newId.equals("")){
+            Optional<AbsenceType> newAbsenceType = Optional.ofNullable(absenceTypeRepository.findById(newId).get());
+            AbsenceType absenceType = absenceTypeRepository.findById(oldId).get();
+            List<AbsenceRequest> list = absenceRequestRepository.findAllByAbsenceType(absenceType);
+            System.out.println(list.size());
+            if(list.size()>0) {
+                list.forEach(absenceType1 -> {
+                    absenceType1.setAbsenceType(newAbsenceType.get());
+                    absenceRequestRepository.save(absenceType1);
+                });
+            }
+        }
+        absenceTypeRepository.deleteById(oldId);
+        logService.addLog(LogType.DELETE, ClassType.ABSENCETYPE,"delete absence type "+action.get().getName());
     }
 
     @Override

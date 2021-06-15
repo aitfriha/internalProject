@@ -1,10 +1,12 @@
 package org.techniu.isbackend.service;
 
+import com.sun.mail.smtp.SMTPAddressFailedException;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.AbsenceRequestMapper;
@@ -19,6 +21,9 @@ import org.techniu.isbackend.repository.StaffRepository;
 import org.techniu.isbackend.repository.StateCountryRepository;
 import org.techniu.isbackend.service.utilities.MailMail;
 
+import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +33,6 @@ import static org.techniu.isbackend.exception.ExceptionType.*;
 @Service
 @Transactional
 public class AbsenceRequestServiceImpl implements AbsenceRequestService {
-
     private AbsenceRequestRepository absenceRequestRepository;
     private StateCountryRepository stateCountryRepository;
     private StaffRepository staffRepository;
@@ -56,20 +60,24 @@ public class AbsenceRequestServiceImpl implements AbsenceRequestService {
         absenceRequest.setAbsenceType(absenceType);
         absenceRequest.setState("In progress");
         absenceRequestRepository.save(absenceRequest);
-        logService.addLog(LogType.CREATE, ClassType.ABSENCEREQUEST,"create absence request for staff "+staff.getMotherFamilyName());
-        Resource resource=new ClassPathResource("applicationContext.xml");
-        BeanFactory b=new XmlBeanFactory(resource);
-        MailMail m=(MailMail)b.getBean("mailMail");
-        String sender="internal.system.project@gmail.com";//write here sender gmail id
+        logService.addLog(LogType.CREATE, ClassType.ABSENCEREQUEST, "create absence request for staff " + staff.getMotherFamilyName());
+
+        Resource resource = new ClassPathResource("applicationContext.xml");
+        BeanFactory b = new XmlBeanFactory(resource);
+        MailMail m = (MailMail) b.getBean("mailMail");
+        String sender = "internal.system.project@gmail.com";//write here sender gmail id
         String[] receivers = {absenceType.getAbsenceResponsible().getCompanyEmail(), absenceType.getInCopyResponsible().getCompanyEmail()};
         //m.sendMail(sender,"Internal System", receivers,"New Absence Request","Hello " + sendToName +",\nYou got a new absence request from " + fromName + ".\n Regards,\n Internal System.");
-       String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello,</span></span></p>\n" +
-               "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">You got a " + absenceType.getName() + " request from <strong>" + fromName + "</strong>.</span></span></p>\n" +
-               "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Regards,</span></span></p>\n" +
-               "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
-               "<p>&nbsp;</p>";
-        m.sendMail(sender,"Internal System", receivers,"New Absence Request",message);
-
+        String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello,</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">You got a " + absenceType.getName() + " request from <strong>" + fromName + "</strong>.</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Regards,</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \"><span style=\"color: #999999;\"><strong>Internal System</strong></span>.</span></span></p>\n" +
+                "<p>&nbsp;</p>";
+        try {
+            m.sendMail(sender, "Internal System", receivers, "New Absence Request", message);
+        } catch (MailSendException e) {
+            throw exception(STAFF_EMAIL_INVALID);
+        }
     }
 
     @Override

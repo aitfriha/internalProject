@@ -3,8 +3,13 @@ package org.techniu.isbackend.controller;
 import com.wproducts.administration.controller.request.UserAddRequest;
 import com.wproducts.administration.service.UserService;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +19,9 @@ import org.techniu.isbackend.controller.request.StaffUpdaterequest;
 import org.techniu.isbackend.dto.mapper.StaffMapper;
 import org.techniu.isbackend.dto.model.StaffDto;
 import org.techniu.isbackend.entity.*;
+import org.techniu.isbackend.exception.EntityType;
+import org.techniu.isbackend.exception.ExceptionType;
+import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.StaffService;
 
@@ -23,6 +31,7 @@ import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
 import static org.techniu.isbackend.exception.EntityType.Staff;
 
 import org.springframework.http.HttpStatus;
+import org.techniu.isbackend.service.utilities.MailMail;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -123,7 +132,6 @@ public class StaffController {
         if(preContractDoc.getContentType().equals("application/pdf")){
             staffContract.setPreContractDoc(preContractDoc.getBytes());
         }
-
         // Staff economic contract
         StaffEconomicContractInformation staffEconomicContractInformation = new StaffEconomicContractInformation();
         staffEconomicContractInformation.setContractSalary(staffAddRequest.getContractSalary());
@@ -147,7 +155,19 @@ public class StaffController {
         staffEconomicContractInformation.setCompanyObjectivesCostDateOut(staffAddRequest.getCompanyObjectivesCostDateOut());
         staffEconomicContractInformation.setTotalCompanyCostDateGoing(staffAddRequest.getTotalCompanyCostDateGoing());
         staffEconomicContractInformation.setTotalCompanyCostDateOut(staffAddRequest.getTotalCompanyCostDateOut());
-        System.out.println(staffAddRequest.getCompanyId());
+        Resource resource = new ClassPathResource("applicationContext.xml");
+        BeanFactory b = new XmlBeanFactory(resource);
+        MailMail m = (MailMail) b.getBean("mailMail");
+        String sender = "internal.system.project@gmail.com";//write here sender gmail id
+        String[] receivers = {staffAddRequest.getCompanyEmail()};
+        //m.sendMail(sender,"Internal System", receivers,"New Absence Request","Hello " + sendToName +",\nYou got a new absence request from " + fromName + ".\n Regards,\n Internal System.");
+        String message = "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">Hello " + staffAddRequest.getMotherFamilyName() + ",</span></span></p>\n" +
+                "<p><span style=\"font-family: arial, helvetica, sans-serif; \"><span \">you are registered on the internal system internal systems</p>";
+        try {
+            m.sendMail(sender, "Internal System", receivers, "New registered", message);
+        } catch (MailSendException e) {
+            throw exception(STAFF_EMAIL_INVALID);
+        }
         staffService.save(staffMapper.addRequestToDto(staffAddRequest),
                 address, staffEconomicContractInformation, staffContract, staffDocumentList);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Staff, ADDED)), HttpStatus.OK);
@@ -160,7 +180,6 @@ public class StaffController {
                 .setAddressId(staffUpdaterequest.getAddressId())
                 .setFullAddress(staffUpdaterequest.getFullAddress())
                 .setPostCode(staffUpdaterequest.getPostCode());
-        System.out.println(staffUpdaterequest);
         staffService.update(staffMapper.updateRequestToDto(staffUpdaterequest), address);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(Staff, UPDATED)), HttpStatus.OK);
     }
@@ -181,7 +200,6 @@ public class StaffController {
      */
     @GetMapping("/all")
     public ResponseEntity allStaff() {
-        System.out.println("****************");
         return new ResponseEntity<Response>(Response.ok().setPayload(staffService.getAll()), HttpStatus.OK);
     }
 
@@ -276,6 +294,10 @@ public class StaffController {
     public ResponseEntity forgetPassword(@PathVariable String userEmail) {
         staffService.sendPassword(userEmail);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(USER, SENT)), HttpStatus.OK);
+    }
+
+    private RuntimeException exception(ExceptionType exceptionType, String... args) {
+        return MainException.throwException(EntityType.AbsenceRequest, exceptionType, args);
     }
 
 }

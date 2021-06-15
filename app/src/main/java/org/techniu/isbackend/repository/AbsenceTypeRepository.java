@@ -13,4 +13,5 @@ public interface AbsenceTypeRepository extends MongoRepository<AbsenceType, Stri
     AbsenceType findBy_id(String id);
     AbsenceType findByNameAndState(String name, StateCountry state);
     AbsenceType findByCodeAndState(String code, StateCountry state);
+    AbsenceType findByCode(String code);
 }

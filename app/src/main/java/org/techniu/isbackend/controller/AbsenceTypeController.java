@@ -50,7 +50,6 @@ public class AbsenceTypeController {
         AbsenceTypeDto absenceTypeDto = absenceTypeMapper.addRequestToDto(absenceTypeAddrequest);
         if(!doc.getContentType().equals("application/json")) {
             absenceTypeDto.setDocument(doc.getBytes());
-            System.out.println("set contract doc");
         };
         absenceTypeService.save(absenceTypeDto);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceType, ADDED)), HttpStatus.OK);
@@ -82,9 +81,9 @@ public class AbsenceTypeController {
 
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable("id") String id) {
-        absenceTypeService.remove(id);
+    @DeleteMapping("/delete/oldId={oldId}&newId={newId}")
+    public ResponseEntity delete(@PathVariable("oldId") String oldId, @PathVariable("newId") String newId) {
+        absenceTypeService.remove(oldId, newId);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(AbsenceType, DELETED)), HttpStatus.OK);
     }
 

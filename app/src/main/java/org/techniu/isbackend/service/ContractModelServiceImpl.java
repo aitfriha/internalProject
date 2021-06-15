@@ -95,7 +95,6 @@ public class ContractModelServiceImpl implements ContractModelService {
 
     @Override
     public void remove(String oldId, String newId) {
-
         Optional<ContractModel> action = Optional.ofNullable(contractModelRepository.findById(oldId).get());
         if (!action.isPresent()) {
             throw exception(ENTITY_NOT_FOUND);

@@ -104,6 +104,7 @@ public class StaffServiceImpl implements StaffService {
                 || staffDto.getContractModelId().equals("")
                 || staffDto.getCurrencyId().equals("")
                 || staffDto.getPersonalNumber().equals("")
+                || staffDto.getCompanyEmail().equals("")
         ) {
             throw exception(FILL_ALL_NECESSARY_FIELDS);
         }
@@ -147,12 +148,12 @@ public class StaffServiceImpl implements StaffService {
         if (staff5.isPresent()) {
             throw exception(STAFF_PERSONAL_PHONE_EXIST);
         }
-
-        Optional<Staff>  staff6= Optional.ofNullable(staffRepository.findBySkype(staffDto.getSkype()));
-        if (staff6.isPresent()) {
-            throw exception(STAFF_SKYPE_EXIST);
-        }
-
+        /*if(!staffDto.getSkype().equals("")) {
+            Optional<Staff> staff6 = Optional.ofNullable(staffRepository.findBySkype(staffDto.getSkype()));
+            if (staff6.isPresent()) {
+                throw exception(STAFF_SKYPE_EXIST);
+            }
+        }*/
         Optional<StaffContract>  staffContract2= Optional.ofNullable(staffContractRepository.findByPersonalNumber(staffDto.getPersonalNumber()));
         if (staffContract2.isPresent()) {
             throw exception(STAFF_PERSONAL_NUMBER_EXIST);
