@@ -22,6 +22,7 @@ public enum ExceptionType {
     FILL_ALL_NECESSARY_FIELDS("Please fill all necessary fields"),
     STAFF_NAME_EXIST("Staff full name already exist"),
     STAFF_EMAIL_EXIST("Personal email already exist"),
+    STAFF_EMAIL_INVALID("Invalid company email"),
     STAFF_COMPANY_EMAIL_EXIST("Company email already exist"),
     STAFF_COMPANY_MOBILE_PHONE_EXIST("Company mobile already exist"),
     STAFF_PERSONAL_PHONE_EXIST("Personal phone already exist"),

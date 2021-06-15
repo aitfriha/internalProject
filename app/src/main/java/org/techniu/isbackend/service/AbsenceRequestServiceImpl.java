@@ -76,9 +76,7 @@ public class AbsenceRequestServiceImpl implements AbsenceRequestService {
         try {
             m.sendMail(sender, "Internal System", receivers, "New Absence Request", message);
         } catch (MailSendException e) {
-            // logger.error("MailSendException found.",e);
-            System.out.println("Invalid email id of User");
-            throw exception(ENTITY_NOT_FOUND);
+            throw exception(STAFF_EMAIL_INVALID);
         }
     }
 
