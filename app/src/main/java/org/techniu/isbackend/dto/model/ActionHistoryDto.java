@@ -9,6 +9,8 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -37,4 +39,15 @@ public class ActionHistoryDto {
     @NotNull
     private float estimatedTradeVolumeInEuro;
 
+    private String descriptions;
+    private String objectifs;
+
+    private List<String> nbrActions;
+    private List<String> actionDescriptions;
+    private List<String> actionDates;
+    private List<String> nbrConclusions;
+    private List<String> conclusions;
+
+    private List<LinkedHashMap> contactsIds;
+    private List<ContactDto> contactsDtos;
 }
