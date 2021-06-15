@@ -257,6 +257,9 @@ public class StaffServiceImpl implements StaffService {
         staff7.setIsAdministrativeLeader(staff.getIsAdministrativeLeader());
         staff7.setFunctionalStructureLevels(staff.getFunctionalStructureLevels());
         staff7.setAdministrativeStructureLevels(staff.getAdministrativeStructureLevels());
+      //  staff7.setStaffContract()
+        System.out.println("***********");
+        System.out.println(staff.getStaffContract());
         logService.addLog(LogType.UPDATE, ClassType.STAFF,"update staff "+staff7.getMotherFamilyName()+" "+staff7.getFatherFamilyName() + " "+staff7.getFirstName());
         return staffRepository.save(staff7);
     }
@@ -308,7 +311,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public List<StaffDto> getAll() {
-        // Get all actions
+        // Get all staffs
         List<Staff> staffs = staffRepository.findAll();
         // Create a list of all staff dto
         ArrayList<StaffDto> staffDtos = new ArrayList<>();
@@ -546,6 +549,7 @@ public class StaffServiceImpl implements StaffService {
         staffDto.setContractTypeCountry(staff.getStaffContract().getContractType().getState().getCountry().getCountryName());
         staffDto.setContractTypeStateId(staff.getStaffContract().getContractType().getState().get_id());
         staffDto.setContractTypeState(staff.getStaffContract().getContractType().getState().getStateName());
+
         staffDto.setLegalCategoryTypeId(staff.getStaffContract().getLegalCategoryType().get_id());
         staffDto.setLegalCategoryTypeName(staff.getStaffContract().getLegalCategoryType().getName());
         staffDto.setContractModelId(staff.getStaffContract().getContractModel().get_id());
@@ -582,7 +586,6 @@ public class StaffServiceImpl implements StaffService {
         staffDto.setCurrencyMonth(staff.getStaffEconomicContractInformation().getCurrency().getMonth());
         staffDto.setCurrencyYear(staff.getStaffEconomicContractInformation().getCurrency().getYear());
         staffDto.setChangeFactor(staff.getStaffEconomicContractInformation().getCurrency().getChangeFactor());
-
         // Functional Structure Level
         staffDto.setFunctionalStructureLevels(staff.getFunctionalStructureLevels());
 

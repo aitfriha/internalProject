@@ -47,7 +47,7 @@ public class StaffContractController {
                                  @RequestParam("internalRulesDoc") MultipartFile internalRulesDoc,
                                  @RequestParam("preContractDoc") MultipartFile preContractDoc) throws IOException {
         if (bindingResult.hasErrors()) return mapValidationErrorService.mapValidationService(bindingResult);
-
+        System.out.println("b11111");
         System.out.println(staffContractUpdaterequest);
         StaffContractDto staffContractDto = staffContractMapper.updateRequestToDto(staffContractUpdaterequest);
         if(contractDoc.getContentType().equals("application/pdf")) {
@@ -62,7 +62,6 @@ public class StaffContractController {
             staffContractDto.setPreContractDoc(preContractDoc.getBytes());
             System.out.println("set contract doc");
         };
-        System.out.println(staffContractDto);
         staffContractService.update(staffContractDto);
         return new ResponseEntity<Response>(Response.ok().setPayload(getMessageTemplate(StaffContract, UPDATED)), HttpStatus.OK);
     }

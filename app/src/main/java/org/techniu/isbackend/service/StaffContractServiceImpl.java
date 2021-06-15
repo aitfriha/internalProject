@@ -17,8 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.techniu.isbackend.exception.ExceptionType.FILL_ALL_NECESSARY_FIELDS;
-import static org.techniu.isbackend.exception.ExceptionType.STAFF_PERSONAL_NUMBER_EXIST;
+import static org.techniu.isbackend.exception.ExceptionType.*;
 
 @Service
 @Transactional
@@ -50,7 +49,6 @@ public class StaffContractServiceImpl implements StaffContractService {
 
     @Override
     public void update(StaffContractDto staffContractDto) {
-
         if(
                         staffContractDto.getTownContract().equals("")
                         || staffContractDto.getAssociateOffice().equals("")
@@ -61,14 +59,16 @@ public class StaffContractServiceImpl implements StaffContractService {
             throw exception(FILL_ALL_NECESSARY_FIELDS);
         }
 
-        Optional<StaffContract> staffContract2= Optional.ofNullable(staffContractRepository.findByPersonalNumber(staffContractDto.getPersonalNumber()));
-        if (staffContract2.isPresent()) {
+        Optional<StaffContract> staffContract2= Optional.ofNullable(staffContractRepository.findBy_id(staffContractDto.getStaffContractId()));
+        /*if (staffContract2.isPresent()) {
+            throw exception(STAFF_PERSONAL_NUMBER_EXIST);
+        }*/
+        Optional<StaffContract> staffContract3 = Optional.ofNullable(staffContractRepository.findByPersonalNumber(staffContractDto.getPersonalNumber()));
+        if (staffContract3.isPresent() && !(staffContract2.get().getPersonalNumber().equals(staffContractDto.getPersonalNumber())) ) {
             throw exception(STAFF_PERSONAL_NUMBER_EXIST);
         }
 
-
         StaffContract staffContract = staffContractMapper.dtoToModel(staffContractDto);
-
         StaffContract staffContract1 = staffContractRepository.findById(staffContractDto.getStaffContractId()).get();
         if(staffContractDto.getContractDoc() == null && staffContract1.getContractDoc() != null)  {
             staffContract.setContractDoc(staffContract1.getContractDoc());
@@ -82,6 +82,7 @@ public class StaffContractServiceImpl implements StaffContractService {
         staffContract.setContractType(contractTypeRepository.findById(staffContractDto.getContractTypeId()).get());
         staffContract.setLegalCategoryType(legalCategoryTypeRepository.findById(staffContractDto.getLegalCategoryTypeId()).get());
         staffContract.setCompany(financialCompanyRepository.findById(staffContractDto.getCompanyId()).get());
+        staffContract.setContractModel(contractModelRepository.findById(staffContractDto.getContractModelId()).get());
         StaffContractHistory staffContractHistory = new StaffContractHistory();
         staffContractHistory.setStaffContract(staffContract1);
         staffContractHistory.setStaffContractHistory(staffContractRepository.save(staffContract));

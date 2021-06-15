@@ -9,6 +9,8 @@ public interface StaffContractRepository extends MongoRepository<StaffContract, 
 
     StaffContract findByPersonalNumber(String personalNumber);
 
+    StaffContract findBy_id(String id);
+
     List<StaffContract> findAllByContractType(ContractType contractType);
 
     List<StaffContract> findAllByLegalCategoryType(LegalCategoryType legalCategoryType);
