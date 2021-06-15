@@ -54,12 +54,10 @@ public class StaffContractHistoryServiceImpl implements StaffContractHistoryServ
     @Override
     public List<StaffContractHistoryDto> getStaffContractHistoryByStaffContract(String staffContractId) {
         StaffContract staffContract = staffContractRepository.findById(staffContractId).get();
-
         List<StaffContractHistory> staffContractHistories = staffContractHistoryRepository.findAllByStaffContract(staffContract);
         // Create a list of all staff dto
         ArrayList<StaffContractHistoryDto> staffContractHistoryDtos = new ArrayList<>();
         for (StaffContractHistory staffContractHistory : staffContractHistories) {
-
             staffContractHistoryDtos.add(staffContractHistoryToDto(staffContractHistory));
         }
         return staffContractHistoryDtos;
@@ -68,7 +66,6 @@ public class StaffContractHistoryServiceImpl implements StaffContractHistoryServ
 
     public StaffContractHistoryDto staffContractHistoryToDto(StaffContractHistory staffContractHistory) {
         StaffContractHistoryDto staffContractHistoryDto = staffContractHistoryMapper.modelToDto(staffContractHistory);
-        System.out.println(staffContractHistory);
         staffContractHistoryDto.setStaffContractHistoryId(staffContractHistory.get_id());
         staffContractHistoryDto.setCompanyId(staffContractHistory.getStaffContractHistory().getCompany().get_id());
         staffContractHistoryDto.setCompanyName(staffContractHistory.getStaffContractHistory().getCompany().getName());
