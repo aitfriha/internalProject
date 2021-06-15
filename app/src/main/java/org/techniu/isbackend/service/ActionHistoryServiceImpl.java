@@ -6,14 +6,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.ActionHistoryMapper;
 import org.techniu.isbackend.dto.model.ActionHistoryDto;
 import org.techniu.isbackend.entity.ClassType;
+import org.techniu.isbackend.entity.Contact;
 import org.techniu.isbackend.entity.LogType;
 import org.techniu.isbackend.entity.ActionHistory;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.repository.ActionHistoryRepository;
+import org.techniu.isbackend.repository.ContactRepository;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +28,12 @@ public class ActionHistoryServiceImpl implements ActionHistoryService {
     private ActionHistoryRepository actionHistoryRepository;
     private final ActionHistoryMapper actionHistoryMapper = Mappers.getMapper(ActionHistoryMapper.class);
     private LogService logService;
-    public ActionHistoryServiceImpl(ActionHistoryRepository actionHistoryRepository, LogService logService) {
+    private ContactRepository contactRepository;
+    public ActionHistoryServiceImpl(ActionHistoryRepository actionHistoryRepository, LogService logService,
+                                    ContactRepository contactRepository) {
         this.actionHistoryRepository = actionHistoryRepository;
         this.logService = logService;
+        this.contactRepository = contactRepository;
     }
 
     @Override

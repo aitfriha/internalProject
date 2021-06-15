@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Document(value = "ActionHistory")
 @Data
@@ -30,5 +31,17 @@ public class ActionHistory implements Serializable {
     private Date actionDate;
 
     private float estimatedTradeVolumeInEuro;
+
+    private String descriptions;
+    private String objectifs;
+
+    private List<String> nbrActions;
+    private List<String> actionDescriptions;
+    private List<String> actionDates;
+    private List<String> nbrConclusions;
+    private List<String> conclusions;
+
+    @DBRef
+    private List<Contact> contacts;
 
 }

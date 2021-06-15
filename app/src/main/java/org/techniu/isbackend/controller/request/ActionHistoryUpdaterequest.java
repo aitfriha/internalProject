@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +26,15 @@ public class ActionHistoryUpdaterequest {
     private Date paymentDate;
     private Date actionDate;
     private float estimatedTradeVolumeInEuro;
+
+    private String descriptions;
+    private String objectifs;
+
+    private List<String> nbrActions;
+    private List<String> actionDescriptions;
+    private List<String> actionDates;
+    private List<String> nbrConclusions;
+    private List<String> conclusions;
+
+    private List<LinkedHashMap> contactsIds;
 }
