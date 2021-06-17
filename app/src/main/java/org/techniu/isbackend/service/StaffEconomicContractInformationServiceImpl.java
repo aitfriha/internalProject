@@ -45,7 +45,6 @@ public class StaffEconomicContractInformationServiceImpl implements StaffEconomi
     public void update(StaffEconomicContractInformationDto staffEconomicContractInformationDto) {
         StaffEconomicContractInformation staffEconomicContractInformation = staffEconomicContractInformationMapper.dtoToModel(staffEconomicContractInformationDto);
         Currency currency = currencyRepository.findById(staffEconomicContractInformationDto.getCurrencyId()).get();
-        System.out.println(staffEconomicContractInformationDto);
         staffEconomicContractInformation.setCurrency(currency);
         StaffEconomicContractInformation staffEconomicContractInformation1 = staffEconomicContractInformationRepository.findById(staffEconomicContractInformationDto.getStaffEconomicContractInformationId()).get();
         StaffEconomicContractInformationHistory staffEconomicContractInformationHistory = new StaffEconomicContractInformationHistory();

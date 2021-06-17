@@ -148,12 +148,12 @@ public class StaffServiceImpl implements StaffService {
         if (staff5.isPresent()) {
             throw exception(STAFF_PERSONAL_PHONE_EXIST);
         }
-        /*if(!staffDto.getSkype().equals("")) {
+        if(!staffDto.getSkype().equals("")) {
             Optional<Staff> staff6 = Optional.ofNullable(staffRepository.findBySkype(staffDto.getSkype()));
             if (staff6.isPresent()) {
                 throw exception(STAFF_SKYPE_EXIST);
             }
-        }*/
+        }
         Optional<StaffContract>  staffContract2= Optional.ofNullable(staffContractRepository.findByPersonalNumber(staffDto.getPersonalNumber()));
         if (staffContract2.isPresent()) {
             throw exception(STAFF_PERSONAL_NUMBER_EXIST);
@@ -237,14 +237,14 @@ public class StaffServiceImpl implements StaffService {
                 throw exception(STAFF_PERSONAL_PHONE_EXIST);
             }
         }
-
-        Optional<Staff>  staff6= Optional.ofNullable(staffRepository.findBySkype(staffDto.getSkype()));
-        if (staff6.isPresent()) {
-            if(!staff6.get().getStaffId().equals(staffDto.getStaffId())) {
-                throw exception(STAFF_SKYPE_EXIST);
-            }
-        }
-
+       if(!staffDto.getSkype().equals("")) {
+           Optional<Staff> staff6 = Optional.ofNullable(staffRepository.findBySkype(staffDto.getSkype()));
+           if (staff6.isPresent()) {
+               if (!staff6.get().getStaffId().equals(staffDto.getStaffId())) {
+                   throw exception(STAFF_SKYPE_EXIST);
+               }
+           }
+       }
         address.setCity( cityRepository.findById(staffDto.getCityId()).get());
         Staff staff = staffRepository.findById(staffDto.getStaffId()).get();
         Staff staff7 = staffMapper.dtoToModel(staffDto);
@@ -257,9 +257,6 @@ public class StaffServiceImpl implements StaffService {
         staff7.setIsAdministrativeLeader(staff.getIsAdministrativeLeader());
         staff7.setFunctionalStructureLevels(staff.getFunctionalStructureLevels());
         staff7.setAdministrativeStructureLevels(staff.getAdministrativeStructureLevels());
-      //  staff7.setStaffContract()
-        System.out.println("***********");
-        System.out.println(staff.getStaffContract());
         logService.addLog(LogType.UPDATE, ClassType.STAFF,"update staff "+staff7.getMotherFamilyName()+" "+staff7.getFatherFamilyName() + " "+staff7.getFirstName());
         return staffRepository.save(staff7);
     }
