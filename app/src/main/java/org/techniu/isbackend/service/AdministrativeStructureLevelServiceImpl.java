@@ -65,11 +65,10 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                 List<AdministrativeStructureLevel> levels = staff1.getAdministrativeStructureLevels();
                 levels.add(lvl);
                 staff1.setAdministrativeStructureLevels(levels);
-                //System.out.println(staff1);
                 staffRepository.save(staff1);
                 logService.addLog(LogType.UPDATE, ClassType.STAFF,"update administrative structure level of staff "+staff1.getMotherFamilyName()+" "+staff1.getFatherFamilyName()+" "+staff1.getFirstName());
             }
-            if(lvl.getType().equals("Level 1")) {
+           /* if(lvl.getType().equals("Level 1")) {
                 List<StaffContract> staffContracts = staffContractRepository.findAllByCompany(company);
                 List<Staff> assignedStaffs = new ArrayList<>();
                 staffContracts.forEach(staffContract -> {
@@ -77,10 +76,10 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                     assignedStaffs.addAll(staffs1);
                 });
                 AdministrativeStructureLevel finalLvl = lvl;
-                assignedStaffs.forEach(staffDto -> {
+                assignedStaffs.forEach(assignedstaff -> {
                     List<AdministrativeStructureLevel> levels = new ArrayList<>();
                     levels.add(finalLvl);
-                    Staff staff = staffRepository.findById(staffDto.getStaffId()).get();
+                    Staff staff = staffRepository.findById(assignedstaff.getStaffId()).get();
                     staff.setAdministrativeStructureLevels(levels);
                     AdministrativeStructureAssignationHistory administrativeStructureAssignationHistory = new AdministrativeStructureAssignationHistory();
                     administrativeStructureAssignationHistory.setStartDate(new Date().toInstant().toString().substring(0,10));
@@ -88,10 +87,8 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                     administrativeStructureAssignationHistory.setLevel(finalLvl);
                     administrativeStructureAssignationHistory.setStaff(staffRepository.save(staff));
                     administrativeStructureAssignationHistoryRepository.save(administrativeStructureAssignationHistory);
-                    //System.out.println("staffDto related");
-                    //System.out.println(staffDto.getFirstName());
                 });
-            }
+            }*/
             list.add(lvl);
         }
         for (int i=list.size()-1; i > 0; i--) {
@@ -141,7 +138,11 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
         administrativeStructureLevel1.setChilds(administrativeStructureLevel.getChilds());
         List<AdministrativeStructureLevel> levels = newLeader.getAdministrativeStructureLevels();
         administrativeStructureLevel1.setCompany(company);
-        levels.add(administrativeStructureLevelRepository.save(administrativeStructureLevel1));
+        administrativeStructureLevel1.set_id(administrativeStructureLevelDto.getLevelId());
+        if(!oldLeader.getStaffId().equals(newLeader.getStaffId())) {
+            levels.add(administrativeStructureLevelRepository.save(administrativeStructureLevel1));
+        }
+        administrativeStructureLevelRepository.save(administrativeStructureLevel1);
         logService.addLog(LogType.UPDATE, ClassType.administrativeStructureLevel,"update administrative structure level "+administrativeStructureLevelDto.getName());
         newLeader.setAdministrativeStructureLevels(levels);
         newLeader.setIsAdministrativeLeader("yes");
@@ -193,24 +194,25 @@ public class AdministrativeStructureLevelServiceImpl implements AdministrativeSt
                 administrativeStructureLevelRepository.delete(level2);
             });
         }
-        List<Staff> staffs = staffRepository.findAllByAdministrativeStructureLevelsContainingAndIsAdministrativeLeader(level, "no");
-        staffs.addAll(staffRepository.findAllByAdministrativeStructureLevelsContainingAndIsAdministrativeLeader(level, "yes"));
+        AdministrativeStructureLevel levelOriginal = administrativeStructureLevelRepository.findById(levelId).get();
+        List<Staff> staffs = staffRepository.findAllByAdministrativeStructureLevelsContainingAndIsAdministrativeLeader(levelOriginal, "no");
+        staffs.addAll(staffRepository.findAllByAdministrativeStructureLevelsContainingAndIsAdministrativeLeader(levelOriginal, "yes"));
         staffs.forEach(staff -> {
             List<AdministrativeStructureLevel> levels = staff.getAdministrativeStructureLevels();
-            levels.remove(level);
+            levels.remove(levelOriginal);
             if(levels.size() == 0) {
                 staff.setIsAdministrativeLeader("no");
             }
             staff.setAdministrativeStructureLevels(levels);
             staffRepository.save(staff);
         });
-        AdministrativeStructureLevel parent = administrativeStructureLevelRepository.findByChildsContaining(level);
+        AdministrativeStructureLevel parent = administrativeStructureLevelRepository.findByChildsContaining(levelOriginal);
         if(parent != null) {
             parent.setChilds(null);
             administrativeStructureLevelRepository.save(parent);
         }
-        logService.addLog(LogType.DELETE, ClassType.administrativeStructureLevel,"delete administrative structure level "+level.getName());
-        administrativeStructureLevelRepository.delete(level);
+        logService.addLog(LogType.DELETE, ClassType.administrativeStructureLevel,"delete administrative structure level "+levelOriginal.getName());
+        administrativeStructureLevelRepository.delete(levelOriginal);
         return null;
     }
 

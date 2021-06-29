@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.techniu.isbackend.dto.mapper.LocalBankHolidayMapper;
 import org.techniu.isbackend.dto.model.LocalBankHolidayDto;
-import org.techniu.isbackend.entity.ClassType;
-import org.techniu.isbackend.entity.FinancialCompany;
-import org.techniu.isbackend.entity.LocalBankHoliday;
-import org.techniu.isbackend.entity.LogType;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -46,8 +43,8 @@ public class LocalBankHolidayServiceImpl implements LocalBankHolidayService {
     public void save(LocalBankHolidayDto localBankHolidayDto) {
         FinancialCompany financialCompany = financialCompanyRepository.findById(localBankHolidayDto.getFinancialCompanyId()).get();
         LocalBankHoliday localBankHoliday = localBankHolidayMapper.dtoToModel(localBankHolidayDto);
-
-        Optional<LocalBankHoliday>  localBankHoliday1= Optional.ofNullable(localBankHolidayRepository.findByNameAndCompany(localBankHolidayDto.getName(), financialCompany));
+        //Optional<LocalBankHoliday>  localBankHoliday1= Optional.ofNullable(localBankHolidayRepository.findByNameAndCompany(localBankHolidayDto.getName(), financialCompany));
+        Optional<LocalBankHoliday>  localBankHoliday1= Optional.ofNullable(localBankHolidayRepository.findByCode(localBankHolidayDto.getCode()));
         if (localBankHoliday1.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
         }
@@ -61,13 +58,21 @@ public class LocalBankHolidayServiceImpl implements LocalBankHolidayService {
     public void update(LocalBankHolidayDto localBankHolidayDto) {
         LocalBankHoliday localBankHoliday = localBankHolidayRepository.findById(localBankHolidayDto.getLocalBankHolidayId()).get();
 
-        Optional<LocalBankHoliday>  localBankHoliday1= Optional.ofNullable(localBankHolidayRepository.findByNameAndCompany(localBankHolidayDto.getName(), localBankHoliday.getCompany()));
-        if (localBankHoliday1.isPresent()) {
+       // Optional<LocalBankHoliday>  localBankHoliday1= Optional.ofNullable(localBankHolidayRepository.findByCode(localBankHolidayDto.getCode()));
+        Optional<LocalBankHoliday> localBankHoliday1 = Optional.ofNullable(localBankHolidayRepository.findBy_id(localBankHolidayDto.getLocalBankHolidayId()));
+        if (!localBankHoliday1.isPresent()) {
+            throw exception(ExceptionType.ENTITY_NOT_FOUND);
+        }
+        Optional<LocalBankHoliday> localBankHoliday3 = Optional.ofNullable(localBankHolidayRepository.findByCode(localBankHolidayDto.getCode()));
+
+        if (localBankHoliday3.isPresent() && !(localBankHoliday1.get().getCode().equals(localBankHolidayDto.getCode())) ) {
+            throw exception(DUPLICATE_ENTITY);
+        }
+        /*if (localBankHoliday1.isPresent()) {
             if(!localBankHoliday1.get().get_id().equals(localBankHolidayDto.getLocalBankHolidayId())) {
                 throw exception(DUPLICATE_ENTITY);
             }
-        }
-
+        }*/
         LocalBankHoliday localBankHoliday2 = localBankHolidayMapper.dtoToModel(localBankHolidayDto);
         localBankHoliday2.setCompany(localBankHoliday.getCompany());
         localBankHolidayRepository.save(localBankHoliday2);

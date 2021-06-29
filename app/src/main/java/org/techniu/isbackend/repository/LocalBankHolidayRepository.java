@@ -10,5 +10,6 @@ public interface LocalBankHolidayRepository extends MongoRepository<LocalBankHol
 
     List<LocalBankHoliday> getAllByCompany(FinancialCompany financialCompany);
     LocalBankHoliday findBy_id(String id);
+    LocalBankHoliday findByCode(String code);
     LocalBankHoliday findByNameAndCompany(String name, FinancialCompany company);
 }

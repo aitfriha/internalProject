@@ -190,7 +190,6 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public Staff update(StaffDto staffDto, Address address) {
-      //  System.out.println(staffDto);
         if(
                 staffDto.getFirstName().equals("")
                         || staffDto.getFatherFamilyName().equals("")
@@ -248,7 +247,6 @@ public class StaffServiceImpl implements StaffService {
         address.setCity( cityRepository.findById(staffDto.getCityId()).get());
         Staff staff = staffRepository.findById(staffDto.getStaffId()).get();
         Staff staff7 = staffMapper.dtoToModel(staffDto);
-        //System.out.println(staff1);
         staff7.setAddress(addressRepository.save(address));
         staff7.setStaffContract(staff.getStaffContract());
         staff7.setStaffEconomicContractInformation(staff.getStaffEconomicContractInformation());
@@ -325,7 +323,6 @@ public class StaffServiceImpl implements StaffService {
         // Create a list of all staff dto
         ArrayList<StaffDto> staffDtos = new ArrayList<>();
         for (Staff staff : staffs) {
-
             staffDtos.add(staffToStaffDto(staff));
         }
         return staffDtos;
@@ -333,7 +330,10 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public List<StaffDto> getAllAdministrativeNotAssignedStaffs() {
-        // Get all actions
+        // Get all staffs
+        System.out.println("******************");
+        System.out.println(new ArrayList<>());
+        System.out.println("******************");
         List<Staff> staffs = staffRepository.findAllByAdministrativeStructureLevelsEquals(new ArrayList<>());
         // Create a list of all staff dto
         ArrayList<StaffDto> staffDtos = new ArrayList<>();
@@ -490,7 +490,6 @@ public class StaffServiceImpl implements StaffService {
     public List<StaffDto> getStaffsByIsFunctionalLeader(String isFunctionalLeader) {
         // Get all actions
         List<Staff> staffs = staffRepository.findAllByIsFunctionalLeader(isFunctionalLeader);
-        System.out.println(staffs);
         // Create a list of all staff dto
         ArrayList<StaffDto> staffDtos = new ArrayList<>();
         for (Staff staff : staffs) {
@@ -504,7 +503,6 @@ public class StaffServiceImpl implements StaffService {
     public List<StaffDto> getStaffsByIsAdministrativeLeader(String isAdministrativeLeader) {
         // Get all actions
         List<Staff> staffs = staffRepository.findAllByIsAdministrativeLeader(isAdministrativeLeader);
-        System.out.println(staffs);
         // Create a list of all staff dto
         ArrayList<StaffDto> staffDtos = new ArrayList<>();
         for (Staff staff : staffs) {

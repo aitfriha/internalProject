@@ -89,6 +89,7 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
         return true;
     }
 
+
     @Override
     public FunctionalStructureLevel update(FunctionalStructureLevelDto functionalStructureLevelDto, String oldLeaderId, String newLeaderId) {
         Staff oldLeader = staffRepository.findById(oldLeaderId).get();
@@ -107,7 +108,9 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
         FunctionalStructureLevel functionalStructureLevel1 = functionalStructureLevelMapper.dtoToModel(functionalStructureLevelDto);
         functionalStructureLevel1.setChilds(functionalStructureLevel.getChilds());
         List<FunctionalStructureLevel> levels = newLeader.getFunctionalStructureLevels();
-        levels.add(functionalStructureLevelRepository.save(functionalStructureLevel1));
+        functionalStructureLevel1.set_id(functionalStructureLevelDto.getLevelId());
+        functionalStructureLevelRepository.save(functionalStructureLevel1);
+        //levels.add(functionalStructureLevelRepository.save(functionalStructureLevel1));
         logService.addLog(LogType.UPDATE, ClassType.functionalStructureLevel,"update functional structure level "+functionalStructureLevel1.getName());
         newLeader.setFunctionalStructureLevels(levels);
         newLeader.setIsFunctionalLeader("yes");
