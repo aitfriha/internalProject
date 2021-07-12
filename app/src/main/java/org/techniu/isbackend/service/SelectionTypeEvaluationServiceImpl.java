@@ -94,16 +94,37 @@ public class SelectionTypeEvaluationServiceImpl implements SelectionTypeEvaluati
     @Override
     public ResponseEntity<?> remove(String SelectionTypeId) {
         SelectionTypeEvaluation selectionTypeEvaluation = selectionTypeEvaluationRepository.findById(SelectionTypeId).get();
+        List<SelectionTypeEvaluation> selectionTypeEvaluationsChilds;
+        List<SelectionTypeEvaluation> listChilds;
         if(selectionTypeEvaluation.getChilds() != null) {
             List<SelectionTypeEvaluation> list1 = selectionTypeEvaluation.getChilds();
             list1.forEach(type -> {
                 selectionTypeEvaluationRepository.delete(type);
             });
         }
-        logService.addLog(LogType.DELETE, ClassType.SELECTIONTYPEEVALUATION,"delete selection Type Evaluation "+selectionTypeEvaluation.getName());
-        selectionTypeEvaluationRepository.delete(selectionTypeEvaluation);
 
+        logService.addLog(LogType.DELETE, ClassType.SELECTIONTYPEEVALUATION,"delete selection Type Evaluation "+selectionTypeEvaluation.getName());
+        List<SelectionTypeEvaluation> selectionTypeEvaluations = selectionTypeEvaluationRepository.findAll();
+
+            for (SelectionTypeEvaluation selectionType : selectionTypeEvaluations) {
+                if (selectionType.getChilds() != null) {
+                    listChilds = selectionType.getChilds();
+                    System.out.println(this.containsChild(listChilds, selectionTypeEvaluation));
+                    if (this.containsChild(listChilds, selectionTypeEvaluation)) {
+                        selectionTypeEvaluationsChilds = selectionType.getChilds();
+                        selectionTypeEvaluationsChilds.remove(selectionTypeEvaluation);
+                        selectionType.setChilds(selectionTypeEvaluationsChilds);
+                        selectionTypeEvaluationRepository.save(selectionType);
+                    }
+                }
+            }
+
+        selectionTypeEvaluationRepository.delete(selectionTypeEvaluation);
         return null;
+    }
+
+    public boolean containsChild(final List<SelectionTypeEvaluation> list, final SelectionTypeEvaluation selectionTypeEvaluation){
+        return list.stream().filter(o -> o.equals(selectionTypeEvaluation)).findFirst().isPresent();
     }
 
     @Override

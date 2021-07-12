@@ -10,10 +10,7 @@ import org.techniu.isbackend.controller.request.FunctionalStructureLevelAddreque
 import org.techniu.isbackend.dto.mapper.FunctionalStructureLevelMapper;
 import org.techniu.isbackend.dto.model.FunctionalStructureLevelDto;
 import org.techniu.isbackend.dto.model.StaffDto;
-import org.techniu.isbackend.entity.ClassType;
-import org.techniu.isbackend.entity.FunctionalStructureLevel;
-import org.techniu.isbackend.entity.LogType;
-import org.techniu.isbackend.entity.Staff;
+import org.techniu.isbackend.entity.*;
 import org.techniu.isbackend.exception.EntityType;
 import org.techniu.isbackend.exception.ExceptionType;
 import org.techniu.isbackend.exception.MainException;
@@ -111,6 +108,9 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
         functionalStructureLevel1.set_id(functionalStructureLevelDto.getLevelId());
         functionalStructureLevelRepository.save(functionalStructureLevel1);
         //levels.add(functionalStructureLevelRepository.save(functionalStructureLevel1));
+        if(!oldLeader.getStaffId().equals(newLeader.getStaffId())) {
+            levels.add(functionalStructureLevelRepository.save(functionalStructureLevel1));
+        }
         logService.addLog(LogType.UPDATE, ClassType.functionalStructureLevel,"update functional structure level "+functionalStructureLevel1.getName());
         newLeader.setFunctionalStructureLevels(levels);
         newLeader.setIsFunctionalLeader("yes");
@@ -152,7 +152,7 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
                 staffs.addAll(staffRepository.findAllByFunctionalStructureLevelsContainingAndIsFunctionalLeader(level2, "yes"));
                 staffs.forEach(staff -> {
                     List<FunctionalStructureLevel> levels = staff.getFunctionalStructureLevels();
-                    levels.remove(level2);
+                    levels.removeIf(e -> e.get_id().equals(level2.get_id()));
                     if(levels.size() == 0) {
                         staff.setIsFunctionalLeader("no");
                     }
@@ -163,11 +163,13 @@ public class FunctionalStructureLevelServiceImpl implements FunctionalStructureL
                 logService.addLog(LogType.DELETE, ClassType.functionalStructureLevel,"delete functional structure level 2 "+level2.getName());
             });
         }
+       // FunctionalStructureLevel level = functionalStructureLevelRepository.findById(levelId).get();
         List<Staff> staffs = staffRepository.findAllByFunctionalStructureLevelsContainingAndIsFunctionalLeader(level, "no");
         staffs.addAll(staffRepository.findAllByFunctionalStructureLevelsContainingAndIsFunctionalLeader(level, "yes"));
         staffs.forEach(staff -> {
             List<FunctionalStructureLevel> levels = staff.getFunctionalStructureLevels();
-            levels.remove(level);
+           // levels.remove(level);
+            levels.removeIf(e -> e.get_id().equals(level.get_id()));
             if(levels.size() == 0) {
                 staff.setIsFunctionalLeader("no");
             }
