@@ -34,12 +34,11 @@ public class ServiceTypeImpl implements ServiceTypeService{
     @Override
     public void save(ServiceTypeDto serviceTypeeDto) {
         // save country if note existe
-        serviceTypeeDto.setName(serviceTypeeDto.getName().toLowerCase());
-
+        //serviceTypeeDto.setName(serviceTypeeDto.getName().toLowerCase());
         if (serviceTypeeDto.getName().contains(" ")) {
              throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
-        Optional<ServiceType>  serviceTypee= Optional.ofNullable(serviceTypeRepository.findByName(serviceTypeeDto.getName()));
+        Optional<ServiceType>  serviceTypee= Optional.ofNullable(serviceTypeRepository.findByNameIgnoreCase(serviceTypeeDto.getName()));
         if (serviceTypee.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
         }
@@ -50,7 +49,7 @@ public class ServiceTypeImpl implements ServiceTypeService{
     @Override
     public void update(ServiceTypeDto serviceTypeeDto) {
         // save country if note existe
-        serviceTypeeDto.setName(serviceTypeeDto.getName().toLowerCase());
+       // serviceTypeeDto.setName(serviceTypeeDto.getName().toLowerCase());
         if (serviceTypeeDto.getName().contains(" ")) {
             throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
@@ -58,9 +57,9 @@ public class ServiceTypeImpl implements ServiceTypeService{
         if (!serviceTypee1.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-        Optional<ServiceType> serviceTypee2 = Optional.ofNullable(serviceTypeRepository.findByName(serviceTypeeDto.getName()));
+        Optional<ServiceType> serviceTypee2 = Optional.ofNullable(serviceTypeRepository.findByNameIgnoreCase(serviceTypeeDto.getName()));
 
-        if (serviceTypee2.isPresent() && !(serviceTypee1.get().getName().equals(serviceTypeeDto.getName())) ) {
+        if (serviceTypee2.isPresent() && (serviceTypee1.get().getName().equals(serviceTypeeDto.getName()) && !serviceTypee1.get().get_id().equals(serviceTypeeDto.getServiceTypeId())) ) {
             throw exception(DUPLICATE_ENTITY);
         }
          serviceTypeRepository.save(serviceTypeeMapper.dtoToModel(serviceTypeeDto));

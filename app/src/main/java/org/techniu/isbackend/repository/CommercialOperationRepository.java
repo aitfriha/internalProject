@@ -10,6 +10,7 @@ import java.util.List;
 public interface CommercialOperationRepository extends MongoRepository<CommercialOperation, String> {
 
     CommercialOperation findByName(String name);
+    CommercialOperation findByNameIgnoreCase(String name);
     CommercialOperation findByCode(String code);
     CommercialOperation findBy_id(String id);
     List<CommercialOperation> findByServiceType(ServiceType serviceType);

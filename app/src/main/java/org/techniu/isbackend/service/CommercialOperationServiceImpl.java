@@ -42,10 +42,9 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
     }
     @Override
     public void save(CommercialOperationDto commercialOperationDto) {
-        System.out.println(commercialOperationDto);
         // save country if note existe
-        commercialOperationDto.setName(commercialOperationDto.getName().toLowerCase());
-       Client client = clientRepository.getBy_id(commercialOperationDto.getClientId());
+       // commercialOperationDto.setName(commercialOperationDto.getName().toLowerCase());
+        Client client = clientRepository.getBy_id(commercialOperationDto.getClientId());
         CommercialOperationStatus commercialOperationStatus = commercialOperationStatusRepository.findBy_id(commercialOperationDto.getStateId());
         //System.out.println(commercialOperationDto.getStateId());
         int len = this.getAll().size() + 1;
@@ -66,11 +65,10 @@ public class CommercialOperationServiceImpl implements CommercialOperationServic
             code =  "-" + len;
             commercialOperationDto.setCode(code);
         }
-        System.out.println(commercialOperationDto);
         if (commercialOperationDto.getName().contains(" ")) {
              throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
-        Optional<CommercialOperation>  commercialOperation= Optional.ofNullable(commercialOperationRepository.findByName(commercialOperationDto.getName()));
+        Optional<CommercialOperation>  commercialOperation= Optional.ofNullable(commercialOperationRepository.findByNameIgnoreCase(commercialOperationDto.getName()));
         if (commercialOperation.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
         }

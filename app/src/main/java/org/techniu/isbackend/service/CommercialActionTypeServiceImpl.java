@@ -61,15 +61,10 @@ public class CommercialActionTypeServiceImpl implements CommercialActionTypeServ
         if (!commercialActionType1.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-
         System.out.println(commercialActionType);
-
         commercialActionType.setTypeName(commercialActionTypeDto.getTypeName());
         commercialActionType.setDescription(commercialActionTypeDto.getDescription());
         commercialActionType.setPercentage(commercialActionTypeDto.getPercentage());
-
-        System.out.println(commercialActionType);
-
         commercialActionTypeRepository.save(commercialActionType);
         return getAllCommercialActionType();
     }

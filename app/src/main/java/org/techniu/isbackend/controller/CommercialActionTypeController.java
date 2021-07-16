@@ -11,6 +11,9 @@ import org.techniu.isbackend.controller.request.CommercialActionTypeUpdatereques
 import org.techniu.isbackend.dto.mapper.CommercialActionTypeMapper;
 import org.techniu.isbackend.dto.model.CommercialActionTypeDto;
 import org.techniu.isbackend.entity.CommercialActionType;
+import org.techniu.isbackend.exception.EntityType;
+import org.techniu.isbackend.exception.ExceptionType;
+import org.techniu.isbackend.exception.MainException;
 import org.techniu.isbackend.exception.validation.MapValidationErrorService;
 import org.techniu.isbackend.service.CommercialActionTypeService;
 
@@ -19,6 +22,7 @@ import java.util.List;
 
 import static org.techniu.isbackend.exception.EntityType.CommercialActionType;
 import static org.techniu.isbackend.exception.ExceptionType.ADDED;
+import static org.techniu.isbackend.exception.ExceptionType.DUPLICATE_ENTITY;
 import static org.techniu.isbackend.exception.MainException.getMessageTemplate;
 
 @RestController
@@ -43,7 +47,9 @@ public class CommercialActionTypeController {
 
         List <CommercialActionTypeDto> actionTypeList = commercialActionTypeService.getAllCommercialActionType();
         for (CommercialActionTypeDto actionTypeDto : actionTypeList) {
-            if (actionTypeDto.getTypeName().equals(commercialActionTypeAddrequest.getTypeName())) return null;
+            if (actionTypeDto.getTypeName().equals(commercialActionTypeAddrequest.getTypeName()))
+
+                throw exception(DUPLICATE_ENTITY);
         }
 
         commercialActionTypeService.saveCommercialActionType(commercialActionTypeMapper.addRequestToDto(commercialActionTypeAddrequest));
@@ -74,6 +80,16 @@ public class CommercialActionTypeController {
         String Id = commercialActionTypeUpdaterequest.getActionTypeId();
         commercialActionTypeService.updateCommercialActionType(commercialActionTypeMapper.updateRequestToDto(commercialActionTypeUpdaterequest), Id);
         return commercialActionTypeService.getAllCommercialActionType();
+    }
+    /**
+     * Returns a new RuntimeException
+     *
+     * @param exceptionType exceptionType
+     * @param args  args
+     * @return RuntimeException
+     */
+    private RuntimeException exception(ExceptionType exceptionType, String... args) {
+        return MainException.throwException(EntityType.CivilityTitle, exceptionType, args);
     }
 
 }

@@ -30,12 +30,11 @@ public class CommercialOperationStatusServiceImpl implements CommercialOperation
     @Override
     public void save(CommercialOperationStatusDto commercialOperationStatusDto) {
         // save country if note existe
-        commercialOperationStatusDto.setName(commercialOperationStatusDto.getName().toLowerCase());
-
+        //commercialOperationStatusDto.setName(commercialOperationStatusDto.getName().toLowerCase());
         if (commercialOperationStatusDto.getName().contains(" ")) {
              throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
-        Optional<CommercialOperationStatus>  commercialOperationStatus= Optional.ofNullable(commercialOperationStatusRepository.findByName(commercialOperationStatusDto.getName()));
+        Optional<CommercialOperationStatus>  commercialOperationStatus= Optional.ofNullable(commercialOperationStatusRepository.findByNameIgnoreCase(commercialOperationStatusDto.getName()));
         if (commercialOperationStatus.isPresent()) {
             throw exception(DUPLICATE_ENTITY);
         }
@@ -50,7 +49,7 @@ public class CommercialOperationStatusServiceImpl implements CommercialOperation
     @Override
     public void update(CommercialOperationStatusDto commercialOperationStatusDto) {
         // save country if note existe
-        commercialOperationStatusDto.setName(commercialOperationStatusDto.getName().toLowerCase());
+        //commercialOperationStatusDto.setName(commercialOperationStatusDto.getName().toLowerCase());
         if (commercialOperationStatusDto.getName().contains(" ")) {
             throw exception(CODE_SHOULD_NOT_CONTAIN_SPACES);
         }
@@ -58,9 +57,9 @@ public class CommercialOperationStatusServiceImpl implements CommercialOperation
         if (!commercialOperationStatus1.isPresent()) {
             throw exception(ExceptionType.ENTITY_NOT_FOUND);
         }
-        Optional<CommercialOperationStatus> commercialOperationStatus2 = Optional.ofNullable(commercialOperationStatusRepository.findByName(commercialOperationStatusDto.getName()));
+        Optional<CommercialOperationStatus> commercialOperationStatus2 = Optional.ofNullable(commercialOperationStatusRepository.findByNameIgnoreCase(commercialOperationStatusDto.getName()));
 
-        if (commercialOperationStatus2.isPresent() && !(commercialOperationStatus1.get().getName().equals(commercialOperationStatusDto.getName())) ) {
+        if (commercialOperationStatus2.isPresent() && (commercialOperationStatus1.get().getName().equals(commercialOperationStatusDto.getName()) && !commercialOperationStatus1.get().get_id().equals(commercialOperationStatusDto.getCommercialOperationStatusId())) ) {
             throw exception(DUPLICATE_ENTITY);
         }
         Optional<CommercialOperationStatus> commercialOperationStatus3 = Optional.ofNullable(commercialOperationStatusRepository.findByCode(commercialOperationStatusDto.getCode()));

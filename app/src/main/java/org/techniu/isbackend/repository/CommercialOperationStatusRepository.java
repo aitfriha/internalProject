@@ -8,6 +8,7 @@ import java.util.List;
 public interface CommercialOperationStatusRepository extends MongoRepository<CommercialOperationStatus, String> {
 
     CommercialOperationStatus findByName(String name);
+    CommercialOperationStatus findByNameIgnoreCase(String name);
     CommercialOperationStatus findByCode(String code);
     CommercialOperationStatus findBy_id(String id);
 }
